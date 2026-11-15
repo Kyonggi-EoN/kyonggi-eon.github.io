@@ -1,0 +1,24 @@
+{%- comment -%} 홈 첫 화면. 내용은 페이지 머리말의 hero: 블록에서 가져옵니다. {%- endcomment -%}
+{%- assign hero = page.hero -%}
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__text">
+      {%- if hero.eyebrow %}<p class="eyebrow">{{ hero.eyebrow }}</p>{% endif %}
+      <h1 class="hero__title">{{ hero.title | default: site.tagline }}</h1>
+      {%- if hero.lead %}<p class="hero__lead">{{ hero.lead }}</p>{% endif %}
+      {%- if hero.actions %}
+      <div class="btn-row">
+        {%- for a in hero.actions %}
+        <a class="btn {% if forloop.first %}btn--primary{% else %}btn--ghost{% endif %}" href="{% include link-url.html url=a.url %}">{{ a.label }}</a>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+    </div>
+    <div class="hero__art" aria-hidden="true">
+      <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="" width="320" height="320">
+    </div>
+  </div>
+  {%- if hero.caption %}
+  <p class="container hero__caption">{{ hero.caption }}</p>
+  {%- endif %}
+</section>

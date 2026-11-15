@@ -1,0 +1,15 @@
+# 상단 메뉴. 위에서부터 순서대로 표시됩니다.
+# 다른 리포의 프로젝트 사이트 상단 바(eon-bar.js)도 이 목록을 그대로 씁니다.
+# url이 http(s)://로 시작하면 외부 링크로 취급합니다.
+
+- title: 소개
+  url: /about/
+- title: 프로젝트
+  url: /projects/
+- title: 소식
+  url: /news/
+- title: 블로그
+  url: /blog/
+# 멤버 명단(members.yml)을 채운 뒤 아래 두 줄의 주석을 푸세요.
+# - title: 멤버
+#   url: /members/

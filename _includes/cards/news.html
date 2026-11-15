@@ -1,0 +1,22 @@
+{%- comment -%}
+  소식 한 줄. 사용: {% include cards/news.html item=n %}
+  link가 있으면 그 주소로, 본문이 있으면 상세 페이지로 연결하고, 둘 다 없으면 제목만 보입니다.
+{%- endcomment -%}
+{%- assign n = include.item -%}
+{%- assign category_label = site.data.labels.news_categories[n.category] | default: n.category -%}
+{%- assign news_body = n.content | strip_html | strip -%}
+{%- assign news_href = nil -%}
+{%- if n.link -%}
+  {%- capture news_href %}{% include link-url.html url=n.link %}{% endcapture -%}
+{%- elsif news_body != "" -%}
+  {%- assign news_href = n.url | relative_url -%}
+{%- endif -%}
+<li class="news-item">
+  <time class="news-item__date" datetime="{{ n.date | date_to_xmlschema }}">{{ n.date | date: "%Y.%m.%d" }}</time>
+  {%- if category_label %}<span class="badge badge--{{ n.category }}">{{ category_label }}</span>{% else %}<span></span>{% endif %}
+  {%- if news_href %}
+  <a class="news-item__title" href="{{ news_href }}">{{ n.title }}{% if n.link %}{% include icon.html name="external" %}{% endif %}</a>
+  {%- else %}
+  <span class="news-item__title">{{ n.title }}</span>
+  {%- endif %}
+</li>

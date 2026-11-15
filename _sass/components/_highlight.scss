@@ -1,0 +1,48 @@
+// 코드 블록 문법 강조 (Rouge). 색은 밝은/어두운 화면 모두에서 읽히는 중간 톤으로 골랐습니다.
+
+.highlight {
+  .c,
+  .c1,
+  .cm,
+  .cs {
+    color: #8b8b98;
+    font-style: italic;
+  }
+
+  .k,
+  .kd,
+  .kn,
+  .kr,
+  .kt,
+  .nt {
+    color: #d1365c;
+  }
+
+  .s,
+  .s1,
+  .s2,
+  .sb,
+  .sh {
+    color: #2f9e6b;
+  }
+
+  .m,
+  .mi,
+  .mf,
+  .no,
+  .kc {
+    color: #c27b16;
+  }
+
+  .nf,
+  .nc,
+  .na,
+  .py {
+    color: #4f7fe0;
+  }
+
+  .nb,
+  .bp {
+    color: #9b59d0;
+  }
+}

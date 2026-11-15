@@ -1,0 +1,178 @@
+// 카드 (프로젝트·글·활동 분야·연락처 공통)
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+
+  &:has(.card__link):hover,
+  &--contact:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border-strong);
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-5);
+  }
+
+  &__title {
+    font-size: var(--fs-lg);
+    font-weight: 800;
+  }
+
+  // 제목 링크가 카드 전체를 덮어 어디를 눌러도 상세 페이지로 갑니다.
+  &__link {
+    color: inherit;
+    text-decoration: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &__text {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+  }
+
+  &__foot {
+    margin-top: auto;
+    padding-top: var(--space-2);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+
+  // 카드 안 별도 링크(사이트·GitHub)는 덮개 위로 올립니다.
+  &__actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: var(--space-4);
+    margin-top: auto;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--brand-text);
+      }
+    }
+  }
+
+  &__media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden; // 큰 이미지가 16:9 틀을 늘리지 않도록
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-subtle);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  // 이미지가 없을 때: 격자 배경 + 리포 이름
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--brand-text);
+    background:
+      radial-gradient(circle at 50% 50%, var(--brand-soft), transparent 70%),
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 24px 24px;
+
+    &::before {
+      content: "~/";
+      opacity: 0.5;
+    }
+  }
+
+  &__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius);
+    background: var(--brand-soft);
+    color: var(--brand-text);
+    font-size: 1.4rem;
+
+    .icon {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  // 활동 분야 카드
+  &--interest {
+    padding: var(--space-5);
+    gap: var(--space-3);
+  }
+
+  &__dl {
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--fs-sm);
+
+    dt {
+      margin-top: var(--space-2);
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    dd {
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+
+  // 연락처 카드
+  &--contact {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    color: var(--text);
+    text-decoration: none;
+
+    strong {
+      display: block;
+    }
+  }
+}
+
+.contact-list {
+  margin: 0;
+}

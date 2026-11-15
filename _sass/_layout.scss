@@ -1,0 +1,302 @@
+// 페이지 골격: 컨테이너, 상단 헤더, 푸터, 섹션, 그리드
+
+.container {
+  width: min(100% - 2 * var(--space-5), var(--container));
+  margin-inline: auto;
+
+  &--prose {
+    width: min(100% - 2 * var(--space-5), var(--prose));
+  }
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+// ── 헤더 ──────────────────────────────────────────────
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--header-bg);
+  backdrop-filter: saturate(1.6) blur(14px);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid var(--border);
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    height: var(--header-h);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-left: auto;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text);
+  text-decoration: none;
+
+  &__name {
+    font-size: var(--fs-lg);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+}
+
+.site-nav ul {
+  display: flex;
+  gap: var(--space-1);
+  list-style: none;
+  padding: 0;
+}
+
+.site-nav a {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+
+  &:hover {
+    color: var(--text);
+    background: var(--bg-subtle);
+  }
+
+  &[aria-current="page"] {
+    color: var(--brand-text);
+  }
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+
+  &:hover {
+    color: var(--text);
+    background: var(--bg-subtle);
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// 테마 버튼: 지금 테마의 반대쪽 아이콘만 보여 줍니다.
+.icon--sun {
+  display: none;
+}
+
+[data-theme="dark"] {
+  .icon--sun {
+    display: block;
+  }
+
+  .icon--moon {
+    display: none;
+  }
+}
+
+.nav-toggle {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .nav-toggle {
+    display: inline-grid;
+  }
+
+  .site-nav {
+    position: absolute;
+    inset: var(--header-h) 0 auto 0;
+    display: none;
+    padding: var(--space-3) var(--space-5) var(--space-5);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow);
+
+    &.is-open {
+      display: block;
+    }
+
+    ul {
+      flex-direction: column;
+    }
+
+    a {
+      font-size: var(--fs-md);
+      padding: var(--space-3);
+    }
+  }
+}
+
+// ── 페이지 제목 영역 ──────────────────────────────────
+.page-hero {
+  padding: var(--space-8) 0 var(--space-6);
+  border-bottom: 1px solid var(--border);
+  background:
+    radial-gradient(60% 120% at 85% 0%, var(--brand-soft), transparent 70%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size);
+
+  &__title {
+    margin-top: var(--space-2);
+    font-size: var(--fs-2xl);
+    font-weight: 800;
+  }
+
+  &__lead {
+    margin-top: var(--space-3);
+    max-width: 640px;
+    color: var(--text-muted);
+  }
+}
+
+// ── 섹션 ──────────────────────────────────────────────
+.section {
+  padding: var(--space-8) 0;
+
+  & + & {
+    padding-top: 0;
+  }
+
+  &--prose + .section {
+    padding-top: var(--space-6);
+  }
+
+  &__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  &__title {
+    margin-top: var(--space-1);
+    font-size: var(--fs-xl);
+    font-weight: 800;
+  }
+
+  &__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex: none;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-decoration: none;
+
+    .icon {
+      transition: transform var(--dur) var(--ease);
+    }
+
+    &:hover .icon {
+      transform: translateX(3px);
+    }
+  }
+}
+
+.page-hero + .section {
+  padding-top: var(--space-7);
+}
+
+// ── 그리드 ────────────────────────────────────────────
+.grid {
+  display: grid;
+  gap: var(--space-5);
+
+  &--3 {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  }
+
+  &--4 {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  }
+
+  &--members {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: var(--space-3);
+  }
+}
+
+// ── 푸터 ──────────────────────────────────────────────
+main {
+  flex: 1; // 내용이 짧아도 푸터가 화면 맨 아래에 붙도록
+}
+
+.site-footer {
+  margin-top: var(--space-8);
+  padding: var(--space-7) 0 var(--space-6);
+  border-top: 1px solid var(--border);
+  background: var(--bg-subtle);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  &__brand p {
+    margin-top: var(--space-3);
+    line-height: 1.6;
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    align-content: flex-start;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--text-muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--text);
+      }
+    }
+  }
+
+  &__copy {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+
+    a {
+      color: inherit;
+    }
+  }
+}

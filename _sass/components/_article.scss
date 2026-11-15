@@ -1,0 +1,171 @@
+// 글 상세 페이지(블로그·소식·프로젝트)와 Markdown 본문(.prose)
+
+.article {
+  padding-top: var(--space-7);
+
+  &__head {
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--border);
+  }
+
+  &__title {
+    margin: var(--space-3) 0 var(--space-4);
+    font-size: var(--fs-2xl);
+    font-weight: 800;
+  }
+
+  &__lead {
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+  }
+
+  &__cover {
+    margin-bottom: var(--space-6);
+
+    img {
+      width: 100%;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+  }
+
+  &__foot {
+    margin-top: var(--space-8);
+  }
+}
+
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+
+    span {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    &:hover {
+      border-color: var(--brand);
+    }
+
+    &--next {
+      grid-column: 2;
+      text-align: right;
+    }
+  }
+}
+
+// Markdown으로 쓴 본문의 타이포그래피
+.prose {
+  &--page {
+    max-width: var(--prose); // 일반 페이지: 섹션과 같은 왼쪽 선에 맞춤
+  }
+
+  > * + * {
+    margin-top: var(--space-4);
+  }
+
+  h2 {
+    margin-top: var(--space-7);
+    font-size: var(--fs-xl);
+  }
+
+  h3 {
+    margin-top: var(--space-6);
+    font-size: var(--fs-lg);
+  }
+
+  h2 + *,
+  h3 + * {
+    margin-top: var(--space-3);
+  }
+
+  ul,
+  ol {
+    padding-left: 1.4em;
+
+    li + li {
+      margin-top: var(--space-1);
+    }
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  blockquote {
+    padding: var(--space-3) var(--space-5);
+    border-left: 3px solid var(--brand);
+    background: var(--bg-subtle);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--text-muted);
+  }
+
+  img {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: var(--space-7) 0;
+  }
+
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: var(--fs-sm);
+  }
+
+  th,
+  td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: 700;
+    border-bottom-width: 2px;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+  }
+
+  :not(pre) > code {
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+  }
+
+  pre {
+    overflow-x: auto;
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--code-bg);
+    line-height: 1.6;
+  }
+}

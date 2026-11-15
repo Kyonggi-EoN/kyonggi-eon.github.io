@@ -1,0 +1,46 @@
+// 버튼
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.7em 1.25em;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &--primary {
+    background: var(--brand);
+    color: var(--on-brand);
+
+    &:hover {
+      background: var(--brand-strong);
+    }
+  }
+
+  &--ghost {
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--surface);
+
+    &:hover {
+      border-color: var(--text-muted);
+    }
+  }
+}

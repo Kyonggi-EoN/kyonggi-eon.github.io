@@ -1,0 +1,10 @@
+{%- comment -%} 섹션 제목줄. 사용: {% include section-head.html eyebrow=".." title=".." more_url="/news/" %} {%- endcomment -%}
+<div class="section__head">
+  <div>
+    {%- if include.eyebrow %}<p class="eyebrow">{{ include.eyebrow }}</p>{% endif %}
+    <h2 class="section__title">{{ include.title }}</h2>
+  </div>
+  {%- if include.more_url %}
+  <a class="section__more" href="{% include link-url.html url=include.more_url %}">{{ include.more_label | default: "전체 보기" }}{% include icon.html name="arrow" %}</a>
+  {%- endif %}
+</div>

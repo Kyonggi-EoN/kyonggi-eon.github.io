@@ -1,0 +1,34 @@
+---
+layout: default
+---
+{%- comment -%}
+  일반 페이지: [제목 영역] → [Markdown 본문] → [sections 목록] 순서로 그립니다.
+  섹션은 페이지 머리말의 sections에 적은 순서대로 _includes/sections/<이름>.html을 불러옵니다.
+  - 문자열로 적으면 기본 설정:   - history
+  - 옵션이 필요하면 type과 함께: - type: projects
+                                   limit: 3
+{%- endcomment -%}
+
+{%- if page.title -%}
+<header class="page-hero">
+  <div class="container">
+    {%- if page.eyebrow %}<p class="eyebrow">{{ page.eyebrow }}</p>{% endif %}
+    <h1 class="page-hero__title">{{ page.title }}</h1>
+    {%- if page.description %}<p class="page-hero__lead">{{ page.description }}</p>{% endif %}
+  </div>
+</header>
+{%- endif -%}
+
+{%- assign body = content | strip -%}
+{%- if body != "" -%}
+<section class="section section--prose">
+  <div class="container">
+    <div class="prose prose--page">{{ content }}</div>
+  </div>
+</section>
+{%- endif -%}
+
+{%- for s in page.sections -%}
+  {%- assign type = s.type | default: s -%}
+  {% include sections/{{ type }}.html section=s %}
+{%- endfor -%}

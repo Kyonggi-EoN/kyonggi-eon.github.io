@@ -1,0 +1,23 @@
+{%- comment -%} 활동 분야 카드. 데이터: content/_data/interests.yml {%- endcomment -%}
+{%- assign s = include.section -%}
+<section class="section">
+  <div class="container">
+    {%- unless s.heading == false %}
+    {%- assign head_eyebrow = s.eyebrow -%}
+    {%- assign head_title = s.title | default: "활동 분야" -%}
+    {% include section-head.html eyebrow=head_eyebrow title=head_title %}
+    {%- endunless %}
+    <div class="grid grid--4">
+      {%- for it in site.data.interests %}
+      <article class="card card--interest">
+        <span class="card__icon" aria-hidden="true">{{ it.icon }}</span>
+        <h3 class="card__title">{{ it.title }}</h3>
+        <dl class="card__dl">
+          <dt>세부 분야</dt><dd>{{ it.fields }}</dd>
+          <dt>관련 활동</dt><dd>{{ it.activities }}</dd>
+        </dl>
+      </article>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

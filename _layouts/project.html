@@ -1,0 +1,39 @@
+---
+layout: default
+---
+{%- assign status_label = site.data.labels.project_status[page.status] | default: page.status -%}
+<article class="article">
+  <header class="article__head container container--prose">
+    <p class="eyebrow"><a href="{{ '/projects/' | relative_url }}">← 프로젝트</a></p>
+    <h1 class="article__title">{{ page.title }}</h1>
+    {%- if page.summary %}<p class="article__lead">{{ page.summary }}</p>{% endif %}
+    <div class="meta">
+      {%- if status_label %}<span class="badge badge--{{ page.status }}">{{ status_label }}</span>{% endif %}
+      {%- if page.year %}<span>{{ page.year }}</span>{% endif %}
+      {%- if page.members %}<span>{{ page.members | join: ", " }}</span>{% endif %}
+    </div>
+    {%- if page.tags.size > 0 %}
+    <ul class="tags">{% for t in page.tags %}<li>{{ t }}</li>{% endfor %}</ul>
+    {%- endif %}
+    {%- if page.site or page.repo %}
+    <div class="btn-row">
+      {%- if page.site %}
+      <a class="btn btn--primary" href="{% include link-url.html url=page.site %}">{% include icon.html name="globe" %}프로젝트 사이트</a>
+      {%- endif %}
+      {%- if page.repo %}
+      <a class="btn btn--ghost" href="https://github.com/{{ page.repo }}">{% include icon.html name="github" %}GitHub</a>
+      {%- endif %}
+    </div>
+    {%- endif %}
+  </header>
+
+  {%- if page.image %}
+  <figure class="article__cover container container--prose">
+    <img src="{{ page.image | relative_url }}" alt="">
+  </figure>
+  {%- endif %}
+
+  <div class="container container--prose prose">
+    {{ content }}
+  </div>
+</article>

@@ -1,0 +1,22 @@
+{%- comment -%} 연혁 타임라인. 데이터: content/_data/history.yml {%- endcomment -%}
+{%- assign s = include.section -%}
+<section class="section">
+  <div class="container">
+    {%- unless s.heading == false %}
+    {%- assign head_eyebrow = s.eyebrow | default: "History" -%}
+    {%- assign head_title = s.title | default: "연혁" -%}
+    {% include section-head.html eyebrow=head_eyebrow title=head_title %}
+    {%- endunless %}
+    <ol class="timeline">
+      {%- for h in site.data.history %}
+      <li class="timeline__item">
+        <span class="timeline__date">{{ h.date }}</span>
+        <div class="timeline__body">
+          {%- if h.title %}<strong>{{ h.title }}</strong>{% endif %}
+          {%- if h.text %}<p>{{ h.text }}</p>{% endif %}
+        </div>
+      </li>
+      {%- endfor %}
+    </ol>
+  </div>
+</section>

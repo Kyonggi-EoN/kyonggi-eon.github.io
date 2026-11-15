@@ -1,0 +1,24 @@
+# 멤버 명단 (/members/ 페이지). 그룹 순서대로 표시됩니다.
+#
+# - group: 2026 운영진          # 그룹 이름
+#   members:
+#     - name: 홍길동
+#       role: 회장               # 선택
+#       note: 22기               # 선택 (기수·학번 등)
+#       github: gildong-hong     # 선택: 적으면 프로필 사진과 링크가 붙습니다
+#
+# 다 채웠으면 content/_data/navigation.yml에서 '멤버' 메뉴 주석을 푸세요.
+
+- group: 초대 멤버 (2005)
+  members:
+    - name: 김주한
+    - name: 김평수
+    - name: 유용출
+    - name: 황두현
+      note: "00"
+    - name: 김현정
+      note: "01"
+    - name: 김승현
+      note: "02"
+    - name: 이미나
+      note: "03"

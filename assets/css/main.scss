@@ -1,0 +1,17 @@
+---
+# Jekyll이 이 파일을 /assets/css/main.css 하나로 묶어 냅니다.
+# 스타일은 여기가 아니라 _sass/ 아래 파일에서 고치세요. 새 부품을 만들면 아래에 @use 한 줄을 추가합니다.
+---
+
+@use "tokens";
+@use "reset";
+@use "base";
+@use "layout";
+
+@use "components/button";
+@use "components/badge";
+@use "components/card";
+@use "components/hero";
+@use "components/lists";
+@use "components/article";
+@use "components/highlight";

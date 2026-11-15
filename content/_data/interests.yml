@@ -1,0 +1,21 @@
+# 활동 분야 카드 (홈·소개 페이지). 위에서부터 순서대로 표시됩니다.
+
+- icon: 🤖
+  title: AI Conference
+  fields: Deep Learning, Computer Vision, NLP
+  activities: 최신 논문 리뷰 및 글로벌 컨퍼런스 트렌드 파악
+
+- icon: 🏆
+  title: Contests
+  fields: 학술대회 및 ICT 공모전
+  activities: Hanium ICT 멘토링, 임베디드 SW 경진대회 등
+
+- icon: 💻
+  title: Software
+  fields: AI, VLA (Vision-Language-Action), Edge AI
+  activities: 알고리즘 설계, 모델 최적화 및 배포
+
+- icon: ⚙️
+  title: Hardware
+  fields: 반도체 공정 및 설계 (Frontend/Backend)
+  activities: Verilog HDL, Layout Design (KLayout), 공정 분석

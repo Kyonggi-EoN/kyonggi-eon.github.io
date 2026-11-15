@@ -1,0 +1,26 @@
+{%- comment -%}
+  프로젝트 카드 목록. 데이터: content/_projects/*.md (order 오름차순)
+  옵션: title, eyebrow, featured(true면 featured: true인 것만), limit, more_url, heading(false면 제목줄 숨김)
+{%- endcomment -%}
+{%- assign s = include.section -%}
+{%- assign items = site.projects | sort: "order", "last" -%}
+{%- if s.featured -%}{%- assign items = items | where: "featured", true -%}{%- endif -%}
+<section class="section">
+  <div class="container">
+    {%- unless s.heading == false %}
+    {%- assign head_eyebrow = s.eyebrow | default: "Projects" -%}
+    {%- assign head_title = s.title | default: "프로젝트" -%}
+    {%- assign head_more_url = s.more_url -%}
+    {% include section-head.html eyebrow=head_eyebrow title=head_title more_url=head_more_url %}
+    {%- endunless %}
+    {%- if items.size > 0 %}
+    <div class="grid grid--3">
+      {%- for p in items limit: s.limit %}
+      {% include cards/project.html project=p %}
+      {%- endfor %}
+    </div>
+    {%- else %}
+    <p class="empty">아직 등록된 프로젝트가 없습니다.</p>
+    {%- endif %}
+  </div>
+</section>

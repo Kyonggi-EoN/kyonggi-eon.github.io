@@ -1,0 +1,107 @@
+// ──────────────────────────────────────────────────────────────
+// 디자인 토큰
+// 색·글꼴·크기·간격·모서리·그림자를 모두 여기에서 CSS 변수로만 정의합니다.
+// 다른 스타일 파일은 var(--…)만 참조하므로, 사이트 톤을 바꿀 때는 이 파일만 고치면 됩니다.
+// ──────────────────────────────────────────────────────────────
+
+@mixin dark {
+  --bg: #0c0c0e;
+  --bg-subtle: #121215;
+  --surface: #16161a;
+  --surface-hover: #1c1c21;
+  --border: #2a2a31;
+  --border-strong: #3a3a43;
+  --text: #ececf1;
+  --text-muted: #9d9daa;
+  --brand-text: #ff5a5a;
+  --brand-soft: rgb(255 70 70 / 0.12);
+  --grid-line: rgb(255 60 60 / 0.07);
+  --code-bg: #121216;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px rgb(0 0 0 / 0.35);
+  --shadow-hover: 0 2px 4px rgb(0 0 0 / 0.5), 0 16px 40px rgb(0 0 0 / 0.45);
+  --header-bg: rgb(12 12 14 / 0.78);
+  color-scheme: dark;
+}
+
+:root {
+  // 브랜드
+  --brand: #dc0000;
+  --brand-strong: #b80000;
+  --brand-text: #c80000;
+  --brand-soft: rgb(220 0 0 / 0.07);
+  --on-brand: #ffffff;
+
+  // 바탕·글자 (밝은 화면)
+  --bg: #ffffff;
+  --bg-subtle: #f6f6f8;
+  --surface: #ffffff;
+  --surface-hover: #fcfcfd;
+  --border: #e5e5ea;
+  --border-strong: #d0d0d8;
+  --text: #141418;
+  --text-muted: #5d5d69;
+  --grid-line: rgb(220 0 0 / 0.06);
+  --code-bg: #f5f5f7;
+  --header-bg: rgb(255 255 255 / 0.82);
+
+  // 상태 배지
+  --c-active: #138a43;
+  --c-done: #2563eb;
+  --c-muted: #6b7280;
+
+  // 글꼴
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  // 글자 크기
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.625rem;
+  --fs-2xl: clamp(1.875rem, 4vw, 2.5rem);
+  --fs-3xl: clamp(2.25rem, 6vw, 3.75rem);
+  --lh-tight: 1.25;
+  --lh: 1.75;
+
+  // 간격
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6rem;
+
+  // 모서리·그림자·움직임
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.05);
+  --shadow-hover: 0 2px 4px rgb(0 0 0 / 0.05), 0 14px 32px rgb(0 0 0 / 0.09);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 180ms;
+
+  // 폭
+  --container: 1120px;
+  --prose: 740px;
+  --header-h: 64px;
+
+  // 배경 격자 (EoN 헤더 이미지의 36px 격자)
+  --grid-size: 36px;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  @include dark;
+}
