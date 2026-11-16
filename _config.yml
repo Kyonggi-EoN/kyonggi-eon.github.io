@@ -19,7 +19,8 @@ org:
   github: Kyonggi-EoN
   since: 2005
 
-# 바람 테마: 로고 빨강에서 뽑은 Matching Gradient 여섯 색 줄기가 왼쪽에서 오른쪽으로 흐릅니다.
+# 바람 테마: 로고 빨강에서 뽑은 Matching Gradient 여섯 색 줄기가 놓인 곳의 UI에 맞는 방향으로 흐릅니다
+# (규칙은 _sass/_tokens.scss의 --wind-colors 설명).
 # 홈 첫 화면의 바람은 content/pages/index.md의 hero.wind에서 따로 켜고 끕니다.
 wind:
   pages: prey  # 페이지 제목 칸 오른쪽 줄기 떼. 마우스를 prey: 쫓아옴, obstacle: 비켜 감. false면 안 그림
