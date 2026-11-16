@@ -4,8 +4,10 @@
 # 쓸 수 있는 섹션: hero, interests, projects, news, posts, history, members, contact
 permalink: /
 hero:
-  kicker: 경기대학교 전자공학과 학술 동아리 · 2005년 발족
+  kicker: 경기대학교 전자공학과 학술 동아리
   # title: 없으면 사이트 이름(EoN), lead: 없으면 _config.yml의 tagline
+  # since: true면 제목 오른쪽에 'Since 2005'(연도는 _config.yml의 org.since). 빼려면 이 줄을 지우세요.
+  since: true
   # 왼쪽 사진. 위에서부터 차례로 interval초마다 바뀌고, 첫 사진이 맨 처음 보입니다.
   #   한 사람만 크게 나온 사진은 넣지 않습니다(여럿이 함께 나온 활동 사진만).
   #   caption: 사진 아래 한 줄, url: 캡션을 누르면 갈 곳(보통 그 사진의 소식 글)

@@ -169,9 +169,24 @@
     color: var(--brand-text);
   }
 
+  // 이름 줄: 큰 제목 + 오른쪽에 작은 Since 연도. 둘을 글자 밑선에 맞춥니다.
+  &__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-4);
+    margin-top: var(--space-3);
+  }
+
+  &__since {
+    font-size: var(--fs-md);
+    font-weight: 500;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
   // 크게, 그러나 가늘게
   &__title {
-    margin-top: var(--space-3);
     font-size: clamp(4rem, 9vw, 7.5rem);
     font-weight: 500;
     letter-spacing: -0.04em;

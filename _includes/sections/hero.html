@@ -1,6 +1,7 @@
 {%- comment -%}
   홈 첫 화면. 내용은 페이지 머리말의 hero: 블록에서 가져옵니다.
-  kicker(제목 위 한 줄), title(없으면 사이트 이름), lead(없으면 _config.yml의 tagline),
+  kicker(제목 위 한 줄), title(없으면 사이트 이름), since(true면 제목 오른쪽에 Since 연도, 연도는 _config.yml의 org.since),
+  lead(없으면 _config.yml의 tagline),
   photos(왼쪽 사진 목록: src·alt·caption·url·position), interval(사진이 바뀌는 간격, 초),
   link(label·url: 지금 볼 것 하나),
   wind(오른쪽 칸 글자 뒤의 바람 줄기. prey: 마우스를 쫓아옴, obstacle: 마우스를 비켜 감, 없거나 false면 안 그림.
@@ -43,7 +44,10 @@
     {%- endif %}
     <div>
       {%- if hero.kicker %}<p class="hero__kicker">{{ hero.kicker }}</p>{% endif %}
-      <h1 class="hero__title">{{ hero.title | default: site.title }}</h1>
+      <div class="hero__name">
+        <h1 class="hero__title">{{ hero.title | default: site.title }}</h1>
+        {%- if hero.since and site.org.since %}<p class="hero__since">Since {{ site.org.since }}</p>{% endif %}
+      </div>
       <p class="hero__lead">{{ hero.lead | default: site.tagline }}</p>
     </div>
     {%- if hero.link %}
