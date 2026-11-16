@@ -8,10 +8,11 @@ Jekyll로 만든 정적 사이트입니다. `main`에 push하면 GitHub Actions�
 
 | 바꾸고 싶은 것 | 고칠 곳 | HTML/CSS 지식 |
 |---|---|---|
-| 블로그 글 · 소식 · 프로젝트 카드 | `content/_posts/`, `content/_news/`, `content/_projects/`에 `.md` 추가 | 필요 없음 |
+| 블로그 글 · 소식 · 프로젝트 카드 | `content/_posts/<연도>/`, `content/_news/<연도>/`, `content/_projects/`에 `.md` 추가 | 필요 없음 |
 | 메뉴 · 연혁 · 활동 분야 · 멤버 · 연락처 | `content/_data/*.yml` | 필요 없음 |
+| 로고·팔레트 등 UI 자료(/ui/) | 파일은 `assets/ui/`, 목록·팔레트 값은 `content/_data/ui.yml` | 필요 없음 |
 | 페이지 소개 문구, 섹션 순서 | `content/pages/*.md`의 머리말 `sections:` | 필요 없음 |
-| 색 · 글꼴 · 간격 등 전체 톤 | `_sass/_tokens.scss` 한 파일 | CSS 변수 |
+| 색 · 글꼴 · 간격 등 전체 톤 (흰 바탕 하나만, 어두운 화면 없음) | `_sass/_tokens.scss` 한 파일 | CSS 변수 |
 | 카드 · 목록 생김새 | `_includes/cards/`, `_includes/sections/`, `_sass/components/` | HTML/CSS |
 | 사이트 동작(JS) | `assets/js/modules/`에 파일 추가 → `assets/js/main.js`에서 불러오기 | JS |
 
@@ -22,10 +23,10 @@ Jekyll로 만든 정적 사이트입니다. `main`에 push하면 GitHub Actions�
 ```
 .
 ├── content/                 ← 콘텐츠는 전부 여기
-│   ├── _posts/              블로그 글     YYYY-MM-DD-slug.md → /blog/YYYY/slug/
-│   ├── _news/               소식          YYYY-MM-DD-slug.md → /news/YYYY/slug/
+│   ├── _posts/YYYY/         블로그 글     YYYY-MM-DD-slug.md → /blog/YYYY/slug/
+│   ├── _news/YYYY/          소식          YYYY-MM-DD-slug.md → /news/YYYY/slug/
 │   ├── _projects/           프로젝트 카드  slug.md            → /projects/slug/
-│   ├── _data/               목록형 데이터 (navigation, interests, history, members, social, labels)
+│   ├── _data/               목록형 데이터 (navigation, interests, history, members, social, labels, ui)
 │   ├── pages/               독립 페이지 (홈, 소개, 목록 페이지, 404)
 │   └── images/              글·카드에 쓰는 이미지 (posts/, news/, projects/, members/)
 │
@@ -42,11 +43,29 @@ Jekyll로 만든 정적 사이트입니다. `main`에 push하면 GitHub Actions�
 │   ├── css/main.scss        _sass를 묶는 진입점 (직접 고칠 일 없음)
 │   ├── js/main.js           JS 진입점 + modules/
 │   ├── js/eon-bar.js        다른 리포 사이트용 공통 상단 바
-│   └── images/              로고·파비콘·SNS 미리보기 이미지
+│   ├── images/              사이트가 쓰는 로고·파비콘·SNS 미리보기 이미지
+│   └── ui/                  내려받기용 UI 자료 원본 (로고·배너·파비콘, 전체 묶음 EoN_UI.zip)
 ├── api/site.json            메뉴·프로젝트 목록 JSON (/api/site.json)
 ├── _templates/              새 글 템플릿 (빌드에 포함되지 않음)
 └── _config.yml              사이트 설정
 ```
+
+### 블로그 글·소식은 연도 폴더에 둔다
+
+글이 쌓여도 찾기 쉽도록 `content/_posts/`와 `content/_news/`는 해마다 폴더를 나눕니다.
+
+```
+content/_news/
+├── 2026/2026-11-04-sow-seminar.md   → /news/2026/sow-seminar/
+├── 2027/.gitkeep                    ← 미리 만들어 둔 빈 폴더
+└── 2028/.gitkeep
+```
+
+- 글은 날짜에 맞는 연도 폴더에 넣습니다. 파일 이름 규칙(`YYYY-MM-DD-slug.md`)은 그대로입니다.
+- 연도 폴더는 정리용일 뿐입니다. 주소와 날짜는 파일 이름에서 읽기 때문에, 폴더를 잘못 골라도 주소는 바뀌지 않습니다.
+- git은 빈 폴더를 올리지 않아서, 앞으로 쓸 해의 폴더에는 `.gitkeep`이라는 빈 파일을 넣어 둡니다. Jekyll은 점(`.`)으로 시작하는 파일을 읽지 않으므로 사이트에는 나타나지 않습니다. 그해 첫 글을 넣은 뒤에 지워도 되고 남겨 둬도 됩니다.
+- 미리 만들어 둔 마지막 해가 오면 다음 해 폴더를 같은 방법으로 추가합니다.
+- 사진(`content/images/`)은 폴더 경로가 그대로 주소가 되므로 연도 폴더 규칙을 따르지 않습니다. 지금은 `2026-bowling.jpg`처럼 파일 이름 앞에 연도를 붙입니다.
 
 ### 페이지는 섹션을 쌓아서 만든다
 
@@ -63,8 +82,10 @@ sections:
     category: seminar         # 세미나 글만 모아 보기
 ```
 
-쓸 수 있는 섹션: `hero`, `interests`, `projects`, `news`, `posts`, `history`, `members`, `contact`
+쓸 수 있는 섹션: `hero`, `interests`, `projects`, `news`, `posts`, `history`, `members`, `contact`, `downloads`, `palette`
 (공통 옵션: `title`, `eyebrow`, `heading: false`)
+
+페이지 제목 아래에 버튼을 두려면 머리말에 `actions:`를 적습니다(`label`, `url`, `icon`). 예: `content/pages/ui.md`의 '전체 받기'.
 
 새 페이지가 필요하면 `content/pages/`에 `.md` 파일을 만들고 `permalink`만 정해 주면 됩니다. 새 섹션 종류가 필요하면 `_includes/sections/<이름>.html`을 추가합니다.
 
@@ -76,8 +97,10 @@ sections:
 
 ```yaml
 repo: Kyonggi-EoN/hw_2026
-site: /hw_2026/
+site: https://kyonggi-eon.github.io/hw_2026/
 ```
+
+`/hw_2026/`처럼 짧게 적어도 배포된 사이트에서는 열리지만, 로컬 미리보기(`localhost:4000`)에는 다른 리포의 사이트가 없어서 404가 납니다. 그래서 전체 주소로 적습니다.
 
 **2. 프로젝트 사이트 → 메인**: 그 리포의 HTML `<head>`에 한 줄을 넣으면 페이지 맨 위에 EoN 상단 바가 붙습니다.
 

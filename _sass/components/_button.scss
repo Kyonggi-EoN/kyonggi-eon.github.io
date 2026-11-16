@@ -1,4 +1,4 @@
-// 버튼
+// 버튼: 라운드 없는 검정 상자 (_refs/2026-11-16-nextartai-co-kr-hero-type)
 
 .btn-row {
   display: flex;
@@ -11,36 +11,32 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 0.7em 1.25em;
-  border: 1px solid transparent;
-  border-radius: 999px;
+  padding: 0.75em 1.1em;
+  border: 1px solid var(--text);
   font-size: var(--fs-sm);
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
-  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
-    transform var(--dur) var(--ease);
-
-  &:hover {
-    transform: translateY(-1px);
-  }
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 
   &--primary {
-    background: var(--brand);
-    color: var(--on-brand);
+    background: var(--text);
+    color: var(--bg);
 
     &:hover {
-      background: var(--brand-strong);
+      background: var(--brand);
+      border-color: var(--brand);
+      color: var(--on-brand);
     }
   }
 
   &--ghost {
-    border-color: var(--border-strong);
     color: var(--text);
-    background: var(--surface);
+    background: transparent;
 
     &:hover {
-      border-color: var(--text-muted);
+      background: var(--text);
+      color: var(--bg);
     }
   }
 }

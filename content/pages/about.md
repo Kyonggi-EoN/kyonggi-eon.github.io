@@ -1,11 +1,9 @@
 ---
 title: EoN 소개
-eyebrow: About
 description: 경기대학교 전자공학과 학술 동아리 EoN(Electronic Over Network)을 소개합니다.
 permalink: /about/
 sections:
   - type: interests
-    eyebrow: Main Interests
     title: 활동 분야
   - history
   - contact

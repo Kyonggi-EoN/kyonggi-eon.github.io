@@ -1,0 +1,161 @@
+// UI 자료 페이지(/ui/): 내려받기 칸과 색 팔레트
+// 카드와 같은 원칙: 테두리·그림자·라운드 없이 미리보기 바탕과 연한 줄로만 나눕니다.
+
+// ── 내려받기 칸 ───────────────────────────────────────
+.asset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  // 3:2 바탕 가운데에 그림. 작은 그림은 원래 크기 그대로, 큰 그림은 여백 안으로 줄입니다.
+  &__preview {
+    --pad: var(--space-6);
+    position: relative;
+    aspect-ratio: 3 / 2;
+    margin-bottom: var(--space-2);
+    background: var(--bg-subtle);
+
+    img {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      max-width: calc(100% - 2 * var(--pad));
+      max-height: calc(100% - 2 * var(--pad));
+    }
+  }
+
+  &__title {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  &__text {
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+    color: var(--text-muted);
+  }
+
+  // 형식 | 크기 링크들. 칸마다 맨 아래에 붙여 옆 칸과 줄을 맞춥니다.
+  &__files {
+    margin-top: auto;
+    padding-top: var(--space-3);
+    font-size: var(--fs-sm);
+
+    > div {
+      display: flex;
+      gap: var(--space-3);
+      padding: var(--space-2) 0;
+      border-top: 1px solid var(--border);
+    }
+
+    dt {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      flex: none;
+      width: 4rem;
+      font-weight: 700;
+    }
+
+    dd {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 var(--space-3);
+      margin: 0;
+    }
+
+    a {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--brand-text);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// ── 색 팔레트 ─────────────────────────────────────────
+// 이름 | 색 칸. 칸 폭을 6칸으로 고정해 팔레트끼리 세로로 줄이 맞습니다.
+.palette-note {
+  padding: var(--space-4) var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+
+  p {
+    max-width: 640px;
+  }
+}
+
+.palette__row {
+  display: grid;
+  grid-template-columns: 13rem 1fr;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.palette__name {
+  font-weight: 700;
+
+  span {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.swatch {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+
+  &__chip {
+    display: block;
+    height: 3rem;
+    background: var(--swatch);
+    // 흰색에 가까운 색(#FFF4EE 등)도 칸 경계가 보이도록 안쪽에 아주 연한 선
+    outline: 1px solid rgb(0 0 0 / 0.06);
+    outline-offset: -1px;
+  }
+
+  &__hex {
+    display: block;
+    padding-top: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+
+  &:hover &__hex,
+  &.is-copied &__hex {
+    color: var(--text);
+  }
+}
+
+@media (max-width: 760px) {
+  .palette__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .swatches {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: var(--space-2);
+  }
+}

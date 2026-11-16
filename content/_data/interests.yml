@@ -1,21 +1,29 @@
-# 활동 분야 카드 (홈·소개 페이지). 위에서부터 순서대로 표시됩니다.
+# 활동 분야 표 (홈·소개 페이지). 위에서부터 순서대로 표시됩니다.
+# links: 이 분야의 실제 결과물(프로젝트·글) 링크. 없으면 비워 둡니다.
 
-- icon: 🤖
-  title: AI Conference
+- title: AI 논문·학회
   fields: Deep Learning, Computer Vision, NLP
   activities: 최신 논문 리뷰 및 글로벌 컨퍼런스 트렌드 파악
+  links:
+    - label: 딥러닝 스터디
+      url: /projects/deeplearning/
 
-- icon: 🏆
-  title: Contests
+- title: 공모전·학술대회
   fields: 학술대회 및 ICT 공모전
   activities: Hanium ICT 멘토링, 임베디드 SW 경진대회 등
 
-- icon: 💻
-  title: Software
+- title: 소프트웨어
   fields: AI, VLA (Vision-Language-Action), Edge AI
   activities: 알고리즘 설계, 모델 최적화 및 배포
+  links:
+    - label: SO-101 로봇팔
+      url: /projects/so101-project/
+    - label: ROS 2 Adapter
+      url: /projects/ros2-adapter/
 
-- icon: ⚙️
-  title: Hardware
+- title: 하드웨어·반도체
   fields: 반도체 공정 및 설계 (Frontend/Backend)
   activities: Verilog HDL, Layout Design (KLayout), 공정 분석
+  links:
+    - label: IGZO TFT 설계·공정
+      url: /projects/igzo-tft/

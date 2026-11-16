@@ -2,36 +2,19 @@
 // 디자인 토큰
 // 색·글꼴·크기·간격·모서리·그림자를 모두 여기에서 CSS 변수로만 정의합니다.
 // 다른 스타일 파일은 var(--…)만 참조하므로, 사이트 톤을 바꿀 때는 이 파일만 고치면 됩니다.
+// 화면은 흰 바탕 하나만 씁니다(어두운 화면 없음).
 // ──────────────────────────────────────────────────────────────
 
-@mixin dark {
-  --bg: #0c0c0e;
-  --bg-subtle: #121215;
-  --surface: #16161a;
-  --surface-hover: #1c1c21;
-  --border: #2a2a31;
-  --border-strong: #3a3a43;
-  --text: #ececf1;
-  --text-muted: #9d9daa;
-  --brand-text: #ff5a5a;
-  --brand-soft: rgb(255 70 70 / 0.12);
-  --grid-line: rgb(255 60 60 / 0.07);
-  --code-bg: #121216;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px rgb(0 0 0 / 0.35);
-  --shadow-hover: 0 2px 4px rgb(0 0 0 / 0.5), 0 16px 40px rgb(0 0 0 / 0.45);
-  --header-bg: rgb(12 12 14 / 0.78);
-  color-scheme: dark;
-}
-
 :root {
-  // 브랜드
-  --brand: #dc0000;
-  --brand-strong: #b80000;
-  --brand-text: #c80000;
-  --brand-soft: rgb(220 0 0 / 0.07);
+  // 브랜드. 기준색은 로고 빨강 #ff0000 (EoN 31기 UI 자료의 팔레트, /ui/ 페이지와 content/_data/ui.yml 참고).
+  // #ff0000은 흰 바탕에서 글자 대비가 4.0:1이라 면·선·로고에만 쓰고, 빨간 글자는 4.5:1을 넘는 --brand-text를 씁니다.
+  --brand: #ff0000;
+  --brand-strong: #d40000;
+  --brand-text: #d40000;
+  --brand-soft: rgb(255 0 0 / 0.07);
   --on-brand: #ffffff;
 
-  // 바탕·글자 (밝은 화면)
+  // 바탕·글자
   --bg: #ffffff;
   --bg-subtle: #f6f6f8;
   --surface: #ffffff;
@@ -40,13 +23,20 @@
   --border-strong: #d0d0d8;
   --text: #141418;
   --text-muted: #5d5d69;
-  --grid-line: rgb(220 0 0 / 0.06);
   --code-bg: #f5f5f7;
   --header-bg: rgb(255 255 255 / 0.82);
 
-  // 상태 배지
-  --c-active: #138a43;
-  --c-done: #2563eb;
+  // 선: 구역 경계는 --line(글자색과 같은 진한 선), 목록 줄 구분은 --border(연한 선) 두 가지만 씁니다.
+  --line: var(--text);
+
+  // 푸터 (본문과 같은 흰 바탕, 위에 진한 선 하나)
+  --footer-bg: var(--bg);
+  --footer-text: var(--text-muted);
+  --footer-strong: var(--text);
+
+  // 상태 배지 (팔레트에서 흰 바탕 대비 4.5:1 이상인 색)
+  --c-active: #006100;
+  --c-done: #325082;
   --c-muted: #6b7280;
 
   // 글꼴
@@ -76,12 +66,10 @@
   --space-8: 4.5rem;
   --space-9: 6rem;
 
-  // 모서리·그림자·움직임
-  --radius-sm: 6px;
-  --radius: 12px;
-  --radius-lg: 20px;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.05);
-  --shadow-hover: 0 2px 4px rgb(0 0 0 / 0.05), 0 14px 32px rgb(0 0 0 / 0.09);
+  // 모서리·움직임. 모서리는 둥글리지 않고, 그림자는 쓰지 않습니다. (_refs/ 참고)
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-lg: 0;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --dur: 180ms;
 
@@ -90,18 +78,5 @@
   --prose: 740px;
   --header-h: 64px;
 
-  // 배경 격자 (EoN 헤더 이미지의 36px 격자)
-  --grid-size: 36px;
-
   color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    @include dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  @include dark;
 }

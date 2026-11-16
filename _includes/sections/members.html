@@ -3,13 +3,21 @@
 <section class="section">
   <div class="container">
     {%- unless s.heading == false %}
-    {%- assign head_eyebrow = s.eyebrow | default: "Members" -%}
     {%- assign head_title = s.title | default: "멤버" -%}
-    {% include section-head.html eyebrow=head_eyebrow title=head_title %}
+    {% include section-head.html eyebrow=s.eyebrow title=head_title %}
     {%- endunless %}
     {%- for g in site.data.members %}
     <div class="member-group">
-      <h3 class="member-group__title">{{ g.group }}</h3>
+      <div class="member-group__head">
+        <h3 class="member-group__title">{{ g.group }}</h3>
+        {%- if g.president or g.vice_president %}
+        <p class="member-group__leaders">
+          {%- if g.president %}회장 {{ g.president }}{% endif -%}
+          {%- if g.president and g.vice_president %} · {% endif -%}
+          {%- if g.vice_president %}부회장 {{ g.vice_president }}{% endif -%}
+        </p>
+        {%- endif %}
+      </div>
       <ul class="grid grid--members">
         {%- for m in g.members %}
         <li>{% include cards/member.html member=m %}</li>

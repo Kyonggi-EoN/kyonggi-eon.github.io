@@ -7,7 +7,7 @@
 
 title: EoN
 tagline: 꿈을 찾다, 아이디어를 현실로 만들다
-description: 경기대학교 전자공학과 학술 동아리 EoN. 전공 H/W 지식과 S/W 지식을 융합해 새로운 가치를 탐구합니다.
+description: 경기대학교 전자공학과 학술 동아리 EoN. 2005년에 발족해 반도체 설계·공정, AI, 로보틱스 프로젝트와 세미나를 하고 있습니다.
 url: https://kyonggi-eon.github.io
 baseurl: ""
 lang: ko
@@ -74,3 +74,4 @@ feed:
 
 exclude:
   - README.md
+  - CLAUDE.md

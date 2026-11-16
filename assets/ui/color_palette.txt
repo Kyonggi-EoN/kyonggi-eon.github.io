@@ -1,0 +1,56 @@
+Color Palette Sites 를 이용함, 아래 링크는 ColorSpace
+https://mycolor.space/?hex=%23FF0000&sub=1
+
+Generic Gradient
+#ff0000
+#ee005f
+#b62a8f
+#6d4b9a
+#325082
+#2f4858
+
+Matching Gradient
+#ff0000
+#ff006f
+#dc00c9
+#4a62ff
+#0082ff
+#008be4
+
+Spot Palette
+#ff0000
+#e8a392
+#ffe6d9
+#5ab7d4
+
+Twisted Spot Palette
+#ff0000
+#5ab7d4
+#c2f9ff
+#487e91
+
+Classy Palette
+#ff0000
+#56423d
+#bea6a0
+#009700
+#006100
+
+Skip Shade Gradient
+#ff0000
+#ff5159
+#ff889d
+#ffbcd9
+
+Discreet Palette
+#ff0000
+#ba8475
+#fff4ee
+#4a271e
+
+Shades
+#ff0000
+#ff3d51
+#ff5f6a
+#ff7f84
+#ff9e9f

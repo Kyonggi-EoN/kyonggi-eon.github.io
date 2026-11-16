@@ -1,24 +1,22 @@
-{%- comment -%} 프로젝트 카드. 사용: {% include cards/project.html project=p %} {%- endcomment -%}
+{%- comment -%}
+  프로젝트 카드 (사진이 있는 프로젝트). 사용: {% include cards/project.html project=p %}
+  사진 왼쪽 위에 상태 라벨, 아래에 제목 → 요약 → 연도·분야 → 링크 순서.
+  사진이 없는 프로젝트는 sections/projects.html에서 카드 대신 목록 한 줄로 보여 줍니다.
+{%- endcomment -%}
 {%- assign p = include.project -%}
 {%- assign status_label = site.data.labels.project_status[p.status] | default: p.status -%}
-{%- assign repo_name = p.repo | split: "/" | last -%}
 <article class="card card--project">
+  {%- if p.image %}
   <div class="card__media">
-    {%- if p.image %}
-    <img src="{{ p.image | relative_url }}" alt="" loading="lazy">
-    {%- else %}
-    <span class="card__placeholder" aria-hidden="true">{{ repo_name | default: p.title }}</span>
-    {%- endif %}
+    <img src="{{ p.image | relative_url }}" alt="{{ p.image_alt }}" loading="lazy">
+    {%- if status_label %}<span class="card__label">{{ status_label }}</span>{% endif %}
   </div>
+  {%- endif %}
   <div class="card__body">
-    <div class="meta">
-      {%- if status_label %}<span class="badge badge--{{ p.status }}">{{ status_label }}</span>{% endif %}
-      {%- if p.year %}<span>{{ p.year }}</span>{% endif %}
-    </div>
     <h3 class="card__title"><a class="card__link" href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
     {%- if p.summary %}<p class="card__text">{{ p.summary }}</p>{% endif %}
-    {%- if p.tags.size > 0 %}
-    <ul class="tags">{% for t in p.tags %}<li>{{ t }}</li>{% endfor %}</ul>
+    {%- if p.year or p.tags.size > 0 %}
+    <ul class="tags">{% if p.year %}<li>{{ p.year }}</li>{% endif %}{% for t in p.tags %}<li>{{ t }}</li>{% endfor %}</ul>
     {%- endif %}
     {%- if p.site or p.repo %}
     <div class="card__actions">

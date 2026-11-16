@@ -7,6 +7,7 @@ layout: default
   - 문자열로 적으면 기본 설정:   - history
   - 옵션이 필요하면 type과 함께: - type: projects
                                    limit: 3
+  제목 아래 버튼은 머리말의 actions에 적습니다. (label, url, icon, style: primary|ghost, download: true)
 {%- endcomment -%}
 
 {%- if page.title -%}
@@ -15,6 +16,13 @@ layout: default
     {%- if page.eyebrow %}<p class="eyebrow">{{ page.eyebrow }}</p>{% endif %}
     <h1 class="page-hero__title">{{ page.title }}</h1>
     {%- if page.description %}<p class="page-hero__lead">{{ page.description }}</p>{% endif %}
+    {%- if page.actions %}
+    <div class="btn-row">
+      {%- for a in page.actions %}
+      <a class="btn btn--{{ a.style | default: 'primary' }}" href="{% include link-url.html url=a.url %}"{% if a.download %} download{% endif %}>{% if a.icon %}{% include icon.html name=a.icon %}{% endif %}{{ a.label }}</a>
+      {%- endfor %}
+    </div>
+    {%- endif %}
   </div>
 </header>
 {%- endif -%}

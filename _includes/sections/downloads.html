@@ -1,0 +1,35 @@
+{%- comment -%}
+  내려받기 칸 모음 (UI 자료 페이지). 데이터: content/_data/ui.yml
+  옵션: data — ui.yml 안의 목록 이름 (logos, etc)
+        grid — 칸 배치 (기본 3: 한 줄에 3칸, fit: 항목 수만큼 꽉 채움)
+{%- endcomment -%}
+{%- assign s = include.section -%}
+{%- assign items = site.data.ui[s.data] -%}
+<section class="section">
+  <div class="container">
+    {%- unless s.heading == false %}
+    {% include section-head.html eyebrow=s.eyebrow title=s.title %}
+    {%- endunless %}
+    <ul class="grid grid--{{ s.grid | default: 3 }}">
+      {%- for a in items %}
+      <li class="asset">
+        <div class="asset__preview"><img src="{{ a.preview | relative_url }}" alt="" loading="lazy"></div>
+        <h3 class="asset__title">{{ a.title }}</h3>
+        {%- if a.text %}<p class="asset__text">{{ a.text }}</p>{% endif %}
+        <dl class="asset__files">
+          {%- for f in a.formats %}
+          <div>
+            <dt>{% include icon.html name="download" %}{{ f.name }}</dt>
+            <dd>
+              {%- for l in f.links %}
+              <a href="{{ l.url | relative_url }}" download>{{ l.label }}</a>
+              {%- endfor %}
+            </dd>
+          </div>
+          {%- endfor %}
+        </dl>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>

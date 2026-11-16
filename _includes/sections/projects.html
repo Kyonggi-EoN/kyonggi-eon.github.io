@@ -1,24 +1,48 @@
 {%- comment -%}
-  프로젝트 카드 목록. 데이터: content/_projects/*.md (order 오름차순)
+  프로젝트 목록. 데이터: content/_projects/*.md (order 오름차순)
+  사진(image)이 있는 프로젝트는 사진 카드로, 없는 프로젝트는 그 아래에 목록 한 줄로 보여 줍니다.
   옵션: title, eyebrow, featured(true면 featured: true인 것만), limit, more_url, heading(false면 제목줄 숨김)
 {%- endcomment -%}
 {%- assign s = include.section -%}
 {%- assign items = site.projects | sort: "order", "last" -%}
 {%- if s.featured -%}{%- assign items = items | where: "featured", true -%}{%- endif -%}
+{%- if s.limit -%}{%- assign items = items | slice: 0, s.limit -%}{%- endif -%}
+{%- assign with_image = items | where_exp: "p", "p.image" -%}
+{%- assign without_image = items | where_exp: "p", "p.image == nil" -%}
 <section class="section">
   <div class="container">
     {%- unless s.heading == false %}
-    {%- assign head_eyebrow = s.eyebrow | default: "Projects" -%}
     {%- assign head_title = s.title | default: "프로젝트" -%}
     {%- assign head_more_url = s.more_url -%}
-    {% include section-head.html eyebrow=head_eyebrow title=head_title more_url=head_more_url %}
+    {% include section-head.html eyebrow=s.eyebrow title=head_title more_url=head_more_url %}
     {%- endunless %}
     {%- if items.size > 0 %}
-    <div class="grid grid--3">
-      {%- for p in items limit: s.limit %}
+    {%- if with_image.size > 0 %}
+    <div class="grid grid--fit">
+      {%- for p in with_image %}
       {% include cards/project.html project=p %}
       {%- endfor %}
     </div>
+    {%- endif %}
+    {%- if without_image.size > 0 %}
+    <ul class="project-rows">
+      {%- for p in without_image %}
+      {%- assign status_label = site.data.labels.project_status[p.status] | default: p.status %}
+      <li class="project-row">
+        <span class="project-row__year">{{ p.year }}</span>
+        <span class="badge badge--{{ p.status }}">{{ status_label }}</span>
+        <div class="project-row__main">
+          <a class="project-row__title" href="{{ p.url | relative_url }}">{{ p.title }}</a>
+          {%- if p.summary %}<p class="project-row__text">{{ p.summary }}</p>{% endif %}
+        </div>
+        <div class="project-row__links">
+          {%- if p.site %}<a href="{% include link-url.html url=p.site %}">{% include icon.html name="globe" %}사이트</a>{% endif %}
+          {%- if p.repo %}<a href="https://github.com/{{ p.repo }}">{% include icon.html name="github" %}GitHub</a>{% endif %}
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
     {%- else %}
     <p class="empty">아직 등록된 프로젝트가 없습니다.</p>
     {%- endif %}

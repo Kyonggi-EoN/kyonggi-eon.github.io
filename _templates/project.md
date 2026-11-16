@@ -5,7 +5,7 @@
 title: 프로젝트 이름
 summary: 카드에 보일 한두 문장 요약
 repo: Kyonggi-EoN/리포-이름          # 선택: GitHub 저장소 (조직/이름)
-# site: /리포-이름/                   # 선택: 그 리포의 GitHub Pages 주소. 같은 조직이면 이렇게 짧게 씁니다.
+# site: https://kyonggi-eon.github.io/리포-이름/   # 선택: 그 리포의 GitHub Pages 주소. 전체 주소로 적어야 로컬 미리보기에서도 열립니다.
 # image: /content/images/projects/썸네일.png   # 선택: 없으면 리포 이름이 들어간 기본 썸네일
 tags: [태그1, 태그2]
 status: active                        # active | done | archived  (content/_data/labels.yml)

@@ -1,24 +1,373 @@
 # 멤버 명단 (/members/ 페이지). 그룹 순서대로 표시됩니다.
 #
 # - group: 2026 운영진          # 그룹 이름
+#   president: 홍길동           # 선택: 그 기수의 회장 (그룹 제목 옆에 표시)
+#   vice_president: 김철수      # 선택: 그 기수의 부회장
 #   members:
 #     - name: 홍길동
 #       role: 회장               # 선택
-#       note: 22기               # 선택 (기수·학번 등)
+#       note: 22학번             # 선택 (학번 등)
 #       github: gildong-hong     # 선택: 적으면 프로필 사진과 링크가 붙습니다
-#
-# 다 채웠으면 content/_data/navigation.yml에서 '멤버' 메뉴 주석을 푸세요.
 
-- group: 초대 멤버 (2005)
+- group: 22기
+  president: 이다민
+  vice_president: 도해민
+  members:
+    - name: 박모세
+      role: 학술부장
+      note: 23학번
+    - name: 박찬홍
+      note: 23학번
+    - name: 이동근
+      note: 25학번
+    - name: 정승원
+      note: 23학번
+    - name: 홍재민
+      note: 23학번
+    - name: 이재원
+      note: 25학번
+    - name: 최지원
+      note: 25학번
+    - name: 강예찬
+      note: 23학번
+    - name: 조수아
+      note: 25학번
+    - name: 오동현
+      note: 23학번
+    - name: 이영아
+      note: 24학번
+    - name: 서예준
+      note: 21학번
+    - name: 조민균
+      note: 24학번
+    - name: 주경원
+      note: 24학번
+    - name: 강유찬
+      note: 23학번
+    - name: 강지성
+      note: 25학번
+    - name: 변재윤
+      note: 22학번
+    - name: 장성진
+      note: 23학번
+    - name: 정유진
+      note: 25학번
+    - name: 허성훈
+      note: 26학번
+
+- group: 21기
+  president: 장건
+  vice_president: 김효진
+  members:
+    - name: 김시내
+      note: 22학번
+    - name: 신용우
+    - name: 이재석
+    - name: 백하은
+      note: 22학번
+    - name: 장건
+      note: 21학번
+    - name: 정희진
+    - name: 이재민
+    - name: 이준영
+    - name: 이다민
+      role: 회장
+      note: 22학번
+    - name: 도해민
+      role: 부회장
+      note: 24학번
+    - name: 정지호
+      note: 22학번
+    - name: 손현서
+      note: 24학번
+    - name: 김지혁
+    - name: 김민규
+      role: 엔터테인먼트 팀장
+      note: 24학번
+
+- group: 20기
+  members:
+    - name: 김시헌
+      note: 20학번
+    - name: 류주한
+      note: 22학번
+    - name: 조영진
+      note: 19학번
+    - name: 윤관
+      note: 19학번
+    - name: 강대민
+      note: 19학번
+    - name: 김재원
+      note: 20학번
+    - name: 정민준
+      note: 20학번
+    - name: 김민재
+      note: 23학번
+    - name: 왕어진
+      note: 20학번
+    - name: 황영익
+      note: 20학번
+    - name: 송현승
+      note: 20학번
+    - name: 이호창
+      note: 20학번
+    - name: 전명호
+      note: 21학번
+    - name: 임대규
+      note: 21학번
+    - name: 노현수
+      note: 23학번
+    - name: 양민세
+      note: 20학번
+    - name: 김효진
+      note: 23학번
+    - name: 최서린
+      note: 22학번
+    - name: 허재혁
+      note: 23학번
+    - name: 이휘준
+      note: 20학번
+    - name: 서현석
+      note: 21학번
+    - name: 이동욱
+      note: 23학번
+    - name: 안시현
+      note: 19학번
+    - name: 임석환
+      note: 22학번
+    - name: 제갈헌
+      note: 20학번
+
+- group: 19기
+  members:
+    - name: 조영진
+    - name: 정세영
+    - name: 김형준
+    - name: 김나윤
+    - name: 강대민
+
+- group: 16기
+  members:
+    - name: 안재홍
+    - name: 이수혁
+
+- group: 15기
+  members:
+    - name: 기지연
+      note: 17학번
+    - name: 고기환
+      note: 13학번
+    - name: 김수현
+      note: 18학번
+    - name: 강백구
+      note: 15학번
+    - name: 곽유진
+      note: 18학번
+    - name: 김경철
+      note: 15학번
+    - name: 김민수
+      note: 15학번
+    - name: 남은우
+      note: 15학번
+    - name: 박재원
+      note: 18학번
+    - name: 이기민
+      note: 16학번
+    - name: 이현우
+      note: 17학번
+    - name: 임아름
+      note: 17학번
+    - name: 전수빈
+      note: 18학번
+    - name: 정현윤
+      note: 18학번
+    - name: 팽대원
+      note: 15학번
+
+- group: 14기
+  members:
+    - name: 이문열
+      note: 13학번
+    - name: 서승원
+      note: 13학번
+    - name: 김범수
+      note: 13학번
+    - name: 유윤식
+      note: 16학번
+    - name: 현석민
+      note: 16학번
+    - name: 김중완
+      note: 15학번
+    - name: 조현준
+      note: 16학번
+
+- group: 13기
+  members:
+    - name: 김종도
+      note: 15학번
+    - name: 류병옥
+      note: 12학번
+    - name: 서보경
+      note: 16학번
+    - name: 진태영
+      note: 15학번
+    - name: 황희중
+      note: 16학번
+
+- group: 12기
+  members:
+    - name: 김지훈
+      note: 11학번
+    - name: 손윤진
+      note: 15학번
+    - name: 함혜정
+      note: 14학번
+    - name: 우주은
+      note: 15학번
+    - name: 정연두
+      note: 11학번
+
+- group: 11기
+  members:
+    - name: 오태양
+      note: 11학번
+    - name: 이승종
+      note: 09학번
+    - name: 이제호
+      note: 12학번
+    - name: 김규현
+      note: 12학번
+    - name: 김주윤
+      note: 12학번
+    - name: 민준기
+      note: 12학번
+    - name: 신상윤
+      note: 12학번
+    - name: 김동엽
+      note: 13학번
+    - name: 채희태
+      note: 13학번
+    - name: 김건우
+      note: 14학번
+    - name: 김채영
+      note: 14학번
+    - name: 임다빈
+      note: 14학번
+
+- group: 10기
+  members:
+    - name: 윤병훈
+      note: 11학번
+    - name: 전가림
+      note: 13학번
+
+- group: 9기
+  members:
+    - name: 조경수
+      note: 12학번
+    - name: 강성호
+      note: 08학번
+    - name: 이유진
+    - name: 이기웅
+      note: 09학번
+
+- group: 8기
+  members:
+    - name: 김남욱
+      note: 08학번
+    - name: 소순원
+      note: 09학번
+    - name: 이원호
+      note: 09학번
+
+- group: 7기
+  members:
+    - name: 성재우
+      note: 07학번
+    - name: 박용덕
+      note: 07학번
+    - name: 이영규
+      note: 08학번
+    - name: 박영준
+      note: 08학번
+
+- group: 6기
+  members:
+    - name: 최재용
+      note: 06학번
+
+- group: 5기
+  members:
+    - name: 김상민
+      note: 05학번
+    - name: 김동길
+      note: 05학번
+    - name: 어유경
+      note: 06학번
+    - name: 장성훈
+      note: 05학번
+    - name: 주이원
+      note: 07학번
+    - name: 임햇살
+      note: 08학번
+    - name: 오미현
+      note: 08학번
+
+- group: 4기
+  members:
+    - name: 김명집
+      note: 05학번
+    - name: 문연모
+      note: 05학번
+    - name: 이민지
+      note: 07학번
+
+- group: 3기
+  members:
+    - name: 유민재
+      note: 03학번
+    - name: 김경태
+      note: 03학번
+    - name: 이훈
+      note: 03학번
+    - name: 윤상현
+      note: 03학번
+    - name: 최윤석
+      note: 01학번
+
+- group: 2기
+  members:
+    - name: 한지동
+      note: 02학번
+    - name: 이신영
+      note: 03학번
+    - name: 김개열
+    - name: 안진영
+    - name: 김도윤
+      note: 03학번
+    - name: 박근호
+    - name: 송재혁
+    - name: 김동주
+      note: 03학번
+
+- group: 1기 (초대)
   members:
     - name: 김주한
     - name: 김평수
+      note: 00학번
     - name: 유용출
-    - name: 황두현
-      note: "00"
+      note: 00학번
     - name: 김현정
-      note: "01"
+      note: 01학번
+    - name: 황두현
     - name: 김승현
-      note: "02"
+      note: 02학번
     - name: 이미나
-      note: "03"
+      note: 03학번
+
+- group: 0기
+  members:
+    - name: 김기용
+      role: 교수
+      note: 93학번
+    - name: 이성민

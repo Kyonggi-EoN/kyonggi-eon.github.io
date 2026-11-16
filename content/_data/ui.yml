@@ -1,0 +1,90 @@
+# UI 자료 페이지(/ui/)에 보이는 내용입니다. 파일은 assets/ui/ 아래에 있습니다.
+# 파일을 바꿀 때는 assets/ui/의 파일을 같은 이름으로 덮어쓰고, 묶음(EoN_UI.zip)도 다시 만드세요.
+#
+# files 한 칸 = 미리보기 + 제목 + 설명 + 형식별 내려받기 링크
+#   preview: 미리보기 이미지   formats: 형식(SVG, PNG …)마다 링크 목록
+
+logos:
+  - title: 기본 로고
+    text: 정육면체에 딱 맞춘 로고입니다. 홈페이지 상단, 문서 머리글, 작은 아이콘에 씁니다.
+    preview: /assets/ui/logo.svg
+    formats:
+      - name: SVG
+        links:
+          - { label: logo.svg, url: /assets/ui/logo.svg }
+      - name: PNG
+        links:
+          - { label: "16", url: /assets/ui/logos/logo@1x.png }
+          - { label: "24", url: /assets/ui/logos/logo@1.5x.png }
+          - { label: "32", url: /assets/ui/logos/logo@2x.png }
+          - { label: "48", url: /assets/ui/logos/logo@3x.png }
+          - { label: "85", url: /assets/ui/logos/logo@dp48.png }
+          - { label: "171", url: /assets/ui/logo.png }
+          - { label: "533px", url: /assets/ui/logos/logo@dp300.png }
+
+  - title: 여백 포함 로고
+    text: 둘레에 여백을 둔 로고입니다. 프로필 사진처럼 둥글게 잘리는 곳, 슬라이드 표지에 씁니다.
+    preview: /assets/ui/logo_padding.svg
+    formats:
+      - name: SVG
+        links:
+          - { label: logo_padding.svg, url: /assets/ui/logo_padding.svg }
+      - name: PNG
+        links:
+          - { label: "16", url: /assets/ui/logos_P/logo_P@1x.png }
+          - { label: "24", url: /assets/ui/logos_P/logo_P@1.5x.png }
+          - { label: "32", url: /assets/ui/logos_P/logo_P@2x.png }
+          - { label: "48", url: /assets/ui/logos_P/logo_P@3x.png }
+          - { label: "85", url: /assets/ui/logos_P/logo_P@dp48.png }
+          - { label: "533px", url: /assets/ui/logos_P/logo_P@dp300.png }
+
+  - title: 이전 로고
+    text: 지금 로고 이전에 쓰던 로고입니다.
+    preview: /assets/ui/logo_legacy.png
+    formats:
+      - name: PNG
+        links:
+          - { label: "101×116px", url: /assets/ui/logo_legacy.png }
+
+etc:
+  - title: 디스코드 배너
+    text: 디스코드 서버 배너입니다. 로고에서 회로 선이 사방으로 뻗어 나갑니다.
+    preview: /assets/ui/discord_banner-preview.webp
+    formats:
+      - name: PNG
+        links:
+          - { label: "1600×964px", url: /assets/ui/discord_banner.png }
+
+  - title: 파비콘
+    text: 브라우저 탭·북마크 아이콘 묶음입니다. 16~512px PNG, favicon.ico, Apple 터치 아이콘이 들어 있습니다.
+    preview: /assets/ui/favicon/genfavicon-512.png
+    formats:
+      - name: ZIP
+        links:
+          - { label: "묶음 · 160KB", url: /assets/ui/EoN_favicon.zip }
+      - name: PNG
+        links:
+          - { label: "512px", url: /assets/ui/favicon/genfavicon-512.png }
+
+# 색 팔레트. 모두 로고 빨강 #ff0000에서 ColorSpace(https://mycolor.space/?hex=%23FF0000&sub=1)로 뽑았습니다.
+# 사이트 자체의 색(_sass/_tokens.scss, 코드 강조색)도 여기서 골랐습니다.
+palettes:
+  - name: 기준색
+    note: 로고 빨강
+    colors: ["#ff0000"]
+  - name: Generic Gradient
+    colors: ["#ff0000", "#ee005f", "#b62a8f", "#6d4b9a", "#325082", "#2f4858"]
+  - name: Matching Gradient
+    colors: ["#ff0000", "#ff006f", "#dc00c9", "#4a62ff", "#0082ff", "#008be4"]
+  - name: Spot Palette
+    colors: ["#ff0000", "#e8a392", "#ffe6d9", "#5ab7d4"]
+  - name: Twisted Spot Palette
+    colors: ["#ff0000", "#5ab7d4", "#c2f9ff", "#487e91"]
+  - name: Classy Palette
+    colors: ["#ff0000", "#56423d", "#bea6a0", "#009700", "#006100"]
+  - name: Skip Shade Gradient
+    colors: ["#ff0000", "#ff5159", "#ff889d", "#ffbcd9"]
+  - name: Discreet Palette
+    colors: ["#ff0000", "#ba8475", "#fff4ee", "#4a271e"]
+  - name: Shades
+    colors: ["#ff0000", "#ff3d51", "#ff5f6a", "#ff7f84", "#ff9e9f"]

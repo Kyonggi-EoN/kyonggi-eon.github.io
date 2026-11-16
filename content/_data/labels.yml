@@ -12,6 +12,8 @@ news_categories:
   award: 수상
   seminar: 세미나
   recruit: 모집
+  visit: 견학
+  project: 프로젝트
 
 post_categories:
   guide: 가이드

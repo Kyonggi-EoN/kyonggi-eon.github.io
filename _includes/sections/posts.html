@@ -1,5 +1,5 @@
 {%- comment -%}
-  블로그 글 목록. 데이터: content/_posts/*.md (최신순)
+  블로그 글 목록. 데이터: content/_posts/<연도>/*.md (최신순)
   옵션: title, eyebrow, category(해당 분류만 — 예: seminar로 세미나 페이지 만들기), limit, more_url, heading
 {%- endcomment -%}
 {%- assign s = include.section -%}
@@ -8,10 +8,9 @@
 <section class="section">
   <div class="container">
     {%- unless s.heading == false %}
-    {%- assign head_eyebrow = s.eyebrow | default: "Blog" -%}
     {%- assign head_title = s.title | default: "최근 글" -%}
     {%- assign head_more_url = s.more_url -%}
-    {% include section-head.html eyebrow=head_eyebrow title=head_title more_url=head_more_url %}
+    {% include section-head.html eyebrow=s.eyebrow title=head_title more_url=head_more_url %}
     {%- endunless %}
     {%- if items.size > 0 %}
     <div class="grid grid--3">

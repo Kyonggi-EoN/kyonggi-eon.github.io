@@ -1,6 +1,7 @@
 {%- comment -%}
-  소식 한 줄. 사용: {% include cards/news.html item=n %}
+  소식 한 줄: 날짜 | 분류 | 제목 [| 작은 사진]. 사용: {% include cards/news.html item=n thumb=true %}
   link가 있으면 그 주소로, 본문이 있으면 상세 페이지로 연결하고, 둘 다 없으면 제목만 보입니다.
+  thumb=true이고 글에 image가 있으면 줄 오른쪽에 작은 사진을 붙입니다.
 {%- endcomment -%}
 {%- assign n = include.item -%}
 {%- assign category_label = site.data.labels.news_categories[n.category] | default: n.category -%}
@@ -11,12 +12,17 @@
 {%- elsif news_body != "" -%}
   {%- assign news_href = n.url | relative_url -%}
 {%- endif -%}
-<li class="news-item">
+{%- assign show_thumb = false -%}
+{%- if include.thumb and n.image -%}{%- assign show_thumb = true -%}{%- endif -%}
+<li class="news-item{% if show_thumb %} news-item--thumb{% endif %}">
   <time class="news-item__date" datetime="{{ n.date | date_to_xmlschema }}">{{ n.date | date: "%Y.%m.%d" }}</time>
-  {%- if category_label %}<span class="badge badge--{{ n.category }}">{{ category_label }}</span>{% else %}<span></span>{% endif %}
+  <span class="badge badge--{{ n.category }}">{{ category_label }}</span>
   {%- if news_href %}
   <a class="news-item__title" href="{{ news_href }}">{{ n.title }}{% if n.link %}{% include icon.html name="external" %}{% endif %}</a>
   {%- else %}
   <span class="news-item__title">{{ n.title }}</span>
+  {%- endif %}
+  {%- if show_thumb %}
+  <img class="news-item__thumb" src="{{ n.image | relative_url }}" alt="" loading="lazy">
   {%- endif %}
 </li>

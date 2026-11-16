@@ -9,13 +9,6 @@
   }
 }
 
-.bg-grid {
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
-}
-
 // ── 헤더 ──────────────────────────────────────────────
 .site-header {
   position: sticky;
@@ -102,21 +95,6 @@
   }
 }
 
-// 테마 버튼: 지금 테마의 반대쪽 아이콘만 보여 줍니다.
-.icon--sun {
-  display: none;
-}
-
-[data-theme="dark"] {
-  .icon--sun {
-    display: block;
-  }
-
-  .icon--moon {
-    display: none;
-  }
-}
-
 .nav-toggle {
   display: none;
 }
@@ -132,8 +110,7 @@
     display: none;
     padding: var(--space-3) var(--space-5) var(--space-5);
     background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--line);
 
     &.is-open {
       display: block;
@@ -152,17 +129,13 @@
 
 // ── 페이지 제목 영역 ──────────────────────────────────
 .page-hero {
-  padding: var(--space-8) 0 var(--space-6);
-  border-bottom: 1px solid var(--border);
-  background:
-    radial-gradient(60% 120% at 85% 0%, var(--brand-soft), transparent 70%),
-    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size);
+  padding: var(--space-8) 0 var(--space-5);
 
   &__title {
     margin-top: var(--space-2);
-    font-size: var(--fs-2xl);
-    font-weight: 800;
+    font-size: var(--fs-3xl);
+    font-weight: 600;
+    letter-spacing: -0.035em;
   }
 
   &__lead {
@@ -184,18 +157,28 @@
     padding-top: var(--space-6);
   }
 
+  // 제목줄: 왼쪽 큰 제목, 같은 줄 오른쪽 끝에 "전체 보기 →", 아래에 진한 1px 선
   &__head {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: var(--space-4);
-    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--line);
   }
 
   &__title {
     margin-top: var(--space-1);
-    font-size: var(--fs-xl);
-    font-weight: 800;
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  // 제목줄 선 아래에 바로 목록이 붙지 않을 때(카드·표) 띄우는 간격
+  &__head + .grid,
+  &__head + .project-rows,
+  &__head + .member-group {
+    margin-top: var(--space-6);
   }
 
   &__more {
@@ -218,7 +201,7 @@
 }
 
 .page-hero + .section {
-  padding-top: var(--space-7);
+  padding-top: var(--space-5);
 }
 
 // ── 그리드 ────────────────────────────────────────────
@@ -232,6 +215,11 @@
 
   &--4 {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  }
+
+  // 칸 수가 항목 수에 맞춰 늘어남: 사진 카드 2장이면 2칸을 꽉 채웁니다.
+  &--fit {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   }
 
   &--members {
@@ -248,10 +236,14 @@ main {
 .site-footer {
   margin-top: var(--space-8);
   padding: var(--space-7) 0 var(--space-6);
-  border-top: 1px solid var(--border);
-  background: var(--bg-subtle);
+  border-top: 1px solid var(--line);
+  background: var(--footer-bg);
   font-size: var(--fs-sm);
-  color: var(--text-muted);
+  color: var(--footer-text);
+
+  .brand {
+    color: var(--footer-strong);
+  }
 
   &__inner {
     display: flex;
@@ -275,11 +267,11 @@ main {
       display: inline-flex;
       align-items: center;
       gap: var(--space-2);
-      color: var(--text-muted);
+      color: var(--footer-text);
       text-decoration: none;
 
       &:hover {
-        color: var(--text);
+        color: var(--footer-strong);
       }
     }
   }
@@ -292,11 +284,15 @@ main {
     margin-top: var(--space-6);
     padding-top: var(--space-5);
     border-top: 1px solid var(--border);
-    font-family: var(--font-mono);
     font-size: var(--fs-xs);
 
     a {
       color: inherit;
     }
+  }
+
+  &__meta {
+    display: flex;
+    gap: var(--space-4);
   }
 }

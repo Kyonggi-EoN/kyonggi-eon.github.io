@@ -2,6 +2,8 @@
 title: SO-101 로봇팔
 summary: 동아리 공용 SO-101 로봇팔 프로젝트. uv sync 한 번으로 환경이 준비되고, 로봇팔이 없어도 설치와 학습을 해 볼 수 있습니다.
 repo: Kyonggi-EoN/so101-project
+image: /content/images/projects/so101-lab.jpg
+image_alt: 동아리방에서 SO-101 로봇팔을 다루는 부원들
 tags: [Robotics, Python]
 status: active
 year: 2026

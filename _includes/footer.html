@@ -17,6 +17,9 @@
   </div>
   <div class="container site-footer__copy">
     <span>© {{ site.time | date: "%Y" }} EoN · Kyonggi University</span>
-    <a href="https://github.com/{{ site.org.github }}/kyonggi-eon.github.io">이 사이트의 소스</a>
+    <span class="site-footer__meta">
+      <a href="{{ '/ui/' | relative_url }}">로고·UI 자료</a>
+      <a href="https://github.com/{{ site.org.github }}/kyonggi-eon.github.io">이 사이트의 소스</a>
+    </span>
   </div>
 </footer>

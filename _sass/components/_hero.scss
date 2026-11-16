@@ -1,77 +1,224 @@
-// 홈 첫 화면
+// 홈 첫 화면: 왼쪽 2/5는 사진으로 꽉 채우고, 오른쪽 3/5에 이름·구호·링크 하나.
+// 근거: _refs/2026-11-16-nextartai-co-kr-hero-type, _refs/2026-11-16-biff-kr-hero-photo
+// 사진은 여러 장을 서서히 겹쳐 바꾸고, 오른쪽 아래 버튼·터치 밀기로 직접 넘깁니다(점 표시 없음).
+// 사진 목록은 content/pages/index.md의 hero.photos
 
 .hero {
-  position: relative;
-  overflow: hidden;
-  padding: var(--space-9) 0 var(--space-7);
-  border-bottom: 1px solid var(--border);
-  background:
-    radial-gradient(45% 60% at 75% 45%, var(--brand-soft), transparent 70%),
-    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / var(--grid-size) var(--grid-size);
+  display: grid;
+  grid-template-columns: 1fr;
+  border-bottom: 1px solid var(--line);
 
-  &__inner {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    align-items: center;
-    gap: var(--space-7);
+  &--photo {
+    grid-template-columns: 2fr 3fr;
+    min-height: min(calc(100svh - var(--header-h)), 760px);
   }
 
-  &__title {
-    margin-top: var(--space-3);
-    font-size: var(--fs-3xl);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1.15;
+  &__media {
+    position: relative;
+    min-height: 320px;
+    overflow: hidden;
+    background: var(--bg-subtle);
+
+    // 좌우로 미는 손짓은 사진 넘기기에 쓰고, 위아래는 그대로 화면 스크롤
+    &[data-hero-rotate] {
+      touch-action: pan-y;
+    }
   }
 
-  &__lead {
-    margin-top: var(--space-5);
-    max-width: 560px;
-    font-size: var(--fs-lg);
-    line-height: 1.7;
-    color: var(--text-muted);
-  }
+  // 사진 한 장과 캡션. 여러 장이면 겹쳐 두고 is-active인 것만 보입니다.
+  // 바뀔 때는 새 사진이 위에서 서서히 나타나고, 앞 사진(is-leaving)은 그동안 아래에 그대로 둡니다.
+  // (assets/js/modules/hero-rotate.js — 전환 시간을 바꾸면 거기 FADE_MS도 같이)
+  &__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 900ms var(--ease);
 
-  &__art {
-    justify-self: center;
+    &.is-active {
+      z-index: 1;
+      opacity: 1;
+    }
 
+    // 캡션은 글자가 겹쳐 보이지 않게 앞 사진 것을 바로 숨깁니다.
+    &.is-leaving {
+      opacity: 1;
+      transition: none;
+
+      figcaption {
+        visibility: hidden;
+      }
+    }
+
+    // --pos: 사진이 잘릴 때 남길 곳 (index.md의 position, 가로% 세로%)
     img {
-      width: min(320px, 70vw);
-      height: auto;
-      filter: drop-shadow(0 18px 40px rgb(220 0 0 / 0.28));
-      animation: hero-float 6s var(--ease) infinite alternate;
-    }
-  }
-
-  &__caption {
-    margin-top: var(--space-8);
-    font-family: var(--font-mono);
-    font-size: var(--fs-xs);
-    letter-spacing: 0.12em;
-    color: var(--text-muted);
-    text-align: center;
-  }
-
-  @media (max-width: 760px) {
-    padding-top: var(--space-7);
-
-    &__inner {
-      grid-template-columns: 1fr;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: var(--pos, 50% 50%);
     }
 
-    &__art {
-      order: -1;
+    // 높이 2.25rem(줄 1.25rem + 위아래 여백)으로 오른쪽 넘기기 버튼 줄과 맞춥니다.
+    figcaption {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      padding: var(--space-2) var(--space-3);
+      background: rgb(0 0 0 / 0.62);
+      color: #fff;
+      font-size: var(--fs-xs);
+      line-height: 1.25rem;
 
-      img {
-        width: 140px;
+      // 넘기기 버튼과 겹치지 않게. 길면 두 줄로
+      [data-hero-rotate] & {
+        max-width: calc(100% - 10.25rem);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
-}
 
-@keyframes hero-float {
-  to {
-    transform: translateY(-10px) rotate(-1.5deg);
+  // 사진 넘기기: 이전 · 3 / 7 · 다음 · 자동 넘기기 멈춤. 캡션과 같은 어두운 바탕, 오른쪽 아래.
+  &__controls {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    height: 2.25rem;
+    background: rgb(0 0 0 / 0.62);
+    color: #fff;
+
+    &[hidden] {
+      display: none;
+    }
+
+    button {
+      display: grid;
+      place-items: center;
+      width: 2.25rem;
+      transition: background var(--dur) var(--ease);
+
+      &:hover {
+        background: rgb(255 255 255 / 0.18);
+      }
+
+      // 사진 칸이 overflow: hidden이라 테두리를 안쪽에 그립니다.
+      &:focus-visible {
+        outline-color: #fff;
+        outline-offset: -4px;
+        border-radius: 0;
+      }
+    }
+
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__count {
+    display: grid;
+    place-items: center;
+    min-width: 2.75rem;
+    font-size: var(--fs-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__toggle-play,
+  [data-paused] &__toggle-pause {
+    display: none;
+  }
+
+  [data-paused] &__toggle-play {
+    display: block;
+  }
+
+  // 위: 이름과 구호, 아래: 링크 하나. 둘 사이를 벌려 칸을 채웁니다.
+  &__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-8);
+    padding: var(--space-8) var(--space-7) var(--space-7);
+  }
+
+  &__kicker {
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--brand-text);
+  }
+
+  // 크게, 그러나 가늘게
+  &__title {
+    margin-top: var(--space-3);
+    font-size: clamp(4rem, 9vw, 7.5rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  &__lead {
+    margin-top: var(--space-4);
+    font-size: clamp(1.375rem, 2.4vw, 2rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.35;
+  }
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+
+    .icon {
+      transition: transform var(--dur) var(--ease);
+    }
+
+    &:hover .icon {
+      transform: translate(2px, -2px);
+    }
+  }
+
+  &__link-note {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  &__link-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--fs-lg);
+    font-weight: 600;
+  }
+
+  @media (max-width: 860px) {
+    &--photo {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    &__media {
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+    }
+
+    &__text {
+      gap: var(--space-6);
+      padding: var(--space-6) var(--space-5);
+    }
   }
 }

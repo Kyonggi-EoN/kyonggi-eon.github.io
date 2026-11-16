@@ -13,20 +13,23 @@ HTML이나 CSS를 몰라도, 알맞은 폴더에 Markdown 파일을 하나 추�
 
 | 올릴 것 | 폴더 | 파일 이름 |
 |---|---|---|
-| 블로그 글 | `content/_posts/` | `2026-11-20-제목.md` |
-| 소식 (공지·행사·수상) | `content/_news/` | `2026-11-20-제목.md` |
+| 블로그 글 | `content/_posts/2026/` | `2026-11-20-제목.md` |
+| 소식 (공지·행사·수상) | `content/_news/2026/` | `2026-11-20-제목.md` |
 | 프로젝트 카드 | `content/_projects/` | `프로젝트-이름.md` |
 | 이미지 | `content/images/<종류>/` | 자유 |
 | 메뉴·연혁·멤버·활동 분야 | `content/_data/*.yml` | 기존 파일 수정 |
 
 파일 이름의 영문 부분이 주소가 됩니다. 예를 들어 `2026-11-20-yolo-seminar.md`는 `/blog/2026/yolo-seminar/`가 됩니다.
 
+블로그 글과 소식은 연도 폴더(`2026/`, `2027/` …)에 나눠 둡니다. 찾기 쉽게 나눈 것일 뿐이라 주소에는 영향이 없고, 날짜는 파일 이름에서 읽습니다.
+그해 첫 글이라 폴더가 없으면 새로 만드세요. GitHub 웹에서는 파일 이름 칸에 `2027/`을 먼저 입력하면 폴더가 생깁니다.
+
 ## 1. 템플릿 복사
 
 저장소 루트의 `_templates/` 폴더에 글 종류별 템플릿이 있습니다.
 
 ```bash
-cp _templates/post.md content/_posts/2026-11-20-yolo-seminar.md
+cp _templates/post.md content/_posts/2026/2026-11-20-yolo-seminar.md
 ```
 
 ## 2. 머리말 채우기

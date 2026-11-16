@@ -10,6 +10,7 @@
   url: /news/
 - title: 블로그
   url: /blog/
-# 멤버 명단(members.yml)을 채운 뒤 아래 두 줄의 주석을 푸세요.
-# - title: 멤버
-#   url: /members/
+- title: UI 자료
+  url: /ui/
+- title: 멤버
+  url: /members/

@@ -1,26 +1,32 @@
 // 목록형 요소: 소식 목록, 연혁 타임라인, 멤버
 
 // ── 소식 ──────────────────────────────────────────────
-.news-list {
-  border-top: 1px solid var(--border);
-}
-
+// 날짜 | 분류 | 제목. 칸 폭을 고정해 세로로 훑으면 날짜와 분류가 한 줄로 맞춰집니다.
+// 근거: _refs/2026-11-16-biff-kr-news-list
 .news-item {
+  position: relative;
   display: grid;
-  grid-template-columns: 7.5rem 4.5rem 1fr;
+  grid-template-columns: 6.5rem 4.5rem 1fr;
   align-items: center;
   gap: var(--space-4);
-  padding: var(--space-4) var(--space-2);
+  padding: var(--space-4) var(--space-3);
   border-bottom: 1px solid var(--border);
+  transition: background var(--dur) var(--ease);
 
-  &__date {
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    color: var(--text-muted);
+  &--thumb {
+    grid-template-columns: 6.5rem 4.5rem 1fr 96px;
+    padding-block: var(--space-3);
   }
 
-  .badge {
-    justify-self: start;
+  &:has(a.news-item__title):hover {
+    background: var(--bg-subtle);
+  }
+
+  &__date {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
   }
 
   &__title {
@@ -38,59 +44,201 @@
     }
   }
 
-  a.news-item__title:hover {
-    color: var(--brand-text);
+  // 제목 링크가 줄 전체를 덮어 어디를 눌러도 이동합니다.
+  a.news-item__title::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  &__thumb {
+    width: 96px;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
   }
 
   @media (max-width: 560px) {
     grid-template-columns: auto 1fr;
-    gap: var(--space-2) var(--space-3);
+    gap: var(--space-1) var(--space-3);
 
     &__title {
       grid-column: 1 / -1;
+    }
+
+    &--thumb {
+      grid-template-columns: auto 1fr 72px;
+
+      .news-item__title {
+        grid-column: 1 / 3;
+      }
+
+      .news-item__thumb {
+        grid-column: 3;
+        grid-row: 1 / 3;
+        width: 72px;
+      }
+    }
+  }
+}
+
+// 제목줄 없이 목록만 있을 때(소식·프로젝트 페이지)는 목록 위에 진한 선을 긋습니다.
+.news-list,
+.project-rows,
+.interest-rows,
+.timeline {
+  border-top: 1px solid var(--line);
+}
+
+.section__head + .news-list,
+.section__head + .project-rows,
+.section__head + .interest-rows,
+.section__head + .timeline {
+  border-top: 0;
+}
+
+.grid + .project-rows {
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--line);
+}
+
+// ── 프로젝트 (사진 없는 것은 카드 대신 한 줄) ─────────────
+.project-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6.5rem 4.5rem 1fr auto;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--dur) var(--ease);
+
+  &:hover {
+    background: var(--bg-subtle);
+  }
+
+  &__year {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+
+  &__title {
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &__text {
+    margin-top: var(--space-1);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+
+  &__links {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: var(--space-4);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+
+      &:hover {
+        color: var(--brand-text);
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: auto 1fr;
+    gap: var(--space-1) var(--space-3);
+
+    &__main,
+    &__links {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// ── 활동 분야 (표) ─────────────────────────────────────
+.interest-row {
+  display: grid;
+  grid-template-columns: 11rem 1fr 1fr 12rem;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-sm);
+
+  &--head {
+    padding-block: var(--space-3);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  &__title {
+    font-size: var(--fs-md);
+    font-weight: 700;
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  @media (max-width: 760px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+
+    &--head {
+      display: none;
+    }
+
+    &__links {
+      margin-top: var(--space-2);
     }
   }
 }
 
 // ── 연혁 ──────────────────────────────────────────────
 .timeline {
-  position: relative;
-  display: grid;
-  gap: var(--space-5);
-  padding-left: var(--space-6);
-
-  &::before {
-    content: "";
-    position: absolute;
-    left: 7px;
-    top: 8px;
-    bottom: 8px;
-    width: 2px;
-    background: linear-gradient(var(--brand), var(--border));
-  }
-
   &__item {
-    position: relative;
     display: grid;
     grid-template-columns: 6.5rem 1fr;
     gap: var(--space-4);
-
-    &::before {
-      content: "";
-      position: absolute;
-      left: calc(-1 * var(--space-6) + 2px);
-      top: 0.55em;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 3px solid var(--brand);
-    }
+    padding: var(--space-4) var(--space-3);
+    border-bottom: 1px solid var(--border);
   }
 
   &__date {
-    font-family: var(--font-mono);
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
     color: var(--brand-text);
   }
 
@@ -118,19 +266,32 @@
   margin-top: var(--space-7);
 }
 
-.member-group__title {
+// 기수 제목 옆에 그 기수의 회장·부회장을 작은 회색 글자로. 배지 배경 없음.
+// 근거: _refs/2026-11-16-biff-kr-news-list (머리줄 같은 줄에 작은 글자)
+.member-group__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-4);
+  row-gap: var(--space-1);
   margin-bottom: var(--space-4);
+}
+
+.member-group__title {
   font-size: var(--fs-lg);
+}
+
+.member-group__leaders {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
 }
 
 .member {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
 
   &__avatar {
     width: 48px;
@@ -141,9 +302,9 @@
     &--initial {
       display: grid;
       place-items: center;
-      background: var(--brand-soft);
-      color: var(--brand-text);
-      font-weight: 800;
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
     }
   }
 

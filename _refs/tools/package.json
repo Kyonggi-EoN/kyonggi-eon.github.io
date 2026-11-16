@@ -1,0 +1,12 @@
+{
+  "name": "eon-refs-tools",
+  "private": true,
+  "type": "module",
+  "description": "디자인 레퍼런스 캡처 도구 (사이트 빌드와 무관)",
+  "scripts": {
+    "capture": "node capture.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.65.1"
+  }
+}

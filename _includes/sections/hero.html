@@ -1,24 +1,51 @@
-{%- comment -%} 홈 첫 화면. 내용은 페이지 머리말의 hero: 블록에서 가져옵니다. {%- endcomment -%}
+{%- comment -%}
+  홈 첫 화면. 내용은 페이지 머리말의 hero: 블록에서 가져옵니다.
+  kicker(제목 위 한 줄), title(없으면 사이트 이름), lead(없으면 _config.yml의 tagline),
+  photos(왼쪽 사진 목록: src·alt·caption·url·position), interval(사진이 바뀌는 간격, 초),
+  link(label·url: 지금 볼 것 하나)
+  사진이 두 장 이상이면 assets/js/modules/hero-rotate.js가 차례로 바꿔 보여 주고,
+  오른쪽 아래 버튼(이전·다음·멈춤)이나 터치 밀기로 직접 넘길 수 있습니다. JS가 없으면 첫 사진만 보입니다.
+{%- endcomment -%}
 {%- assign hero = page.hero -%}
-<section class="hero">
-  <div class="container hero__inner">
-    <div class="hero__text">
-      {%- if hero.eyebrow %}<p class="eyebrow">{{ hero.eyebrow }}</p>{% endif %}
-      <h1 class="hero__title">{{ hero.title | default: site.tagline }}</h1>
-      {%- if hero.lead %}<p class="hero__lead">{{ hero.lead }}</p>{% endif %}
-      {%- if hero.actions %}
-      <div class="btn-row">
-        {%- for a in hero.actions %}
-        <a class="btn {% if forloop.first %}btn--primary{% else %}btn--ghost{% endif %}" href="{% include link-url.html url=a.url %}">{{ a.label }}</a>
-        {%- endfor %}
-      </div>
+{%- assign photos = hero.photos -%}
+<section class="hero{% if photos %} hero--photo{% endif %}">
+  {%- if photos %}
+  <div class="hero__media"{% if photos.size > 1 %} data-hero-rotate data-interval="{{ hero.interval | default: 6 | times: 1000 }}"{% endif %}>
+    {%- for p in photos %}
+    <figure class="hero__slide{% if forloop.first %} is-active{% endif %}"{% unless forloop.first %} hidden{% endunless %}>
+      <img src="{{ p.src | relative_url }}" alt="{{ p.alt }}"{% if p.position %} style="--pos: {{ p.position }}"{% endif %}{% if forloop.first %} fetchpriority="high"{% else %} loading="lazy"{% endif %}>
+      {%- if p.caption %}
+      <figcaption>
+        {%- if p.url %}<a href="{% include link-url.html url=p.url %}">{{ p.caption }}</a>{% else %}{{ p.caption }}{% endif -%}
+      </figcaption>
       {%- endif %}
+    </figure>
+    {%- endfor %}
+    {%- if photos.size > 1 %}
+    <div class="hero__controls" role="group" aria-label="사진 넘기기" hidden>
+      <button type="button" data-hero-prev aria-label="이전 사진">{% include icon.html name="chevron-left" %}</button>
+      <span class="hero__count" data-hero-count aria-hidden="true">1 / {{ photos.size }}</span>
+      <button type="button" data-hero-next aria-label="다음 사진">{% include icon.html name="chevron-right" %}</button>
+      <button type="button" data-hero-toggle aria-label="자동 넘기기 멈춤">
+        <span class="hero__toggle-pause">{% include icon.html name="pause" %}</span>
+        <span class="hero__toggle-play">{% include icon.html name="play" %}</span>
+      </button>
     </div>
-    <div class="hero__art" aria-hidden="true">
-      <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="" width="320" height="320">
-    </div>
+    <p class="visually-hidden" aria-live="polite" data-hero-status></p>
+    {%- endif %}
   </div>
-  {%- if hero.caption %}
-  <p class="container hero__caption">{{ hero.caption }}</p>
   {%- endif %}
+  <div class="hero__text">
+    <div>
+      {%- if hero.kicker %}<p class="hero__kicker">{{ hero.kicker }}</p>{% endif %}
+      <h1 class="hero__title">{{ hero.title | default: site.title }}</h1>
+      <p class="hero__lead">{{ hero.lead | default: site.tagline }}</p>
+    </div>
+    {%- if hero.link %}
+    <a class="hero__link" href="{% include link-url.html url=hero.link.url %}">
+      {%- if hero.link.note %}<span class="hero__link-note">{{ hero.link.note }}</span>{% endif -%}
+      <span class="hero__link-label">{{ hero.link.label }}{% include icon.html name="arrow-up-right" %}</span>
+    </a>
+    {%- endif %}
+  </div>
 </section>

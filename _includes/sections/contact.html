@@ -3,9 +3,8 @@
 <section class="section">
   <div class="container">
     {%- unless s.heading == false %}
-    {%- assign head_eyebrow = s.eyebrow | default: "Contact" -%}
     {%- assign head_title = s.title | default: "연락처" -%}
-    {% include section-head.html eyebrow=head_eyebrow title=head_title %}
+    {% include section-head.html eyebrow=s.eyebrow title=head_title %}
     {%- endunless %}
     <ul class="grid grid--3 contact-list">
       {%- for c in site.data.social %}

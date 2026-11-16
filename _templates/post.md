@@ -1,6 +1,6 @@
 ---
 # 블로그 글 템플릿
-# 복사할 위치: content/_posts/YYYY-MM-DD-영문-슬러그.md  (예: 2026-11-20-yolo-seminar.md)
+# 복사할 위치: content/_posts/YYYY/YYYY-MM-DD-영문-슬러그.md  (예: 2026/2026-11-20-yolo-seminar.md)
 # 주소는 /blog/YYYY/영문-슬러그/ 가 됩니다.
 
 title: 글 제목
