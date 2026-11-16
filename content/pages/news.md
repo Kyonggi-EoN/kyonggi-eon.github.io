@@ -6,4 +6,5 @@ sections:
   - type: news
     heading: false
     thumbs: true
+    filter: true
 ---

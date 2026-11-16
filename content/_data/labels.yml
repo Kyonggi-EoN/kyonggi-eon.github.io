@@ -22,3 +22,11 @@ post_categories:
   review: 논문 리뷰
   tech: 기술
   log: 활동 기록
+
+# 소식 필터의 기간 칸에 보이는 학기 구분. from~to는 달(1~12)이고, 12월은 2학기, 1~2월은 그해 겨울방학으로 칩니다.
+# 기간 칸에는 이 순서를 거꾸로(최근 것부터) 보여 주고, 그 기간에 소식이 있는 것만 나옵니다.
+semesters:
+  - { key: winter, label: 겨울방학, from: 1, to: 2 }
+  - { key: s1, label: 1학기, from: 3, to: 6 }
+  - { key: summer, label: 여름방학, from: 7, to: 8 }
+  - { key: s2, label: 2학기, from: 9, to: 12 }

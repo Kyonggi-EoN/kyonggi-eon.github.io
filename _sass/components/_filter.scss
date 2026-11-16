@@ -1,0 +1,143 @@
+// 목록 위 필터 칸: 왼쪽에 분류 글자, 오른쪽에 기간 고르기·제목 검색. (_includes/sections/news.html)
+// 분류는 알약·배경 없이 글자만 쓰고, 고른 것만 진한 글자에 빨간 밑줄을 긋습니다. (_refs/2026-11-16-biff-kr-news-list)
+// 입력 칸은 버튼처럼 라운드·그림자 없는 1px 상자입니다.
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-4);
+
+  &[hidden] {
+    display: none;
+  }
+
+  &__cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin-right: auto;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  &__cat {
+    position: relative;
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    span {
+      display: block;
+      padding-block: var(--space-2);
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: color var(--dur) var(--ease);
+    }
+
+    &:hover span {
+      color: var(--text);
+    }
+
+    input:checked + span {
+      color: var(--text);
+      box-shadow: inset 0 -2px 0 var(--brand);
+    }
+
+    input:focus-visible + span {
+      outline: 2px solid var(--brand);
+      outline-offset: 2px;
+    }
+  }
+
+  &__fields {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  &__input {
+    height: 2.5rem;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    background-color: var(--bg);
+    font-size: var(--fs-sm);
+    appearance: none;
+
+    &:hover {
+      border-color: var(--text-muted);
+    }
+
+    &:focus-visible {
+      border-color: var(--text);
+      border-radius: 0;
+      outline-offset: 0;
+    }
+  }
+
+  // 화살표: --text-muted(#5d5d69) 선 하나
+  &__select {
+    padding-right: 2.25rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d5d69' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--space-3) center;
+    background-size: 1rem;
+    cursor: pointer;
+  }
+
+  &__search {
+    width: 14rem;
+
+    &::placeholder {
+      color: var(--text-muted);
+    }
+  }
+
+  // 결과 건수와 초기화. 필터 칸 맨 아래 줄 오른쪽, 목록 위 진한 선 바로 위.
+  &__status {
+    display: flex;
+    gap: var(--space-3);
+    flex-basis: 100%;
+    justify-content: flex-end;
+    font-size: var(--fs-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+
+  &__reset {
+    padding: 0;
+    font-weight: 600;
+    color: var(--brand-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (max-width: 560px) {
+    // 기간 칸과 검색 칸이 한 줄에 다 안 들어가면 한 줄씩 나눠 꽉 채웁니다.
+    &__fields {
+      flex-basis: 100%;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    &__select {
+      flex: 1 1 auto;
+    }
+
+    &__search {
+      flex: 1 1 10rem;
+      min-width: 0;
+    }
+
+    &__status {
+      justify-content: flex-start;
+    }
+  }
+}

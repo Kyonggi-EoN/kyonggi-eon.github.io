@@ -1,6 +1,9 @@
 {%- comment -%}
   소식 목록. 데이터: content/_news/<연도>/*.md (최신순)
-  옵션: title, eyebrow, category(해당 분류만), limit, more_url, heading, thumbs(true면 줄마다 작은 사진)
+  옵션: title, eyebrow, category(해당 분류만), limit, more_url, heading, thumbs(true면 줄마다 작은 사진),
+        filter(true면 목록 위에 분류·기간·제목 검색 칸. 동작은 assets/js/modules/news-filter.js)
+  필터의 분류는 목록에 있는 것만 content/_data/labels.yml 순서로, 기간은 글이 있는 연도·학기만 보여 줍니다.
+  학기의 달 범위는 labels.yml의 semesters. 기간 option마다 data-year·from·to(달)를 적어 두고 스크립트는 그것만 봅니다.
 {%- endcomment -%}
 {%- assign s = include.section -%}
 {%- assign items = site.news | sort: "date" | reverse -%}
@@ -13,11 +16,59 @@
     {% include section-head.html eyebrow=s.eyebrow title=head_title more_url=head_more_url %}
     {%- endunless %}
     {%- if items.size > 0 %}
+    {%- if s.filter %}
+    {%- assign labels = site.data.labels.news_categories -%}
+    {%- assign cats = items | map: "category" | compact | uniq -%}
+    {%- assign years = items | group_by_exp: "n", "n.date | date: '%Y'" %}
+    <form class="filter" data-news-filter role="search" aria-label="소식 찾기" autocomplete="off" hidden>
+      <fieldset class="filter__cats">
+        <legend class="visually-hidden">분류</legend>
+        <label class="filter__cat"><input type="radio" name="category" value="" checked><span>전체</span></label>
+        {%- for pair in labels %}{% if cats contains pair[0] %}
+        <label class="filter__cat"><input type="radio" name="category" value="{{ pair[0] }}"><span>{{ pair[1] }}</span></label>
+        {%- endif %}{% endfor %}
+        {%- for c in cats %}{% unless labels[c] %}
+        <label class="filter__cat"><input type="radio" name="category" value="{{ c }}"><span>{{ c }}</span></label>
+        {%- endunless %}{% endfor %}
+      </fieldset>
+      <div class="filter__fields">
+        <label class="visually-hidden" for="news-period">기간</label>
+        <select class="filter__input filter__select" id="news-period" name="period">
+          <option value="">전체 기간</option>
+          {%- for y in years %}
+          {%- assign months = y.items | group_by_exp: "n", "n.date | date: '%m'" %}
+          <optgroup label="{{ y.name }}년">
+            <option value="{{ y.name }}" data-year="{{ y.name }}" data-from="1" data-to="12">{{ y.name }}년 전체</option>
+            {%- for t in site.data.labels.semesters reversed %}
+            {%- assign has_news = false -%}
+            {%- for m in months -%}
+              {%- assign month = m.name | plus: 0 -%}
+              {%- if month >= t.from and month <= t.to -%}{%- assign has_news = true -%}{%- endif -%}
+            {%- endfor -%}
+            {%- if has_news %}
+            <option value="{{ y.name }}-{{ t.key }}" data-year="{{ y.name }}" data-from="{{ t.from }}" data-to="{{ t.to }}">{{ y.name }}년 {{ t.label }} ({{ t.from }}~{{ t.to }}월)</option>
+            {%- endif %}
+            {%- endfor %}
+          </optgroup>
+          {%- endfor %}
+        </select>
+        <label class="visually-hidden" for="news-q">제목 검색</label>
+        <input class="filter__input filter__search" id="news-q" name="q" type="search" placeholder="제목 검색" enterkeyhint="search">
+      </div>
+      <p class="filter__status">
+        <span data-news-count aria-live="polite">전체 {{ items.size }}건</span>
+        <button class="filter__reset" type="button" data-news-reset hidden>초기화</button>
+      </p>
+    </form>
+    {%- endif %}
     <ul class="news-list">
       {%- for n in items limit: s.limit %}
       {% include cards/news.html item=n thumb=s.thumbs %}
       {%- endfor %}
     </ul>
+    {%- if s.filter %}
+    <p class="empty" data-news-empty hidden>조건에 맞는 소식이 없습니다.</p>
+    {%- endif %}
     {%- else %}
     <p class="empty">아직 소식이 없습니다.</p>
     {%- endif %}

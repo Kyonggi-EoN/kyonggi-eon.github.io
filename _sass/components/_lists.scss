@@ -13,6 +13,11 @@
   border-bottom: 1px solid var(--border);
   transition: background var(--dur) var(--ease);
 
+  // 소식 필터에 걸러진 줄 (assets/js/modules/news-filter.js)
+  &[hidden] {
+    display: none;
+  }
+
   &--thumb {
     grid-template-columns: 6.5rem 4.5rem 1fr 96px;
     padding-block: var(--space-3);
