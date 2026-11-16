@@ -8,10 +8,18 @@ layout: default
   - 옵션이 필요하면 type과 함께: - type: projects
                                    limit: 3
   제목 아래 버튼은 머리말의 actions에 적습니다. (label, url, icon, style: primary|ghost, download: true)
+  제목 칸 오른쪽 바람 줄기를 이 페이지만 끄려면 머리말에 wind: false, 마우스 반응만 바꾸려면 wind: obstacle
 {%- endcomment -%}
+
+{%- comment -%} 제목 칸 오른쪽의 바람 줄기: _config.yml의 wind.pages. 페이지 머리말에 wind: false면 안 그림 {%- endcomment -%}
+{%- assign page_wind = site.wind.pages -%}
+{%- if page.wind == false -%}{%- assign page_wind = false -%}{%- elsif page.wind -%}{%- assign page_wind = page.wind -%}{%- endif -%}
 
 {%- if page.title -%}
 <header class="page-hero">
+  {%- if page_wind %}
+  <canvas class="page-hero__wind" data-wind="page" data-wind-mode="{{ page_wind }}" aria-hidden="true"></canvas>
+  {%- endif %}
   <div class="container">
     {%- if page.eyebrow %}<p class="eyebrow">{{ page.eyebrow }}</p>{% endif %}
     <h1 class="page-hero__title">{{ page.title }}</h1>

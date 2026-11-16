@@ -144,11 +144,23 @@
 
   // 위: 이름과 구호, 아래: 링크 하나. 둘 사이를 벌려 칸을 채웁니다.
   &__text {
+    position: relative;
+    isolation: isolate; // 바람 줄기를 글자 뒤에 깔려고
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: var(--space-8);
     padding: var(--space-8) var(--space-7) var(--space-7);
+  }
+
+  // 바람 줄기: 오른쪽 칸 전체를 덮는 그림판, 글자 뒤. 그리는 건 assets/js/modules/wind.js의 hero
+  &__wind {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
   }
 
   &__kicker {
@@ -219,6 +231,11 @@
     &__text {
       gap: var(--space-6);
       padding: var(--space-6) var(--space-5);
+    }
+
+    // 좁은 화면은 빈 칸이 없어 글자와 겹치므로 그리지 않습니다.
+    &__wind {
+      display: none;
     }
   }
 }

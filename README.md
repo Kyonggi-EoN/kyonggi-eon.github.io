@@ -13,6 +13,7 @@ Jekyll로 만든 정적 사이트입니다. `main`에 push하면 GitHub Actions�
 | 로고·팔레트 등 UI 자료(/ui/) | 파일은 `assets/ui/`, 목록·팔레트 값은 `content/_data/ui.yml` | 필요 없음 |
 | 페이지 소개 문구, 섹션 순서 | `content/pages/*.md`의 머리말 `sections:` | 필요 없음 |
 | 색 · 글꼴 · 간격 등 전체 톤 (흰 바탕 하나만, 어두운 화면 없음) | `_sass/_tokens.scss` 한 파일 | CSS 변수 |
+| 바람(흐르는 색 줄기) 켜고 끄기 · 마우스 반응 | `_config.yml`의 `wind`, 홈 첫 화면은 `content/pages/index.md`의 `hero.wind` | 필요 없음 |
 | 카드 · 목록 생김새 | `_includes/cards/`, `_includes/sections/`, `_sass/components/` | HTML/CSS |
 | 사이트 동작(JS) | `assets/js/modules/`에 파일 추가 → `assets/js/main.js`에서 불러오기 | JS |
 

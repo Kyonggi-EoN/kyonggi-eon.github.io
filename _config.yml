@@ -19,6 +19,12 @@ org:
   github: Kyonggi-EoN
   since: 2005
 
+# 바람 테마: 로고 빨강에서 뽑은 Matching Gradient 여섯 색 줄기가 왼쪽에서 오른쪽으로 흐릅니다.
+# 홈 첫 화면의 바람은 content/pages/index.md의 hero.wind에서 따로 켜고 끕니다.
+wind:
+  pages: prey  # 페이지 제목 칸 오른쪽 줄기 떼. 마우스를 prey: 쫓아옴, obstacle: 비켜 감. false면 안 그림
+  lines: true  # 섹션 제목줄 아래 선·푸터 위 선이 화면에 처음 들어올 때 선을 타고 한 번 지나가는 줄기
+
 # 검색엔진·SNS 미리보기 (jekyll-seo-tag)
 logo: /assets/images/logo.png
 image: /assets/images/og.png

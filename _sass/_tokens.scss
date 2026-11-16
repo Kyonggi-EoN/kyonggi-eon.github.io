@@ -14,6 +14,15 @@
   --brand-soft: rgb(255 0 0 / 0.07);
   --on-brand: #ffffff;
 
+  // 바람 테마. UI 팔레트의 Matching Gradient 여섯 색(로고 빨강에서 파랑까지).
+  // - 모양은 하나: 둥근 머리에 가늘어지는 꼬리인 줄기. 줄기 하나에 한 색씩 그대로 칠하고 섞지 않습니다(그러데이션 없음).
+  // - 바람은 언제나 왼쪽에서 오른쪽으로 붑니다.
+  // - 글자 뒤로 지나가지 않고 빈 곳과 선 위에만 붑니다. 글자·배지·버튼 색으로는 쓰지 않습니다.
+  // - 쓰는 곳 (켜고 끄기는 _config.yml의 wind, 홈 첫 화면은 content/pages/index.md의 hero.wind)
+  //   · 홈 첫 화면 오른쪽 칸과 페이지 제목 칸 오른쪽의 줄기 떼: assets/js/modules/wind.js
+  //   · 섹션 제목줄 아래 선·푸터 위 선을 타고 한 번 지나가는 줄기: assets/js/modules/wind-lines.js
+  --wind-colors: #ff0000, #ff006f, #dc00c9, #4a62ff, #0082ff, #008be4;
+
   // 바탕·글자
   --bg: #ffffff;
   --bg-subtle: #f6f6f8;

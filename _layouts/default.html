@@ -3,7 +3,7 @@
 <head>
   {%- include head.html -%}
 </head>
-<body>
+<body{% if site.wind.lines %} data-wind-lines{% endif %}>
   <a class="skip-link" href="#main">본문 바로가기</a>
   {% include header.html %}
   <main id="main">

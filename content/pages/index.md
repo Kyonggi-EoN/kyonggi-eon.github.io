@@ -44,6 +44,9 @@ hero:
       alt: 졸업 가운을 입은 부원들이 학사모를 던지는 모습
       caption: 학위수여식 · 2026.02.20
       url: /news/2026/graduation/
+  # 오른쪽 칸 글자 뒤의 바람 줄기(Matching Gradient 색). 마우스를
+  #   prey: 먹잇감으로 보고 쫓아옴, obstacle: 장애물로 보고 비켜 감. 끄려면 false
+  wind: prey
   link:
     note: 지금 진행 중
     label: IGZO TFT 설계·시뮬레이션·공정

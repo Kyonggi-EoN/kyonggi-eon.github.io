@@ -1,0 +1,56 @@
+// 바람 테마. 규칙은 _tokens.scss의 --wind-colors 설명 참고.
+// 홈 첫 화면의 줄기 떼는 _hero.scss의 .hero__wind에 있습니다.
+
+// 페이지 제목 칸의 줄기 떼: 제목 칸 전체를 덮는 그림판, 글자 뒤. 실제로 줄기가 나는 곳은
+// 글자 오른쪽 빈 곳뿐입니다(assets/js/modules/wind.js의 page). 켜고 끄기는 _config.yml의 wind.pages
+.page-hero {
+  position: relative;
+  isolation: isolate;
+
+  &__wind {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  // 좁은 화면은 글자 옆에 빈 곳이 없음
+  @media (max-width: 860px) {
+    &__wind {
+      display: none;
+    }
+  }
+}
+
+// 진한 1px 선을 타고 한 번 지나가는 줄기(assets/js/modules/wind-lines.js)의 길.
+// 선 위아래로 5px씩, 선 길이만큼만 보입니다. 켜고 끄기는 _config.yml의 wind.lines
+.section__head,
+.site-footer {
+  position: relative;
+}
+
+.wind-lane {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 10px;
+  overflow: hidden;
+  pointer-events: none;
+
+  // 선 두께 1px의 가운데에 맞춤
+  &--bottom {
+    bottom: -5.5px;
+  }
+
+  &--top {
+    top: -5.5px;
+  }
+
+  svg {
+    position: absolute;
+    left: 0;
+    opacity: 0.7; // wind.js의 ALPHA와 같게
+  }
+}

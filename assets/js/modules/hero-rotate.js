@@ -4,6 +4,7 @@
 // - 사진 위에 마우스를 올리거나 키보드로 사진 칸 안의 링크·버튼에 가 있으면 자동 넘기기를 잠시 멈춥니다.
 // - 다른 탭을 보고 있으면 멈춥니다.
 // - '동작 줄이기'를 켠 사용자에게는 자동 넘기기를 끈 채로 시작합니다. 멈춤 버튼으로 켜고 끕니다.
+// - 넘길 때마다 오른쪽 칸 바람 줄기에 돌풍을 한 번 보냅니다(wind.js의 'wind:gust').
 
 const FADE_MS = 900; // _sass/components/_hero.scss의 .hero__slide transition과 같게
 const SWIPE_PX = 40; // 이만큼 넘게 옆으로 밀어야 넘어감
@@ -55,6 +56,7 @@ export function initHeroRotate() {
     slide.classList.add("is-active");
     current = next;
     count.textContent = `${current + 1} / ${total}`;
+    root.closest(".hero")?.dispatchEvent(new Event("wind:gust"));
 
     setTimeout(() => {
       prev.classList.remove("is-leaving");

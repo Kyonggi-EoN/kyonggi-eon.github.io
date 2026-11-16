@@ -5,7 +5,11 @@
 import { initNav } from "./modules/nav.js";
 import { initCopy } from "./modules/copy.js";
 import { initHeroRotate } from "./modules/hero-rotate.js";
+import { initWind } from "./modules/wind.js";
+import { initWindLines } from "./modules/wind-lines.js";
 
 initNav();
 initCopy();
 initHeroRotate();
+initWind();
+initWindLines();

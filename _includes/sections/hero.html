@@ -2,7 +2,9 @@
   홈 첫 화면. 내용은 페이지 머리말의 hero: 블록에서 가져옵니다.
   kicker(제목 위 한 줄), title(없으면 사이트 이름), lead(없으면 _config.yml의 tagline),
   photos(왼쪽 사진 목록: src·alt·caption·url·position), interval(사진이 바뀌는 간격, 초),
-  link(label·url: 지금 볼 것 하나)
+  link(label·url: 지금 볼 것 하나),
+  wind(오른쪽 칸 글자 뒤의 바람 줄기. prey: 마우스를 쫓아옴, obstacle: 마우스를 비켜 감, 없거나 false면 안 그림.
+       그리는 건 assets/js/modules/wind.js의 hero. 사진이 바뀔 때마다 돌풍이 한 번 붑니다)
   사진이 두 장 이상이면 assets/js/modules/hero-rotate.js가 차례로 바꿔 보여 주고,
   오른쪽 아래 버튼(이전·다음·멈춤)이나 터치 밀기로 직접 넘길 수 있습니다. JS가 없으면 첫 사진만 보입니다.
 {%- endcomment -%}
@@ -36,6 +38,9 @@
   </div>
   {%- endif %}
   <div class="hero__text">
+    {%- if hero.wind %}
+    <canvas class="hero__wind" data-wind="hero" data-wind-mode="{{ hero.wind }}" aria-hidden="true"></canvas>
+    {%- endif %}
     <div>
       {%- if hero.kicker %}<p class="hero__kicker">{{ hero.kicker }}</p>{% endif %}
       <h1 class="hero__title">{{ hero.title | default: site.title }}</h1>
