@@ -4,7 +4,7 @@
 //   (_refs/2026-11-16-kyonggi-eon-github-io-line-wind-ltr).
 // - 크기는 선 길이를 따릅니다. 본문 폭(1120px) 선에서 줄기 길이 90~170px, 머리 반지름 2~3px이고,
 //   선이 짧은 좁은 화면에서는 줄기도 짧고 가늘어집니다.
-// - <body data-wind-lines>일 때만 (_config.yml의 wind.lines). '동작 줄이기'를 켠 사용자에게는 보이지 않습니다.
+// - <body data-wind-lines>일 때만 (_config.yml의 wind.lines). 기기의 '동작 줄이기' 설정과 상관없이 나옵니다(사용자 요청).
 // - 줄기 모양·색은 wind.js의 줄기와 같습니다: 둥근 머리에 가늘어지는 꼬리, 한 줄기에 --wind-colors 한 색.
 // - 선 길이 밖으로는 보이지 않습니다(_sass/components/_wind.scss의 .wind-lane).
 import { windColors } from "./wind.js";
@@ -27,7 +27,6 @@ const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 
 export function initWindLines() {
   if (!document.body.hasAttribute("data-wind-lines")) return;
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const colors = windColors();
   if (!colors.length) return;
 

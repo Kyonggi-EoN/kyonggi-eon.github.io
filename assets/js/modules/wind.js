@@ -26,7 +26,7 @@
 //   · obstacle(장애물): 마우스 둘레를 비켜 흘러가고, 마우스를 빠르게 휘저으면 그 방향으로 밀립니다.
 // - 돌풍: 같은 구역(section·header)에 'wind:gust' 이벤트가 오면 잠깐 바람이 세져서 무리가 빨라지고 꼬리가 길어집니다.
 //   홈 사진이 바뀔 때 hero-rotate.js가 보냅니다.
-// - 화면 밖으로 스크롤하거나 다른 탭을 보면 멈춥니다. '동작 줄이기'를 켠 사용자에게는 멈춘 한 장면만 보여 줍니다.
+// - 화면 밖으로 스크롤하거나 다른 탭을 보면 멈춥니다. 기기의 '동작 줄이기' 설정과 상관없이 움직입니다(사용자 요청).
 
 // 길이는 모두 길이 단위 u에 대한 비율입니다. u는 곳마다 다름(PRESETS): 홈은 칸 너비와 높이 중 짧은 쪽
 // (1440px 화면이면 760px, 0.1u ≈ 76px), 페이지는 제목 오른쪽 빈 곳의 너비(제목 칸 높이의 3배까지).
@@ -218,7 +218,6 @@ function start(canvas) {
   const area = canvas.parentElement;
   const scope = canvas.closest("section, header") ?? area;
   const mode = canvas.dataset.windMode === "obstacle" ? "obstacle" : "prey";
-  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const colors = windColors(canvas);
   if (!colors.length) return;
 
@@ -536,7 +535,7 @@ function start(canvas) {
   }
 
   function wake() {
-    if (still || raf || !w || !onScreen) return;
+    if (raf || !w || !onScreen) return;
     last = performance.now();
     raf = requestAnimationFrame(frame);
   }
@@ -576,8 +575,6 @@ function start(canvas) {
     canvas.height = Math.round(h * dpr);
     if (!ready) {
       place();
-      // 동작 줄이기: 처음 3초를 미리 계산해 무리가 한창 지나가는 한 장면만 그림
-      if (still) for (let n = 0; n < 3 / TICK; n++) step();
       ready = true;
     }
     draw();
@@ -586,7 +583,6 @@ function start(canvas) {
 
   new ResizeObserver(resize).observe(canvas);
   document.fonts?.ready.then(resize); // 글꼴을 받으면 글자 상자가 바뀜
-  if (still) return;
 
   new IntersectionObserver(([entry]) => {
     onScreen = entry.isIntersecting;
