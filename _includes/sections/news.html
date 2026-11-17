@@ -10,11 +10,7 @@
 {%- if s.category -%}{%- assign items = items | where: "category", s.category -%}{%- endif -%}
 <section class="section">
   <div class="container">
-    {%- unless s.heading == false %}
-    {%- assign head_title = s.title | default: "소식" -%}
-    {%- assign head_more_url = s.more_url -%}
-    {% include section-head.html eyebrow=s.eyebrow title=head_title more_url=head_more_url %}
-    {%- endunless %}
+    {%- include section-head.html section=s title="소식" %}
     {%- if items.size > 0 %}
     {%- if s.filter %}
     {%- assign labels = site.data.labels.news_categories -%}

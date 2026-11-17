@@ -129,7 +129,7 @@
 
 // ── 페이지 제목 영역 ──────────────────────────────────
 .page-hero {
-  padding: var(--space-8) 0 var(--space-5);
+  padding: var(--gap-section) 0 var(--space-5);
 
   &__title {
     margin-top: var(--space-2);
@@ -146,15 +146,16 @@
 }
 
 // ── 섹션 ──────────────────────────────────────────────
+// 섹션 사이, 마지막 섹션과 푸터 사이 모두 --gap-section 하나만 띄웁니다.
 .section {
-  padding: var(--space-8) 0;
+  padding: var(--gap-section) 0;
 
   & + & {
     padding-top: 0;
   }
 
-  &--prose + .section {
-    padding-top: var(--space-6);
+  &:last-child {
+    padding-bottom: 0;
   }
 
   // 제목줄: 왼쪽 큰 제목, 같은 줄 오른쪽 끝에 "전체 보기 →", 아래에 진한 1px 선
@@ -174,9 +175,8 @@
     letter-spacing: -0.025em;
   }
 
-  // 제목줄 선 아래에 바로 목록이 붙지 않을 때(카드·표) 띄우는 간격
+  // 제목줄 선 아래에 목록 줄이 아닌 카드·멤버 묶음이 올 때 띄우는 간격
   &__head + .grid,
-  &__head + .project-rows,
   &__head + .member-group {
     margin-top: var(--space-6);
   }
@@ -234,7 +234,7 @@ main {
 }
 
 .site-footer {
-  margin-top: var(--space-8);
+  margin-top: var(--gap-section);
   padding: var(--space-7) 0 var(--space-6);
   border-top: 1px solid var(--line);
   background: var(--footer-bg);
@@ -254,7 +254,7 @@ main {
 
   &__brand p {
     margin-top: var(--space-3);
-    line-height: 1.6;
+    line-height: var(--lh-sm);
   }
 
   &__links {
@@ -279,20 +279,26 @@ main {
   &__copy {
     display: flex;
     flex-wrap: wrap;
+    align-items: baseline;
     justify-content: space-between;
     gap: var(--space-2);
     margin-top: var(--space-6);
     padding-top: var(--space-5);
     border-top: 1px solid var(--border);
     font-size: var(--fs-xs);
-
-    a {
-      color: inherit;
-    }
   }
 
+  // 맨 아래 링크(로고·UI 자료, 이 사이트의 소스): 옆 저작권 글자보다 한 단계 크게,
+  // 위아래로 넓혀 손가락으로 누르기 쉽게(높이 34px)
   &__meta {
     display: flex;
     gap: var(--space-4);
+
+    a {
+      display: inline-block;
+      padding-block: var(--space-1);
+      font-size: var(--fs-sm);
+      color: inherit;
+    }
   }
 }

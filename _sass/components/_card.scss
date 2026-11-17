@@ -29,19 +29,12 @@
   &__title {
     font-size: var(--fs-lg);
     font-weight: 700;
-    letter-spacing: -0.02em;
   }
 
-  // 제목 링크가 카드 전체를 덮어 어디를 눌러도 상세 페이지로 갑니다.
+  // 제목 링크(.cover-link)가 카드 전체를 덮어 어디를 눌러도 상세 페이지로 갑니다.
   &__link {
     color: inherit;
     text-decoration: none;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-    }
   }
 
   &:has(.card__link):hover .card__title {
@@ -53,7 +46,7 @@
   &__text {
     color: var(--text-muted);
     font-size: var(--fs-sm);
-    line-height: 1.65;
+    line-height: var(--lh-sm);
   }
 
   &__foot {
@@ -63,28 +56,10 @@
     color: var(--text-muted);
   }
 
-  // 카드 안 별도 링크(사이트·GitHub)는 덮개 위로 올립니다.
+  // 카드 맨 아래 링크 줄(사이트·GitHub, .sub-links). 옆 카드와 높이를 맞춥니다.
   &__actions {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    gap: var(--space-4);
     margin-top: auto;
     padding-top: var(--space-2);
-
-    a {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-size: var(--fs-sm);
-      font-weight: 600;
-      color: var(--text-muted);
-      text-decoration: none;
-
-      &:hover {
-        color: var(--brand-text);
-      }
-    }
   }
 
   &__media {

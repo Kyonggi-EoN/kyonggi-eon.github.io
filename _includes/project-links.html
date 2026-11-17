@@ -1,0 +1,11 @@
+{%- comment -%}
+  프로젝트 카드·목록 줄 안의 사이트·GitHub 링크. 둘 다 없으면 아무것도 그리지 않습니다.
+  사용: {% include project-links.html project=p class="card__actions" %}
+{%- endcomment -%}
+{%- assign links_of = include.project -%}
+{%- if links_of.site or links_of.repo %}
+<div class="sub-links {{ include.class }}">
+  {%- if links_of.site %}<a href="{% include link-url.html url=links_of.site %}">{% include icon.html name="globe" %}사이트</a>{% endif %}
+  {%- if links_of.repo %}<a href="https://github.com/{{ links_of.repo }}">{% include icon.html name="github" %}GitHub</a>{% endif %}
+</div>
+{%- endif %}

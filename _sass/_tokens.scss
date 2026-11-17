@@ -57,16 +57,20 @@
     "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
   --font-mono: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
-  // 글자 크기
-  --fs-xs: 0.8125rem;
-  --fs-sm: 0.9375rem;
-  --fs-md: 1.0625rem;
-  --fs-lg: 1.25rem;
-  --fs-xl: 1.625rem;
-  --fs-2xl: clamp(1.875rem, 4vw, 2.5rem);
-  --fs-3xl: clamp(2.25rem, 6vw, 3.75rem);
-  --lh-tight: 1.25;
-  --lh: 1.75;
+  // 글자 크기 (13 · 15 · 17 · 20 · 26 · 40 · 60px, 홈 첫 화면만 더 큼)
+  // 제목은 클수록 가늘게: 홈 이름 500 · 페이지 제목 600 · 섹션·글 제목 700
+  --fs-xs: 0.8125rem; // 분류·날짜 보조·캡션
+  --fs-sm: 0.9375rem; // 요약·메타·메뉴
+  --fs-md: 1.0625rem; // 본문
+  --fs-lg: 1.25rem; // 카드 제목·글 첫 줄
+  --fs-xl: 1.625rem; // 본문 소제목(h2)
+  --fs-2xl: clamp(1.875rem, 4vw, 2.5rem); // 섹션 제목·글 제목
+  --fs-3xl: clamp(2.25rem, 6vw, 3.75rem); // 페이지 제목
+  --fs-hero: clamp(4rem, 9vw, 7.5rem); // 홈 첫 화면 이름
+  --fs-hero-lead: clamp(1.375rem, 2.4vw, 2rem); // 홈 첫 화면 구호
+  --lh-tight: 1.25; // 제목
+  --lh-sm: 1.6; // 작은 글(카드 요약·푸터·코드)
+  --lh: 1.75; // 본문
 
   // 간격
   --space-1: 0.25rem;
@@ -78,6 +82,8 @@
   --space-7: 3rem;
   --space-8: 4.5rem;
   --space-9: 6rem;
+  // 구역 사이 간격 하나: 섹션 위아래, 페이지·글 맨 위, 마지막 섹션과 푸터 사이. 좁은 화면에서는 줄입니다(아래).
+  --gap-section: var(--space-8);
 
   // 모서리·움직임. 모서리는 둥글리지 않고, 그림자는 쓰지 않습니다. (_refs/ 참고)
   --radius-sm: 0;
@@ -90,6 +96,15 @@
   --container: 1120px;
   --prose: 740px;
   --header-h: 64px;
+  // 목록 줄(소식·프로젝트·연혁)의 앞 칸 폭. 같은 값을 써서 세로로 훑으면 날짜와 분류가 한 줄로 맞습니다.
+  --col-date: 6.5rem;
+  --col-label: 4.5rem;
 
   color-scheme: light;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --gap-section: var(--space-7);
+  }
 }

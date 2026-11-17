@@ -5,10 +5,7 @@
 {%- assign s = include.section -%}
 <section class="section">
   <div class="container">
-    {%- unless s.heading == false %}
-    {%- assign head_title = s.title | default: "색" -%}
-    {% include section-head.html eyebrow=s.eyebrow title=head_title %}
-    {%- endunless %}
+    {%- include section-head.html section=s title="색" %}
     {%- if s.text %}<div class="palette-note">{{ s.text | markdownify }}</div>{% endif %}
     <ul class="palette">
       {%- for p in site.data.ui.palettes %}

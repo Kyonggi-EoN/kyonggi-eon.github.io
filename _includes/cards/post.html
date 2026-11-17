@@ -1,13 +1,12 @@
 {%- comment -%} 블로그 글 카드. 사용: {% include cards/post.html post=p %} {%- endcomment -%}
 {%- assign p = include.post -%}
-{%- assign category_label = site.data.labels.post_categories[p.category] | default: p.category -%}
 <article class="card card--post">
   <div class="card__body">
     <div class="meta">
-      <time datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: "%Y.%m.%d" }}</time>
-      {%- if category_label %}<span class="badge badge--{{ p.category }}">{{ category_label }}</span>{% endif %}
+      {% include date.html date=p.date %}
+      {%- if p.category %}{% include badge.html kind="post_categories" code=p.category %}{% endif %}
     </div>
-    <h3 class="card__title"><a class="card__link" href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
+    <h3 class="card__title"><a class="card__link cover-link" href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
     <p class="card__text">{{ p.summary | default: p.excerpt | strip_html | strip | truncate: 140 }}</p>
     {%- if p.author %}<p class="card__foot">{{ p.author }}</p>{% endif %}
   </div>

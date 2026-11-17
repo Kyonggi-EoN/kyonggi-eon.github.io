@@ -27,12 +27,11 @@
   &__title {
     font-size: var(--fs-lg);
     font-weight: 700;
-    letter-spacing: -0.02em;
   }
 
   &__text {
     font-size: var(--fs-sm);
-    line-height: 1.65;
+    line-height: var(--lh-sm);
     color: var(--text-muted);
   }
 

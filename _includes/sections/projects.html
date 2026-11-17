@@ -11,11 +11,7 @@
 {%- assign without_image = items | where_exp: "p", "p.image == nil" -%}
 <section class="section">
   <div class="container">
-    {%- unless s.heading == false %}
-    {%- assign head_title = s.title | default: "프로젝트" -%}
-    {%- assign head_more_url = s.more_url -%}
-    {% include section-head.html eyebrow=s.eyebrow title=head_title more_url=head_more_url %}
-    {%- endunless %}
+    {%- include section-head.html section=s title="프로젝트" %}
     {%- if items.size > 0 %}
     {%- if with_image.size > 0 %}
     <div class="grid grid--fit">
@@ -27,18 +23,14 @@
     {%- if without_image.size > 0 %}
     <ul class="project-rows">
       {%- for p in without_image %}
-      {%- assign status_label = site.data.labels.project_status[p.status] | default: p.status %}
       <li class="project-row">
         <span class="project-row__year">{{ p.year }}</span>
-        <span class="badge badge--{{ p.status }}">{{ status_label }}</span>
+        {% include badge.html kind="project_status" code=p.status %}
         <div class="project-row__main">
-          <a class="project-row__title" href="{{ p.url | relative_url }}">{{ p.title }}</a>
+          <a class="project-row__title cover-link" href="{{ p.url | relative_url }}">{{ p.title }}</a>
           {%- if p.summary %}<p class="project-row__text">{{ p.summary }}</p>{% endif %}
         </div>
-        <div class="project-row__links">
-          {%- if p.site %}<a href="{% include link-url.html url=p.site %}">{% include icon.html name="globe" %}사이트</a>{% endif %}
-          {%- if p.repo %}<a href="https://github.com/{{ p.repo }}">{% include icon.html name="github" %}GitHub</a>{% endif %}
-        </div>
+        {%- include project-links.html project=p class="project-row__links" %}
       </li>
       {%- endfor %}
     </ul>

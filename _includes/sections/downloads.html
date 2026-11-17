@@ -7,9 +7,7 @@
 {%- assign items = site.data.ui[s.data] -%}
 <section class="section">
   <div class="container">
-    {%- unless s.heading == false %}
-    {% include section-head.html eyebrow=s.eyebrow title=s.title %}
-    {%- endunless %}
+    {%- include section-head.html section=s %}
     <ul class="grid grid--{{ s.grid | default: 3 }}">
       {%- for a in items %}
       <li class="asset">

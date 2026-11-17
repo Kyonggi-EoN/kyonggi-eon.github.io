@@ -2,10 +2,7 @@
 {%- assign s = include.section -%}
 <section class="section">
   <div class="container">
-    {%- unless s.heading == false %}
-    {%- assign head_title = s.title | default: "멤버" -%}
-    {% include section-head.html eyebrow=s.eyebrow title=head_title %}
-    {%- endunless %}
+    {%- include section-head.html section=s title="멤버" %}
     {%- for g in site.data.members %}
     <div class="member-group">
       <div class="member-group__head">

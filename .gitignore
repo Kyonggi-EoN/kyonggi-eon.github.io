@@ -5,3 +5,4 @@ _site/
 .bundle/
 vendor/
 _refs/tools/node_modules/
+/skills/

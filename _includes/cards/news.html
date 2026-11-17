@@ -5,7 +5,6 @@
   소식 필터(assets/js/modules/news-filter.js)는 li의 data-category와 time의 datetime으로 거릅니다.
 {%- endcomment -%}
 {%- assign n = include.item -%}
-{%- assign category_label = site.data.labels.news_categories[n.category] | default: n.category -%}
 {%- assign news_body = n.content | strip_html | strip -%}
 {%- assign news_href = nil -%}
 {%- if n.link -%}
@@ -16,10 +15,10 @@
 {%- assign show_thumb = false -%}
 {%- if include.thumb and n.image -%}{%- assign show_thumb = true -%}{%- endif -%}
 <li class="news-item{% if show_thumb %} news-item--thumb{% endif %}" data-category="{{ n.category }}">
-  <time class="news-item__date" datetime="{{ n.date | date_to_xmlschema }}">{{ n.date | date: "%Y.%m.%d" }}</time>
-  <span class="badge badge--{{ n.category }}">{{ category_label }}</span>
+  {% include date.html date=n.date class="news-item__date" %}
+  {% include badge.html kind="news_categories" code=n.category %}
   {%- if news_href %}
-  <a class="news-item__title" href="{{ news_href }}">{{ n.title }}{% if n.link %}{% include icon.html name="external" %}{% endif %}</a>
+  <a class="news-item__title cover-link" href="{{ news_href }}">{{ n.title }}{% if n.link %}{% include icon.html name="external" %}{% endif %}</a>
   {%- else %}
   <span class="news-item__title">{{ n.title }}</span>
   {%- endif %}

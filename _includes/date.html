@@ -1,0 +1,2 @@
+{%- comment -%} 날짜(2026.11.15). 사용: {% include date.html date=p.date class="news-item__date" %} (class는 없어도 됨) {%- endcomment -%}
+<time{% if include.class %} class="{{ include.class }}"{% endif %} datetime="{{ include.date | date_to_xmlschema }}">{{ include.date | date: "%Y.%m.%d" }}</time>

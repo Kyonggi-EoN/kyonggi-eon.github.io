@@ -36,7 +36,6 @@ h4 {
 :focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 .skip-link {
@@ -95,6 +94,36 @@ h4 {
   font-size: var(--fs-sm);
   font-variant-numeric: tabular-nums;
   color: var(--text-muted);
+}
+
+// 링크가 가장 가까운 position: relative 칸 전체를 덮어, 칸 어디를 눌러도 이동합니다(카드·목록 줄).
+// 칸 안의 다른 링크는 .sub-links로 덮개 위에 올립니다.
+.cover-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+// 카드·목록 줄 안의 작은 링크 묶음(사이트·GitHub). 회색 글자, 올리면 빨강.
+.sub-links {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-4);
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--brand-text);
+    }
+  }
 }
 
 .empty {

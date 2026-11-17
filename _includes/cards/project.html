@@ -13,16 +13,11 @@
   </div>
   {%- endif %}
   <div class="card__body">
-    <h3 class="card__title"><a class="card__link" href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
+    <h3 class="card__title"><a class="card__link cover-link" href="{{ p.url | relative_url }}">{{ p.title }}</a></h3>
     {%- if p.summary %}<p class="card__text">{{ p.summary }}</p>{% endif %}
     {%- if p.year or p.tags.size > 0 %}
     <ul class="tags">{% if p.year %}<li>{{ p.year }}</li>{% endif %}{% for t in p.tags %}<li>{{ t }}</li>{% endfor %}</ul>
     {%- endif %}
-    {%- if p.site or p.repo %}
-    <div class="card__actions">
-      {%- if p.site %}<a href="{% include link-url.html url=p.site %}">{% include icon.html name="globe" %}사이트</a>{% endif %}
-      {%- if p.repo %}<a href="https://github.com/{{ p.repo }}">{% include icon.html name="github" %}GitHub</a>{% endif %}
-    </div>
-    {%- endif %}
+    {%- include project-links.html project=p class="card__actions" %}
   </div>
 </article>

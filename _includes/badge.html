@@ -1,0 +1,6 @@
+{%- comment -%}
+  분류·상태 글자. 코드(글 머리말의 category·status)를 content/_data/labels.yml의 이름으로 바꿔 보여 줍니다(없으면 코드 그대로).
+  색은 _sass/components/_badge.scss의 badge--<코드>에서 정합니다.
+  사용: {% include badge.html kind="news_categories" code=n.category %}   kind: news_categories · post_categories · project_status
+{%- endcomment -%}
+<span class="badge badge--{{ include.code }}">{{ site.data.labels[include.kind][include.code] | default: include.code }}</span>

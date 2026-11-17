@@ -2,10 +2,7 @@
 {%- assign s = include.section -%}
 <section class="section">
   <div class="container">
-    {%- unless s.heading == false %}
-    {%- assign head_title = s.title | default: "연락처" -%}
-    {% include section-head.html eyebrow=s.eyebrow title=head_title %}
-    {%- endunless %}
+    {%- include section-head.html section=s title="연락처" %}
     <ul class="grid grid--3 contact-list">
       {%- for c in site.data.social %}
       <li>

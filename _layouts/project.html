@@ -1,14 +1,13 @@
 ---
 layout: default
 ---
-{%- assign status_label = site.data.labels.project_status[page.status] | default: page.status -%}
 <article class="article">
   <header class="article__head container container--prose">
     <p class="eyebrow"><a href="{{ '/projects/' | relative_url }}">← 프로젝트</a></p>
     <h1 class="article__title">{{ page.title }}</h1>
     {%- if page.summary %}<p class="article__lead">{{ page.summary }}</p>{% endif %}
     <div class="meta">
-      {%- if status_label %}<span class="badge badge--{{ page.status }}">{{ status_label }}</span>{% endif %}
+      {%- if page.status %}{% include badge.html kind="project_status" code=page.status %}{% endif %}
       {%- if page.year %}<span>{{ page.year }}</span>{% endif %}
       {%- if page.members %}<span>{{ page.members | join: ", " }}</span>{% endif %}
     </div>

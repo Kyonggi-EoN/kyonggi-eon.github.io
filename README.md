@@ -35,7 +35,8 @@ Jekyll로 만든 정적 사이트입니다. `main`에 push하면 GitHub Actions�
 ├── _includes/
 │   ├── sections/            페이지에 끼우는 섹션 (hero, projects, news, posts, history …)
 │   ├── cards/               카드 한 장 (project, post, news, member)
-│   └── head, header, footer, icon, link-url, section-head
+│   ├── head, header, footer, icon, link-url, section-head
+│   └── badge, date, project-links   카드·글이 같이 쓰는 작은 조각 (분류 글자, 날짜, 사이트·GitHub 링크)
 ├── _sass/
 │   ├── _tokens.scss         디자인 토큰 (색·글꼴·간격 CSS 변수)
 │   ├── _reset.scss, _base.scss, _layout.scss
@@ -84,7 +85,7 @@ sections:
 ```
 
 쓸 수 있는 섹션: `hero`, `interests`, `projects`, `news`, `posts`, `history`, `members`, `contact`, `downloads`, `palette`
-(공통 옵션: `title`, `eyebrow`, `heading: false`)
+(공통 옵션: `title`, `eyebrow`, `more_url`(제목줄 오른쪽 "전체 보기 →"), `heading: false`)
 
 페이지 제목 아래에 버튼을 두려면 머리말에 `actions:`를 적습니다(`label`, `url`, `icon`). 예: `content/pages/ui.md`의 '전체 받기'.
 

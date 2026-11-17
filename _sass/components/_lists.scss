@@ -1,17 +1,59 @@
-// 목록형 요소: 소식 목록, 연혁 타임라인, 멤버
+// 목록형 요소: 소식, 프로젝트 줄, 활동 분야 표, 연혁, 멤버
 
-// ── 소식 ──────────────────────────────────────────────
-// 날짜 | 분류 | 제목. 칸 폭을 고정해 세로로 훑으면 날짜와 분류가 한 줄로 맞춰집니다.
-// 근거: _refs/2026-11-16-biff-kr-news-list
-.news-item {
+// ── 목록 줄 공통 ──────────────────────────────────────
+// 소식·프로젝트·연혁 한 줄은 여백과 아래 연한 선이 같고, 앞 칸 폭(--col-date, --col-label)을 같이 써서
+// 세로로 훑으면 날짜와 분류가 한 줄로 맞춰집니다. 근거: _refs/2026-11-16-biff-kr-news-list
+.news-item,
+.project-row,
+.timeline__item {
   position: relative;
   display: grid;
-  grid-template-columns: 6.5rem 4.5rem 1fr;
-  align-items: center;
   gap: var(--space-4);
   padding: var(--space-4) var(--space-3);
   border-bottom: 1px solid var(--border);
+}
+
+// 제목 링크(.cover-link)가 줄 전체를 덮는 줄은 마우스를 올리면 바탕을 칠합니다.
+.news-item,
+.project-row {
   transition: background var(--dur) var(--ease);
+
+  &:has(.cover-link):hover {
+    background: var(--bg-subtle);
+  }
+}
+
+// 날짜·연도 칸
+.news-item__date,
+.project-row__year {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+// 제목줄 없이 목록만 있을 때(소식·프로젝트 페이지)는 목록 위에 진한 선을 긋습니다.
+// 제목줄 바로 아래에서는 제목줄의 선이 그 역할을 합니다.
+.news-list,
+.project-rows,
+.interest-rows,
+.timeline {
+  border-top: 1px solid var(--line);
+
+  .section__head + & {
+    border-top: 0;
+  }
+}
+
+// 사진 카드 아래에 이어지는 프로젝트 줄
+.grid + .project-rows {
+  margin-top: var(--space-6);
+}
+
+// ── 소식: 날짜 | 분류 | 제목 [| 작은 사진] ─────────────
+.news-item {
+  grid-template-columns: var(--col-date) var(--col-label) 1fr;
+  align-items: center;
 
   // 소식 필터에 걸러진 줄 (assets/js/modules/news-filter.js)
   &[hidden] {
@@ -19,19 +61,8 @@
   }
 
   &--thumb {
-    grid-template-columns: 6.5rem 4.5rem 1fr 96px;
+    grid-template-columns: var(--col-date) var(--col-label) 1fr 96px;
     padding-block: var(--space-3);
-  }
-
-  &:has(a.news-item__title):hover {
-    background: var(--bg-subtle);
-  }
-
-  &__date {
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: var(--text-muted);
   }
 
   &__title {
@@ -47,13 +78,6 @@
       height: 0.9em;
       color: var(--text-muted);
     }
-  }
-
-  // 제목 링크가 줄 전체를 덮어 어디를 눌러도 이동합니다.
-  a.news-item__title::after {
-    content: "";
-    position: absolute;
-    inset: 0;
   }
 
   &__thumb {
@@ -86,85 +110,21 @@
   }
 }
 
-// 제목줄 없이 목록만 있을 때(소식·프로젝트 페이지)는 목록 위에 진한 선을 긋습니다.
-.news-list,
-.project-rows,
-.interest-rows,
-.timeline {
-  border-top: 1px solid var(--line);
-}
-
-.section__head + .news-list,
-.section__head + .project-rows,
-.section__head + .interest-rows,
-.section__head + .timeline {
-  border-top: 0;
-}
-
-.grid + .project-rows {
-  margin-top: var(--space-6);
-  border-top: 1px solid var(--line);
-}
-
-// ── 프로젝트 (사진 없는 것은 카드 대신 한 줄) ─────────────
+// ── 프로젝트 (사진 없는 것은 카드 대신 한 줄): 연도 | 상태 | 제목·요약 | 링크 ──
 .project-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: 6.5rem 4.5rem 1fr auto;
+  grid-template-columns: var(--col-date) var(--col-label) 1fr auto;
   align-items: baseline;
-  gap: var(--space-4);
-  padding: var(--space-4) var(--space-3);
-  border-bottom: 1px solid var(--border);
-  transition: background var(--dur) var(--ease);
-
-  &:hover {
-    background: var(--bg-subtle);
-  }
-
-  &__year {
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: var(--text-muted);
-  }
 
   &__title {
     font-weight: 700;
     color: var(--text);
     text-decoration: none;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-    }
   }
 
   &__text {
     margin-top: var(--space-1);
     font-size: var(--fs-sm);
     color: var(--text-muted);
-  }
-
-  &__links {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    gap: var(--space-4);
-
-    a {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-size: var(--fs-sm);
-      font-weight: 600;
-      color: var(--text-muted);
-      text-decoration: none;
-
-      &:hover {
-        color: var(--brand-text);
-      }
-    }
   }
 
   @media (max-width: 560px) {
@@ -234,11 +194,7 @@
 // ── 연혁 ──────────────────────────────────────────────
 .timeline {
   &__item {
-    display: grid;
-    grid-template-columns: 6.5rem 1fr;
-    gap: var(--space-4);
-    padding: var(--space-4) var(--space-3);
-    border-bottom: 1px solid var(--border);
+    grid-template-columns: var(--col-date) 1fr;
   }
 
   &__date {

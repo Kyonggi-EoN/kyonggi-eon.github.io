@@ -2,10 +2,7 @@
 {%- assign s = include.section -%}
 <section class="section">
   <div class="container">
-    {%- unless s.heading == false %}
-    {%- assign head_title = s.title | default: "연혁" -%}
-    {% include section-head.html eyebrow=s.eyebrow title=head_title %}
-    {%- endunless %}
+    {%- include section-head.html section=s title="연혁" %}
     <ol class="timeline">
       {%- for h in site.data.history %}
       <li class="timeline__item">
