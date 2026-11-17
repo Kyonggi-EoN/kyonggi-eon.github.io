@@ -41,6 +41,7 @@ EoN이 처음 기획해 주관을 맡았고, 반도체부트캠프사업단과 �
 
 <p style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-6);margin-top:var(--space-7)">
   <img src="/assets/ui/logo_horizontal.svg" alt="EoN" style="height:48px;width:auto;margin:0;border:0;border-radius:0">
+  <img src="/content/images/news/2026-exhibition-logo-ee.png" alt="경기대학교 전자공학부" style="height:48px;width:auto;margin:0;border:0;border-radius:0">
   <img src="/content/images/news/2026-exhibition-logo-kgu.png" alt="경기대학교" style="height:40px;width:auto;margin:0;border:0;border-radius:0">
   <img src="/content/images/news/2026-kyonggi-semicon-bootcamp-logo.png" alt="반도체부트캠프사업단" style="height:40px;width:auto;margin:0;border:0;border-radius:0">
 </p>
