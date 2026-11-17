@@ -175,9 +175,8 @@
     letter-spacing: -0.025em;
   }
 
-  // 제목줄 선 아래에 목록 줄이 아닌 카드·멤버 묶음이 올 때 띄우는 간격
-  &__head + .grid,
-  &__head + .member-group {
+  // 제목줄 선 아래에 목록 줄이 아닌 카드 묶음이 올 때 띄우는 간격
+  &__head + .grid {
     margin-top: var(--space-6);
   }
 
@@ -220,11 +219,6 @@
   // 칸 수가 항목 수에 맞춰 늘어남: 사진 카드 2장이면 2칸을 꽉 채웁니다.
   &--fit {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  }
-
-  &--members {
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
-    gap: var(--space-3);
   }
 }
 

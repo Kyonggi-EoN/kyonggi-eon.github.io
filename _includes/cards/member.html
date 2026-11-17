@@ -1,10 +1,11 @@
-{%- comment -%} 멤버 카드. 사용: {% include cards/member.html member=m %} {%- endcomment -%}
+{%- comment -%}
+  멤버 한 명. 사용: {% include cards/member.html member=m %}
+  이름 아래 한 줄에 역할(빨강)과 학번. github가 있을 때만 프로필 사진을 붙이고, 없으면 사진 칸을 두지 않습니다.
+{%- endcomment -%}
 {%- assign m = include.member -%}
 <div class="member">
   {%- if m.github %}
-  <img class="member__avatar" src="https://github.com/{{ m.github }}.png?size=96" alt="" width="48" height="48" loading="lazy">
-  {%- else %}
-  <span class="member__avatar member__avatar--initial" aria-hidden="true">{{ m.name | slice: 0 }}</span>
+  <img class="member__avatar" src="https://github.com/{{ m.github }}.png?size=80" alt="" width="40" height="40" loading="lazy">
   {%- endif %}
   <div>
     {%- if m.github %}
@@ -13,7 +14,10 @@
     <span class="member__name">{{ m.name }}</span>
     {%- endif %}
     {%- if m.role or m.note %}
-    <span class="member__role">{{ m.role }}{% if m.role and m.note %} · {% endif %}{{ m.note }}</span>
+    <span class="member__meta">
+      {%- if m.role %}<span class="member__role">{{ m.role }}</span>{% endif -%}
+      {%- if m.note %}{{ m.note }}{% endif -%}
+    </span>
     {%- endif %}
   </div>
 </div>

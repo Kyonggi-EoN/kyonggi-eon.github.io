@@ -23,6 +23,7 @@
 // 진한 1px 선을 타고 한 번 지나가는 줄기(assets/js/modules/wind-lines.js)의 길.
 // 선 위아래로 5px씩, 선 길이만큼만 보입니다. 켜고 끄기는 _config.yml의 wind.lines
 .section__head,
+.member-group,
 .site-footer {
   position: relative;
 }

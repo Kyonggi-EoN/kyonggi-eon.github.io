@@ -5,7 +5,7 @@
 #   vice_president: 김철수      # 선택: 그 기수의 부회장
 #   members:
 #     - name: 홍길동
-#       role: 회장               # 선택
+#       role: 학술부장           # 선택 (회장·부회장은 위 president·vice_president에만)
 #       note: 22학번             # 선택 (학번 등)
 #       github: gildong-hong     # 선택: 적으면 프로필 사진과 링크가 붙습니다
 
@@ -18,10 +18,6 @@
       note: 23학번
     - name: 박찬홍
       note: 23학번
-    - name: 이동근
-      note: 25학번
-    - name: 정승원
-      note: 23학번
     - name: 홍재민
       note: 23학번
     - name: 이재원
@@ -32,8 +28,6 @@
       note: 23학번
     - name: 조수아
       note: 25학번
-    - name: 오동현
-      note: 23학번
     - name: 이영아
       note: 24학번
     - name: 서예준
@@ -71,10 +65,8 @@
     - name: 이재민
     - name: 이준영
     - name: 이다민
-      role: 회장
       note: 22학번
     - name: 도해민
-      role: 부회장
       note: 24학번
     - name: 정지호
       note: 22학번
@@ -86,13 +78,13 @@
       note: 24학번
 
 - group: 20기
+  president: 김시헌
+  vice_president: 류주한
   members:
     - name: 김시헌
       note: 20학번
     - name: 류주한
       note: 22학번
-    - name: 조영진
-      note: 19학번
     - name: 윤관
       note: 19학번
     - name: 강대민
@@ -116,6 +108,7 @@
     - name: 임대규
       note: 21학번
     - name: 노현수
+      role: 총무
       note: 23학번
     - name: 양민세
       note: 20학번
@@ -141,6 +134,7 @@
 - group: 19기
   members:
     - name: 조영진
+    - note: 19학번
     - name: 정세영
     - name: 김형준
     - name: 김나윤

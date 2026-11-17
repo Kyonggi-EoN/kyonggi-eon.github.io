@@ -222,56 +222,79 @@
   }
 }
 
-// ── 멤버 ──────────────────────────────────────────────
-.member-group + .member-group {
-  margin-top: var(--space-7);
-}
+// ── 멤버: 기수 | 이름들 ────────────────────────────────
+// 기수 하나가 한 줄. 앞 칸은 연혁 날짜처럼 빨강 굵은 글자로 기수, 그 아래 회장·부회장.
+// 기수 사이는 구역 경계라 진한 선(--line)이고, 그 선을 따라 바람 줄기가 지나갑니다(wind-lines.js).
+// 이름 칸에는 테두리·선·사진 자리(이니셜 원)를 두지 않고 글자만 놓습니다.
+// 근거: _refs/2026-11-16-nextartai-co-kr-line-divided-block(선으로만 구역 나눔),
+//       _refs/2026-11-16-biff-kr-news-list(빨강 분류 글자, 배경 없음),
+//       _refs/2026-11-16-kyonggi-eon-github-io-placeholder-not-photo(사진 없으면 사진 칸도 없음)
+.member-group {
+  display: grid;
+  grid-template-columns: var(--col-group) 1fr;
+  gap: var(--space-5);
+  padding: var(--space-5) 0 var(--space-6);
+  border-top: 1px solid var(--line);
 
-// 기수 제목 옆에 그 기수의 회장·부회장을 작은 회색 글자로. 배지 배경 없음.
-// 근거: _refs/2026-11-16-biff-kr-news-list (머리줄 같은 줄에 작은 글자)
-.member-group__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: var(--space-4);
-  row-gap: var(--space-1);
-  margin-bottom: var(--space-4);
+  // 제목줄 바로 아래 첫 기수는 제목줄의 선이 그 역할을 합니다.
+  .section__head + .member-groups > &:first-child {
+    border-top: 0;
+  }
 }
 
 .member-group__title {
-  font-size: var(--fs-lg);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--lh-tight);
+  color: var(--brand-text);
 }
 
 .member-group__leaders {
+  margin-top: var(--space-2);
   font-size: var(--fs-sm);
-  color: var(--text-muted);
+  line-height: var(--lh-sm);
+
+  // 직함 칸 폭을 가장 긴 '부회장'(3글자)에 맞춰서 회장·부회장 이름이 세로로 줄이 맞게 합니다.
+  dt {
+    display: inline-block;
+    min-width: 3.5em;
+    color: var(--text-muted);
+  }
+
+  dd {
+    display: inline;
+    font-weight: 600;
+  }
 }
 
+// 이름 칸: 모든 칸이 같은 폭과 높이(이름 한 줄 + 역할·학번 한 줄)라 학번이 없는 사람도 줄이 맞습니다.
+.member-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: var(--space-4) var(--space-5);
+  align-content: start;
+}
+
+// 학번이 없는 사람도 이름이 같은 줄 높이에 오도록 위로 붙입니다.
 .member {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--border);
+  min-height: calc(var(--fs-md) * var(--lh-sm) + var(--fs-xs) * var(--lh-sm));
 
   &__avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     flex: none;
-
-    &--initial {
-      display: grid;
-      place-items: center;
-      background: var(--bg-subtle);
-      color: var(--text-muted);
-      font-weight: 700;
-    }
+    border-radius: var(--radius);
   }
 
   &__name {
     display: block;
+    font-size: var(--fs-md);
     font-weight: 700;
+    line-height: var(--lh-sm);
     color: var(--text);
     text-decoration: none;
   }
@@ -280,9 +303,47 @@
     color: var(--brand-text);
   }
 
-  &__role {
+  &__meta {
     display: block;
     font-size: var(--fs-xs);
+    line-height: var(--lh-sm);
+    font-variant-numeric: tabular-nums;
     color: var(--text-muted);
+  }
+
+  &__role {
+    margin-right: 0.4em; // 뒤에 오는 학번과 띄움
+    font-weight: 700;
+    color: var(--brand-text);
+  }
+}
+
+// 좁은 화면: 기수와 회장·부회장을 한 줄로 올리고 이름은 그 아래에
+@media (max-width: 760px) {
+  .member-group {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .member-group__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-4);
+  }
+
+  .member-group__leaders {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: 0;
+
+    dt {
+      min-width: 0; // 한 줄에 나란히 놓일 때는 띄우지 않음
+    }
+  }
+
+  .member-list {
+    grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+    gap: var(--space-3) var(--space-4);
   }
 }
