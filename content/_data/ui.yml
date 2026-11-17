@@ -47,13 +47,13 @@ logos:
           - { label: logo_horizontal.svg, url: /assets/ui/logo_horizontal.svg }
       - name: PNG
         links:
-          - { label: "38×16", url: /assets/ui/logos_horizontal/logo_horizontal@1x.png }
-          - { label: "57×24", url: /assets/ui/logos_horizontal/logo_horizontal@1.5x.png }
-          - { label: "76×32", url: /assets/ui/logos_horizontal/logo_horizontal@2x.png }
-          - { label: "115×48", url: /assets/ui/logos_horizontal/logo_horizontal@3x.png }
-          - { label: "203×85", url: /assets/ui/logos_horizontal/logo_horizontal@dp48.png }
-          - { label: "409×171", url: /assets/ui/logo_horizontal.png }
-          - { label: "1274×533px", url: /assets/ui/logos_horizontal/logo_horizontal@dp300.png }
+          - { label: "16", url: /assets/ui/logos_horizontal/logo_horizontal@1x.png }
+          - { label: "24", url: /assets/ui/logos_horizontal/logo_horizontal@1.5x.png }
+          - { label: "32", url: /assets/ui/logos_horizontal/logo_horizontal@2x.png }
+          - { label: "48", url: /assets/ui/logos_horizontal/logo_horizontal@3x.png }
+          - { label: "85", url: /assets/ui/logos_horizontal/logo_horizontal@dp48.png }
+          - { label: "171", url: /assets/ui/logo_horizontal.png }
+          - { label: "533px", url: /assets/ui/logos_horizontal/logo_horizontal@dp300.png }
 
   - title: 이전 로고
     text: 지금 로고 이전에 쓰던 로고입니다.
