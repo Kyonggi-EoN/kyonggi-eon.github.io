@@ -15,6 +15,11 @@ hero:
   #             홈 PC 화면의 사진 칸은 세로로 길어서 가로 사진은 가운데 40%쯤만 보입니다.
   interval: 6
   photos:
+    - src: /content/images/news/2026-exhibition-poster.jpg
+      alt: 2026 전자공학부 AI·반도체·시스템 반도체 성과전시회 포스터. 11.24(화)~11.25(수) 12:00~18:00, 경기대학교 제2공학관 1층 로비
+      caption: 2026 전자공학부 성과전시회 · 2026.11.24 ~ 11.25
+      url: /news/2026/ee-exhibition/
+      position: 50% 0%
     - src: /content/images/home/hero-cleanroom.jpg
       alt: 클린룸의 Mask Aligner 앞에서 작업하는 부원들
       caption: hw_2026 공정 실습 · 경기대학교 6강의동 지하 연구실
@@ -50,9 +55,9 @@ hero:
   #   prey: 먹잇감으로 보고 쫓아옴, obstacle: 장애물로 보고 비켜 감. 끄려면 false
   wind: prey
   link:
-    note: 지금 진행 중
-    label: IGZO TFT 설계·시뮬레이션·공정
-    url: /projects/igzo-tft/
+    note: 11.24(화) ~ 25(수) · 제2공학관 1층 로비
+    label: 2026 전자공학부 성과전시회
+    url: /news/2026/ee-exhibition/
 sections:
   - hero
   - type: news
