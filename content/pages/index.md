@@ -43,7 +43,7 @@ hero:
       caption: AI SUMMIT SEOUL & EXPO 2026 견학 · 2026.08.20
       url: /news/2026/ai-summit/
     - src: /content/images/news/2026-sow-seminar-2.jpg
-      alt: SoW 발표 화면 앞에서 발표하는 부원
+      alt: 반도체 아이디어 공모전 세미나에서 SoW 아이디어를 발표하는 팀
       caption: 2026 교내 반도체 아이디어 공모전 세미나 · 2026.11.04
       url: /news/2026/sow-seminar/
       position: 30% 50%
