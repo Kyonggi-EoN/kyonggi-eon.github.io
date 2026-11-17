@@ -1,7 +1,7 @@
 // 바람 테마의 줄기 떼. canvas[data-wind]마다 글자 둘레 빈 곳으로 바람 줄기 떼가 지나갑니다.
 //   data-wind: 그림판이 놓인 곳(아래 PRESETS). 곳마다 바람 방향과 줄기 크기가 다릅니다.
 //     hero: 홈 첫 화면 오른쪽 칸 (_includes/sections/hero.html, content/pages/index.md의 hero.wind)
-//     page: 페이지 제목 칸 오른쪽 (_layouts/page.html, _config.yml의 wind.pages)
+//     page: 페이지 제목 칸과 글 상세 페이지 머리의 오른쪽 (_includes/page-wind.html, _config.yml의 wind.pages)
 //   data-wind-mode: 마우스를 prey(먹잇감)로 볼지 obstacle(장애물)로 볼지
 // 바람 테마 전체 규칙은 _sass/_tokens.scss의 --wind-colors 설명을, 선을 따라 지나가는 줄기는 wind-lines.js를 보세요.
 //
@@ -11,6 +11,8 @@
 // - 바람 방향은 놓인 곳의 UI를 따릅니다(PRESETS의 flow). 왼쪽에서 오른쪽으로만 불지 않습니다.
 //   · hero: 아래 링크의 위 선에서 떠올라, 링크 화살표(↗)처럼 오른쪽 위로 휘어 올라갑니다.
 //   · page: 화면 오른쪽 끝에서 들어와 제목·설명 쪽으로 모여듭니다.
+// - 좁은 화면 홈에서는 글자 옆에 빈 곳이 없으므로 이름·구호 칸을 떠 있는 글씨로 봅니다.
+//   줄기가 비켜 가지 않고 그 뒤로 지나갑니다. 링크는 그대로 비켜 갑니다. 페이지 제목은 떠 있지 않습니다.
 // - 줄기 굵기는 둘레의 빈 곳을 따릅니다. 글자(PRESETS의 keep 상자)에서 멀어 넓은 곳에서는 제 굵기로,
 //   글자에 다가가면 가늘어집니다. 글자 뒤로는 지나가지 않습니다: hero는 비켜 돌아가고(push),
 //   page는 제목에 닿기 전에 가늘어져 사라집니다(sink).
@@ -25,7 +27,7 @@
 //     마우스가 멈춰 있으면 느슨하게 둘레를 지나다니고, 움직이면 힘껏 따라붙습니다.
 //   · obstacle(장애물): 마우스 둘레를 비켜 흘러가고, 마우스를 빠르게 휘저으면 그 방향으로 밀립니다.
 // - 돌풍: 같은 구역(section·header)에 'wind:gust' 이벤트가 오면 잠깐 바람이 세져서 무리가 빨라지고 꼬리가 길어집니다.
-//   홈 사진이 바뀔 때 hero-rotate.js가 보냅니다.
+//   홈 사진이 바뀔 때 hero-rotate.js가 보냅니다. 화면을 스크롤해도 넘기는 빠르기만큼 돌풍이 붑니다(SCROLL).
 // - 화면 밖으로 스크롤하거나 다른 탭을 보면 멈춥니다. 기기의 '동작 줄이기' 설정과 상관없이 움직입니다(사용자 요청).
 
 // 길이는 모두 길이 단위 u에 대한 비율입니다. u는 곳마다 다름(PRESETS): 홈은 칸 너비와 높이 중 짧은 쪽
@@ -57,6 +59,11 @@ const GUST = {
   speed: 0.8, // 그때 최대 빠르기도 이만큼 더해짐(SPEED[1]의 배수)
   decay: 1.2, // 잦아드는 빠르기(1/초). 1.2면 1초 뒤 30%, 2초 뒤 9%
 };
+// 스크롤 돌풍: 화면을 넘기는 빠르기만큼 돌풍이 붑니다. 멈추면 GUST.decay대로 잦아듦
+const SCROLL = {
+  full: 2000, // 이 빠르기(px/초)로 넘기면 사진이 바뀔 때 부는 돌풍(1)만큼
+  max: 1.2, // 아무리 빨리 넘겨도 이 세기까지
+};
 
 // 마우스
 const LURE = { lag: 7, wobble: 0.45 }; // 먹잇감 점이 마우스를 따라가는 힘(작을수록 늦게)과 출렁임(1보다 작으면 지나쳤다 돌아옴)
@@ -84,11 +91,14 @@ const OBSTACLE = {
 //     from: 줄기가 생겨나는 선분 목록 [x0, y0, x1, y1]. 길이에 비례해 고름
 //     flow(x, y): 그 자리의 바람 방향(rad). 0이면 →, π/2면 ↓, -π/2면 ↑ (그림판은 y가 아래로 커짐)
 //     band: [위, 아래] (px, 없어도 됨). 이 띠 밖으로 나가면 되밈
+//     count, room: (없어도 됨) 이 배치에서만 줄기 수를 줄이거나 room을 바꿈
 const PRESETS = {
   // 홈 첫 화면 오른쪽 칸. 아래 링크의 위 선(과 사진 쪽 왼쪽 끝 아래)에서 생겨나 오른쪽 위로 휘어 올라갑니다.
   // 링크 화살표(↗)와 같은 쪽입니다. 왼쪽에서는 눕게(→) 불어 제목·구호 아래를 지나고,
   // 오른쪽으로 갈수록 서게(↑) 불어 제목 오른쪽 빈 곳으로 올라가 위·오른쪽 끝으로 나갑니다.
   // 링크 선 가까이에서 막 생겨난 줄기는 가늘고, 넓은 위쪽으로 올라갈수록 굵어집니다.
+  // 좁은 화면(사진 아래로 글자 칸이 내려옴)에서는 글자 옆 빈 곳이 좁으므로, 이름·구호를 떠 있는 글씨로 봐서
+  // 비켜 가지 않고 그 뒤로 지나갑니다. _hero.scss가 좁은 화면에서 그림판에 --wind-text: float를 줍니다.
   hero: {
     count: 17,
     size: [0.005, 0.026], // u가 760px이면 4~20px
@@ -99,16 +109,18 @@ const PRESETS = {
       const text = textBox(area.querySelector(":scope > div"), canvas);
       const link = box(area.querySelector(".hero__link"), canvas);
       const floor = link ? link.t : h;
+      const float = floats(canvas);
       const keep = [];
-      if (text) keep.push({ ...text, l: -w, t: -h }); // 글자 왼쪽(사진 옆 여백)·위쪽 여백까지
+      if (text && !float) keep.push({ ...text, l: -w, t: -h }); // 글자 왼쪽(사진 옆 여백)·위쪽 여백까지
       if (link) keep.push({ ...link, l: -w, r: 2 * w, b: 2 * h }); // 링크 선 아래 전부
-      const lift = floor - (text ? text.b : 0); // 제목·구호와 링크 사이 빈 띠의 높이
+      // 왼쪽 끝에서 생겨나는 높이: 링크 위 빈 띠의 아래쪽. 떠 있는 글씨면 이름 아래부터
+      const left = float && text ? (text.t + text.b) / 2 : floor - 0.45 * (floor - (text ? text.b : 0));
       return {
         u: Math.min(w, h),
         keep,
         from: [
           [0.02 * w, floor - 6, 0.7 * w, floor - 6], // 링크 위 선 바로 위
-          [-8, floor - 0.45 * lift, -8, floor - 6], // 사진 쪽 왼쪽 끝 아래쪽
+          [-8, left, -8, floor - 6], // 사진 쪽 왼쪽 끝 아래쪽
         ],
         flow: (x) => -(0.3 + 0.95 * smooth(x / w)), // 왼쪽 끝 -17°(→), 오른쪽 끝 -71°(↑)
       };
@@ -116,7 +128,9 @@ const PRESETS = {
   },
   // 페이지 제목 칸. 화면 오른쪽 끝에서 들어와 왼쪽(←)으로 불며 제목·설명 오른쪽 끝 가운데로 조금씩 모여듭니다.
   // 넓은 오른쪽에서는 제 굵기로 오다가, 제목에 다가가며 가늘어져 닿기 전에 사라집니다.
-  // 글자가 길어 오른쪽 빈 곳이 288px보다 좁으면 그리지 않습니다.
+  // 좁은 화면(설명이 화면 폭을 다 채워 오른쪽 빈 곳이 288px보다 좁을 때)에서는 제목 마지막 줄 오른쪽 빈 곳만 써서
+  // 그 줄 끝으로 모여듭니다. 글자 뒤로는 지나가지 않습니다(떠 있는 글씨는 홈만). 빈 곳이 120px보다 좁으면 그리지 않습니다.
+  // 페이지 제목 칸(_layouts/page.html)과 글 상세 페이지 머리(_layouts/post.html, project.html)가 함께 씁니다.
   page: {
     count: 9,
     size: [0.003, 0.01], // 제목 칸은 낮으므로(약 240px) 홈보다 가늘게. 빈 곳 700px이면 2~7px
@@ -124,27 +138,54 @@ const PRESETS = {
     pad: 0,
     sink: true,
     layout(canvas, w, h) {
-      const text = textBox(canvas.parentElement.querySelector(".container"), canvas);
-      if (!text || w - text.r < 288) return null;
-      const cy = (text.t + text.b) / 2;
-      const top = Math.max(0.12 * h, text.t - 0.1 * h);
-      const bottom = Math.min(0.9 * h, text.b + 0.1 * h);
+      const head = canvas.parentElement.querySelector(".container");
+      const text = textBox(head, canvas);
+      if (!text) return null;
+      if (w - text.r >= 288) {
+        const top = Math.max(0.12 * h, text.t - 0.1 * h);
+        const bottom = Math.min(0.9 * h, text.b + 0.1 * h);
+        return {
+          ...sinkInto(w, h, text.r, (text.t + text.b) / 2, [top, bottom]),
+          u: Math.min(w - text.r, 3 * h),
+        };
+      }
+      const title = lastLine(head.querySelector("h1"), canvas);
+      if (!title || w - title.r < 120) return null;
+      const next = textBox(head.querySelector("h1 ~ *"), canvas); // 설명·날짜·버튼 줄
+      const lh = title.b - title.t;
+      const whole = textBox(head.querySelector("h1"), canvas);
+      // 한 줄 제목은 제목 위로 제목 높이의 반만큼, 여러 줄이면 윗줄에 걸치지 않게 마지막 줄 위 끝부터
+      const top = whole.t < title.t - 2 ? title.t : Math.max(0.1 * h, title.t - 0.5 * lh);
+      const bottom = next ? (title.b + next.t) / 2 : Math.min(0.9 * h, title.b + 0.1 * h);
+      const L = sinkInto(w, h, title.r, (title.t + title.b) / 2, [top, bottom]);
+      L.keep.push({ l: -w, t: -h, r: 2 * w, b: top }); // 제목 윗줄·'← 소식' 줄에 걸치지 않게
+      if (next) L.keep.push({ l: -w, t: next.t, r: 2 * w, b: 2 * h }); // 설명 줄 위로 넘어가지 않게
       return {
-        u: Math.min(w - text.r, 3 * h),
-        keep: [{ l: -w, t: -h, r: text.r, b: 2 * h }], // 글자 오른쪽 끝에서 왼쪽 전부: 제목 위아래로 새어 나가지 않게
-        from: [[w + 8, top, w + 8, bottom]],
-        flow(x, y) {
-          // 왼쪽(←) 60%에 제목 오른쪽 끝 가운데 쪽 40%를 섞음. 멀리서는 거의 가로로, 가까이 오면 모여듦
-          const dx = text.r - x;
-          const dy = cy - y;
-          const d = Math.hypot(dx, dy) || 1;
-          return Math.atan2((0.4 * dy) / d, -0.6 + (0.4 * dx) / d);
-        },
-        band: [top, bottom],
+        ...L,
+        u: Math.min(Math.max(w - title.r, 360), 3 * h), // 빈 곳이 좁아도 360px로 봄: 390px 화면이면 머리 반지름 1~4px
+        room: 0.12, // 띠가 낮으므로(약 70px) 설명 줄 가까이만 가늘어지게
+        count: 5,
       };
     },
   },
 };
+
+// page의 배치: 오른쪽 끝(띠 band 안)에서 들어와 글자 오른쪽 끝 r의 가운데 높이 cy 쪽으로 모여들고,
+// r보다 왼쪽은 모두 글자 상자로 봐서 제목 위아래로 새어 나가지 않게 합니다.
+function sinkInto(w, h, r, cy, band) {
+  return {
+    keep: [{ l: -w, t: -h, r, b: 2 * h }],
+    from: [[w + 8, band[0], w + 8, band[1]]],
+    flow(x, y) {
+      // 왼쪽(←) 60%에 제목 오른쪽 끝 가운데 쪽 40%를 섞음. 멀리서는 거의 가로로, 가까이 오면 모여듦
+      const dx = r - x;
+      const dy = cy - y;
+      const d = Math.hypot(dx, dy) || 1;
+      return Math.atan2((0.4 * dy) / d, -0.6 + (0.4 * dx) / d);
+    },
+    band,
+  };
+}
 
 const TICK = 1 / 60; // 움직임을 계산하는 간격(초). 잔상도 이 간격마다 하나씩 남김
 const N = Math.round(TRAIL / TICK); // 줄기 하나에 남는 잔상 수
@@ -160,6 +201,27 @@ export const windColors = (el = document.documentElement) =>
     .split(",")
     .map((c) => c.trim())
     .filter(Boolean);
+
+// 글자를 떠 있는 글씨로 볼지(비켜 가지 않고 뒤로 지나감). CSS에서 그림판에 --wind-text: float를 줌
+const floats = (canvas) => getComputedStyle(canvas).getPropertyValue("--wind-text").trim() === "float";
+
+// el 글자의 마지막 줄 상자(canvas 기준 px). 여러 줄로 꺾인 제목은 마지막 줄 오른쪽만 비어 있음
+function lastLine(el, canvas) {
+  if (!el) return null;
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const rects = [...range.getClientRects()].filter((r) => r.width && r.height);
+  if (!rects.length) return null;
+  const c = canvas.getBoundingClientRect();
+  const bottom = Math.max(...rects.map((r) => r.bottom));
+  const line = rects.filter((r) => r.bottom > bottom - 2); // 마지막 줄에 놓인 조각들
+  return {
+    l: Math.min(...line.map((r) => r.left)) - c.left,
+    t: Math.min(...line.map((r) => r.top)) - c.top,
+    r: Math.max(...line.map((r) => r.right)) - c.left,
+    b: bottom - c.top,
+  };
+}
 
 // el의 상자(canvas 기준 px)
 function box(el, canvas) {
@@ -254,6 +316,7 @@ function start(canvas) {
     head: 0,
     count: 0,
   }));
+  let flock = boids; // 지금 배치에서 날리는 줄기 (배치의 count만큼 앞에서부터)
 
   // 글자 상자까지 가장 가까운 거리(px)
   function room(x, y) {
@@ -290,7 +353,7 @@ function start(canvas) {
 
   // 처음에는 바람길 여기저기에 흩어 놓음: 생겨나는 곳에서 바람을 따라 아무 거리나 미리 보내 둠. 머리는 제자리에서 커짐
   function place() {
-    for (const b of boids) {
+    for (const b of flock) {
       for (let tries = 0; tries < 8; tries++) {
         enter(b);
         const go = rand([0, 0.9]) * u;
@@ -334,7 +397,7 @@ function start(canvas) {
     // 보이드: 이웃 찾기
     let n = 0;
     let cx = 0, cy = 0, avx = 0, avy = 0, sx = 0, sy = 0;
-    for (const o of boids) {
+    for (const o of flock) {
       if (o === b) continue;
       const dx = o.x - b.x;
       const dy = o.y - b.y;
@@ -445,13 +508,13 @@ function start(canvas) {
     moveLure();
 
     const sway = SWAY * Math.sin(time * 0.31) + SWAY * 0.55 * Math.sin(time * 0.77 + 1);
-    for (const b of boids) steer(b, sway); // 모두 같은 순간의 자리를 보고 힘을 정한 뒤에 움직임
+    for (const b of flock) steer(b, sway); // 모두 같은 순간의 자리를 보고 힘을 정한 뒤에 움직임
 
     const vmin = SPEED[0] * u;
     const vmax = SPEED[1] * u * (1 + GUST.speed * gust);
     const out = 0.3 * u; // 그림판 밖으로 이만큼 나가면(꼬리까지 다 빠지면) 다시 생겨남
-    const full = preset.room * u;
-    for (const b of boids) {
+    const full = (L.room ?? preset.room) * u;
+    for (const b of flock) {
       // 오래된 잔상 버리기
       while (b.count && tick - b.ts[(b.head - b.count + N) % N] >= N) b.count--;
 
@@ -484,7 +547,7 @@ function start(canvas) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
     ctx.globalAlpha = ALPHA;
-    for (const b of boids) {
+    for (const b of flock) {
       if (!b.count) continue;
       // 한 줄기의 원을 한 경로로 모아 한 번에 칠해야 겹친 잔상끼리 진해지지 않습니다.
       // 빠를 때(돌풍) 잔상 사이가 벌어져 구슬처럼 끊겨 보이지 않게, 이웃한 두 원 사이를 사다리꼴로 메웁니다.
@@ -544,7 +607,7 @@ function start(canvas) {
     const rect = canvas.getBoundingClientRect();
     const layout = rect.width && rect.height ? preset.layout(canvas, rect.width, rect.height) : null;
     if (!layout) {
-      // 좁은 화면에서는 숨겨져 있거나, 글자가 길어 빈 곳이 좁음
+      // 그림판이 숨겨져 있거나, 글자가 길어 빈 곳이 좁음
       if (w) canvas.width = canvas.width; // 그림 지우기
       w = h = 0;
       return;
@@ -573,9 +636,13 @@ function start(canvas) {
     dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
+    const before = flock.length;
+    flock = boids.slice(0, L.count ?? boids.length);
     if (!ready) {
       place();
       ready = true;
+    } else {
+      flock.slice(before).forEach(enter); // 화면이 넓어져 늘어난 줄기는 바람이 시작되는 곳에서
     }
     draw();
     wake();
@@ -593,6 +660,28 @@ function start(canvas) {
     gust = Math.min(gust + 1, 1.5);
     wake();
   });
+
+  // 스크롤 돌풍. 잠깐 멈췄다 다시 넘기기 시작한 첫 순간은 빠르기를 잴 수 없어 건너뜀
+  let scrollY = window.scrollY;
+  let scrollT = 0;
+  let scrollV = 0;
+  addEventListener(
+    "scroll",
+    (e) => {
+      const dt = (e.timeStamp - scrollT) / 1000;
+      const v = Math.abs(window.scrollY - scrollY) / dt;
+      scrollY = window.scrollY;
+      scrollT = e.timeStamp;
+      if (!(dt > 0 && dt < 0.2)) {
+        scrollV = 0;
+        return;
+      }
+      scrollV = scrollV * 0.5 + v * 0.5; // 손가락 떨림에 들쭉날쭉하지 않게
+      gust = Math.max(gust, Math.min(scrollV / SCROLL.full, SCROLL.max));
+      wake();
+    },
+    { passive: true },
+  );
 
   area.addEventListener("pointermove", (e) => {
     if (!L) return;

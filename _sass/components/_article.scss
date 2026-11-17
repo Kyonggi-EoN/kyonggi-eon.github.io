@@ -1,7 +1,10 @@
 // 글 상세 페이지(블로그·소식·프로젝트)와 Markdown 본문(.prose)
 
 .article {
-  padding-top: var(--gap-section);
+  // 제목 위 여백까지 바람 그림판이 덮도록, 여백은 머리를 감싼 칸(_wind.scss의 .article__top)에
+  &__top {
+    padding-top: var(--gap-section);
+  }
 
   &__head {
     margin-bottom: var(--space-6);

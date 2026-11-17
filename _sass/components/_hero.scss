@@ -231,10 +231,12 @@
     font-weight: 600;
   }
 
+  // 좁은 화면: 사진 위, 글자 아래. 글자 칸이 첫 화면의 남은 높이를 채워서 구호와 링크 사이가 벌어집니다.
   @media (max-width: 860px) {
     &--photo {
       grid-template-columns: 1fr;
-      min-height: 0;
+      grid-template-rows: auto 1fr;
+      min-height: calc(100svh - var(--header-h));
     }
 
     &__media {
@@ -247,9 +249,9 @@
       padding: var(--space-6) var(--space-5);
     }
 
-    // 좁은 화면은 빈 칸이 없어 글자와 겹치므로 그리지 않습니다.
+    // 글자 옆에 빈 곳이 없으므로 이름·구호를 떠 있는 글씨로 봐서, 바람이 비켜 가지 않고 그 뒤로 지나갑니다(wind.js의 hero).
     &__wind {
-      display: none;
+      --wind-text: float;
     }
   }
 }
