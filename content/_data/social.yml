@@ -1,6 +1,6 @@
 # 연락처·외부 채널. 푸터와 소개 페이지의 '연락처' 섹션에 표시됩니다.
 # icon 이름은 _includes/icon.html에 정의된 것만 쓸 수 있습니다:
-#   mail, github, chat, globe, rss, external
+#   mail, github, youtube, chat, globe, rss, external
 
 - label: 이메일
   value: kyonggieon@gmail.com
@@ -10,6 +10,10 @@
   value: Kyonggi-EoN
   url: https://github.com/Kyonggi-EoN
   icon: github
+- label: YouTube
+  value: "@Kyonggi-EoN"
+  url: https://www.youtube.com/@Kyonggi-EoN
+  icon: youtube
 - label: 네이버 카페
   value: cafe.naver.com/kyonggieon
   url: https://cafe.naver.com/kyonggieon
