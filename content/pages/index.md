@@ -45,7 +45,7 @@ hero:
     - src: /content/images/news/2026-sow-seminar-2.jpg
       alt: 반도체 아이디어 공모전 세미나에서 SoW 아이디어를 발표하는 팀
       caption: 2026 교내 반도체 아이디어 공모전 세미나 · 2026.11.04
-      url: /news/2026/sow-seminar/
+      url: /news/2026/idea-contest-seminar/
       position: 30% 50%
     - src: /content/images/news/2026-graduation-2.jpg
       alt: 졸업 가운을 입은 부원들이 학사모를 던지는 모습

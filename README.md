@@ -58,7 +58,7 @@ Jekyll로 만든 정적 사이트입니다. `main`에 push하면 GitHub Actions�
 
 ```
 content/_news/
-├── 2026/2026-11-04-sow-seminar.md   → /news/2026/sow-seminar/
+├── 2026/2026-11-04-idea-contest-seminar.md   → /news/2026/idea-contest-seminar/
 ├── 2027/.gitkeep                    ← 미리 만들어 둔 빈 폴더
 └── 2028/.gitkeep
 ```
