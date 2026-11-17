@@ -38,6 +38,23 @@ logos:
           - { label: "85", url: /assets/ui/logos_P/logo_P@dp48.png }
           - { label: "533px", url: /assets/ui/logos_P/logo_P@dp300.png }
 
+  - title: 가로형 로고
+    text: 심볼 옆에 EoN 이름을 붙인 로고입니다. 문서 머리글이나 배너처럼 가로로 넓은 곳에 씁니다.
+    preview: /assets/ui/logo_horizontal.svg
+    formats:
+      - name: SVG
+        links:
+          - { label: logo_horizontal.svg, url: /assets/ui/logo_horizontal.svg }
+      - name: PNG
+        links:
+          - { label: "38×16", url: /assets/ui/logos_horizontal/logo_horizontal@1x.png }
+          - { label: "57×24", url: /assets/ui/logos_horizontal/logo_horizontal@1.5x.png }
+          - { label: "76×32", url: /assets/ui/logos_horizontal/logo_horizontal@2x.png }
+          - { label: "115×48", url: /assets/ui/logos_horizontal/logo_horizontal@3x.png }
+          - { label: "203×85", url: /assets/ui/logos_horizontal/logo_horizontal@dp48.png }
+          - { label: "409×171", url: /assets/ui/logo_horizontal.png }
+          - { label: "1274×533px", url: /assets/ui/logos_horizontal/logo_horizontal@dp300.png }
+
   - title: 이전 로고
     text: 지금 로고 이전에 쓰던 로고입니다.
     preview: /assets/ui/logo_legacy.png

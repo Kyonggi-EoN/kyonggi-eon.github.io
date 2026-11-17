@@ -4,7 +4,7 @@ description: EoN 로고, 색 팔레트, 배너, 파비콘입니다. 발표 자�
 permalink: /ui/
 # 파일 목록과 팔레트 값은 content/_data/ui.yml, 파일은 assets/ui/에 있습니다.
 actions:
-  - label: 전체 받기 (ZIP, 2.0MB)
+  - label: 전체 받기 (ZIP, 2.1MB)
     url: /assets/ui/EoN_UI.zip
     icon: download
 sections:
