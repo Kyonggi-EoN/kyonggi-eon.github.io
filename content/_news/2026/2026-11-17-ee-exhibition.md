@@ -42,16 +42,16 @@ EoN이 처음 기획해 주관을 맡았고, 반도체부트캠프사업단과 �
 - **동아리**: EoN, EEI, ROAD, KROWD
 - **연구실**: 차세대반도체디바이스 연구실, ASNL, RV Lab, SIDL, I2_COINS_Lab, CSP, 파동응용연구센터
 
-<p style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--space-5) var(--space-6);margin:var(--space-6) 0">
-  <img src="/content/images/news/2026-exhibition-org-eei.png" alt="EEI" style="height:40px;width:auto;margin:0;border:0;border-radius:0">
-  <img src="/content/images/news/2026-exhibition-org-road.png" alt="ROAD" style="height:34px;width:auto;margin:0;border:0;border-radius:0">
-  <img src="/content/images/news/2026-exhibition-org-krowd.png" alt="KROWD" style="height:40px;width:auto;margin:0;border:0;border-radius:0">
-  <img src="/content/images/news/2026-exhibition-org-ngsd.png" alt="차세대반도체디바이스 연구실" style="height:26px;width:auto;margin:0;border:0;border-radius:0">
-  <img src="/content/images/news/2026-exhibition-org-asnl.png" alt="ASNL" style="height:30px;width:auto;margin:0;border:0;border-radius:0">
-  <img src="/content/images/news/2026-exhibition-org-rvlab.png" alt="RV Lab" style="height:40px;width:auto;margin:0;border:0;border-radius:0">
-  <span style="font-family:var(--font-sans);font-size:1.5rem;font-weight:700;line-height:1;color:#111">SIDL</span>
-  <img src="/content/images/news/2026-exhibition-org-i2coins.png" alt="I2_COINS_Lab" style="height:32px;width:auto;margin:0;border:0;border-radius:0">
-  <img src="/content/images/news/2026-exhibition-org-csp.png" alt="CSP 연구실" style="height:32px;width:auto;margin:0;border:0;border-radius:0">
+<p style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(0.75rem,3vw,1.5rem) clamp(1rem,4vw,2rem);margin:var(--space-6) 0">
+  <img src="/content/images/news/2026-exhibition-org-eei.png" alt="EEI" style="height:clamp(24px,7vw,40px);width:auto;margin:0;border:0;border-radius:0">
+  <img src="/content/images/news/2026-exhibition-org-road.png" alt="ROAD" style="height:clamp(20px,6vw,34px);width:auto;margin:0;border:0;border-radius:0">
+  <img src="/content/images/news/2026-exhibition-org-krowd.png" alt="KROWD" style="height:clamp(24px,7vw,40px);width:auto;margin:0;border:0;border-radius:0">
+  <img src="/content/images/news/2026-exhibition-org-ngsd.png" alt="차세대반도체디바이스 연구실" style="height:clamp(16px,4.6vw,26px);width:auto;margin:0;border:0;border-radius:0">
+  <img src="/content/images/news/2026-exhibition-org-asnl.png" alt="ASNL" style="height:clamp(18px,5.3vw,30px);width:auto;margin:0;border:0;border-radius:0">
+  <img src="/content/images/news/2026-exhibition-org-rvlab.png" alt="RV Lab" style="height:clamp(24px,7vw,40px);width:auto;margin:0;border:0;border-radius:0">
+  <span style="font-family:var(--font-sans);font-size:clamp(0.95rem,4.2vw,1.5rem);font-weight:700;line-height:1;color:#111">SIDL</span>
+  <img src="/content/images/news/2026-exhibition-org-i2coins.png" alt="I2_COINS_Lab" style="height:clamp(19px,5.6vw,32px);width:auto;margin:0;border:0;border-radius:0">
+  <img src="/content/images/news/2026-exhibition-org-csp.png" alt="CSP 연구실" style="height:clamp(19px,5.6vw,32px);width:auto;margin:0;border:0;border-radius:0">
 </p>
 
 문의는 [kyonggieon@gmail.com](mailto:kyonggieon@gmail.com)으로 보내 주세요.
