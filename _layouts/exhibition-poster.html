@@ -1,0 +1,69 @@
+---
+layout: default
+---
+{% assign exhibition_path = "/news/2026/ee-exhibition-posters/" %}
+{% assign exhibition = site.news | where: "url", exhibition_path | first %}
+{% assign poster_dir = "/content/exhibition/2026/" | relative_url %}
+{% assign gallery_url = exhibition_path | relative_url %}
+{% for section in exhibition.sections %}
+  {% for entry in section.posters %}
+    {% if entry.id == page.poster_id %}
+      {% assign poster = entry %}
+      {% assign chapter = section %}
+      {% unless forloop.first %}
+        {% assign previous_index = forloop.index0 | minus: 1 %}
+        {% assign previous_poster = section.posters[previous_index] %}
+      {% endunless %}
+      {% unless forloop.last %}
+        {% assign next_poster = section.posters[forloop.index] %}
+      {% endunless %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  {% if poster %}{% break %}{% endif %}
+{% endfor %}
+{% capture pdf_url %}{{ poster_dir }}{{ poster.file }}.pdf{% if poster.page %}#page={{ poster.page }}{% endif %}{% endcapture %}
+{% capture image_url %}{{ poster_dir }}large/{{ poster.id }}.webp{% endcapture %}
+<article class="poster-detail container">
+  <nav class="poster-detail__back" aria-label="전시로 돌아가기">
+    <a href="{{ gallery_url }}#{{ poster.id }}" data-exhibition-query>← {{ chapter.title }}</a>
+    <a href="{{ gallery_url }}#poster-index" data-exhibition-query>전체 포스터</a>
+  </nav>
+  <div class="poster-detail__display">
+    <header class="poster-detail__story">
+      <p class="exhibition__team">{{ poster.team }}</p>
+      <h1>{{ poster.title }}</h1>
+      <p>{{ poster.summary }}</p>
+      <div class="poster-detail__actions">
+        <a href="{{ image_url }}">이미지 크게 보기 <span aria-hidden="true">↗</span></a>
+        <a href="{{ pdf_url }}">PDF 원본 보기 <span aria-hidden="true">↗</span></a>
+      </div>
+      {% if poster.look %}
+      <section class="poster-detail__look" aria-labelledby="poster-look">
+        <h2 id="poster-look">여기를 보세요</h2>
+        <p>{{ poster.look }}</p>
+        {% if poster.crop %}
+        <figure>
+          <img src="{{ poster_dir }}detail/{{ poster.id }}.webp" alt="{{ poster.crop | escape }}" width="760" height="380">
+        </figure>
+        {% endif %}
+      </section>
+      {% endif %}
+    </header>
+    <figure class="poster-detail__image">
+      <a href="{{ image_url }}" aria-label="{{ poster.title | escape }} 이미지 크게 보기">
+        <img src="{{ image_url }}" alt="{{ poster.title | escape }} 포스터" width="1200" height="1700" fetchpriority="high">
+      </a>
+    </figure>
+  </div>
+  {% if previous_poster or next_poster %}
+  <nav class="exhibition__chapter-end" aria-label="같은 챕터의 이전·다음 포스터">
+    {% if previous_poster %}
+      <a href="{{ gallery_url }}{{ previous_poster.id }}/" data-exhibition-query><span aria-hidden="true">←</span>{{ previous_poster.title }}</a>
+    {% endif %}
+    {% if next_poster %}
+      <a class="exhibition__chapter-next" href="{{ gallery_url }}{{ next_poster.id }}/" data-exhibition-query>{{ next_poster.title }}<span aria-hidden="true">→</span></a>
+    {% endif %}
+  </nav>
+  {% endif %}
+</article>

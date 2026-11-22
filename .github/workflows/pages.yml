@@ -32,6 +32,13 @@ jobs:
         env:
           JEKYLL_ENV: production
 
+      - name: Check the online exhibition
+        run: |
+          npm install --prefix "$RUNNER_TEMP/exhibition-test" playwright@1.58.2
+          "$RUNNER_TEMP/exhibition-test/node_modules/.bin/playwright" install --with-deps chromium
+          python3 -m http.server 8137 --bind 127.0.0.1 --directory _site &
+          NODE_PATH="$RUNNER_TEMP/exhibition-test/node_modules" node .github/scripts/exhibition-smoke.cjs
+
       - uses: actions/upload-pages-artifact@v4
         if: github.event_name != 'pull_request'
 

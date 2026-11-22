@@ -14,6 +14,7 @@ const LINES = [
   [".section__head", "bottom"],
   [".member-group", "top"],
   [".site-footer", "top"],
+  [".exhibition__chapter-end", "top"],
 ];
 const FULL = 1120; // 이 길이(px) 이상인 선에서 아래 크기 그대로. 더 짧으면 줄임
 const LEN = [0.08, 0.15]; // 줄기 길이(선 길이의 배수)
@@ -31,16 +32,24 @@ export function initWindLines() {
   const colors = windColors();
   if (!colors.length) return;
 
+  document.addEventListener("exhibition:wind", event => {
+    blow(event.target, "bottom", colors, event.detail, 560);
+  });
+
   const side = new Map();
   const seen = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
+        const exhibition = e.target.closest(".exhibition");
+        if (exhibition && (exhibition.hasAttribute("data-motion-paused") ||
+            matchMedia("(prefers-reduced-motion: reduce)").matches)) continue;
+        if (e.target.matches(".exhibition__chapter-end") && e.intersectionRatio < 0.5) continue;
         seen.unobserve(e.target);
         blow(e.target, side.get(e.target), colors);
       }
     },
-    { rootMargin: "0px 0px -15% 0px" }, // 화면 아래쪽 끝이 아니라 조금 올라온 뒤에
+    { rootMargin: "0px 0px -15% 0px", threshold: [0, 0.5] },
   );
   for (const [selector, s] of LINES) {
     for (const el of document.querySelectorAll(selector)) {
@@ -51,7 +60,7 @@ export function initWindLines() {
 }
 
 // 선 하나를 따라 줄기 한두 개를 보냅니다. 다 지나가면 지움
-function blow(line, side, colors) {
+function blow(line, side, colors, direction = 1, duration) {
   const lane = document.createElement("span");
   lane.className = `wind-lane wind-lane--${side}`;
   lane.setAttribute("aria-hidden", "true");
@@ -72,9 +81,14 @@ function blow(line, side, colors) {
     const svg = streak(s.len, s.r, s.color);
     svg.style.top = `calc(50% - ${s.r - s.dy}px)`;
     lane.append(svg);
-    const ms = clamp((width + s.len) / SPEED, 1, 2.6) * 1000 * s.slow;
+    const ms = (duration ?? clamp((width + s.len) / SPEED, 1, 2.6) * 1000) * s.slow;
+    const start = direction === 1 ? -s.len : width;
+    const end = direction === 1 ? width : -s.len;
     svg
-      .animate([{ transform: `translateX(${-s.len}px)` }, { transform: `translateX(${width}px)` }], {
+      .animate([
+        { transform: `translateX(${start}px) scaleX(${direction})` },
+        { transform: `translateX(${end}px) scaleX(${direction})` },
+      ], {
         duration: ms,
         delay: s.delay,
         easing: "cubic-bezier(0.35, 0, 0.25, 1)", // 빠르게 들어와 끝에서 조금 늦춰짐

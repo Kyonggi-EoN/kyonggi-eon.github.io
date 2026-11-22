@@ -138,7 +138,8 @@ const PRESETS = {
     pad: 0,
     sink: true,
     layout(canvas, w, h) {
-      const head = canvas.parentElement.querySelector(".container");
+      const area = canvas.parentElement;
+      const head = area.querySelector("[data-wind-text]") ?? area.querySelector(".container");
       const text = textBox(head, canvas);
       if (!text) return null;
       if (w - text.r >= 288) {

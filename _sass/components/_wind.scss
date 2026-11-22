@@ -5,13 +5,15 @@
 // 실제로 줄기가 나는 곳은 글자 오른쪽 빈 곳이고, 좁은 화면에서는 제목 줄입니다(assets/js/modules/wind.js의 page).
 // 그림판은 _includes/page-wind.html, 켜고 끄기는 _config.yml의 wind.pages
 .page-hero,
-.article__top {
+.article__top,
+.exhibition__masthead {
   position: relative;
   isolation: isolate;
 }
 
 .page-hero__wind,
-.article__wind {
+.article__wind,
+.exhibition__wind {
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -24,8 +26,14 @@
 // 선 위아래로 5px씩, 선 길이만큼만 보입니다. 켜고 끄기는 _config.yml의 wind.lines
 .section__head,
 .member-group,
-.site-footer {
+.site-footer,
+.exhibition__stage,
+.exhibition__chapter-end {
   position: relative;
+}
+
+.exhibition__stage > .wind-lane {
+  z-index: 3;
 }
 
 .wind-lane {

@@ -16,6 +16,10 @@ const FEATURES = [
   ["news-filter.js", "initNewsFilter"],
 ];
 
+if (document.querySelector("[data-exhibition-chapters], .poster-detail")) {
+  FEATURES.push(["exhibition.js", "initExhibition"]);
+}
+
 for (const [file, init] of FEATURES) {
   import(`./modules/${file}`)
     .then((m) => m[init]())
