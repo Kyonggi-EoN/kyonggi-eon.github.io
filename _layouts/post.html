@@ -37,7 +37,7 @@ layout: default
   </header>
   </div>
 
-  {%- if page.image and page.event == nil %}
+  {%- if page.image %}
   <figure class="article__cover container container--prose">
     <img src="{{ page.image | relative_url }}" alt="">
   </figure>

@@ -37,10 +37,6 @@ EoN이 처음 기획해 주관을 맡았고, 반도체부트캠프사업단과 �
 
 현장 전시와 함께 [온라인 전시]({{ '/news/2026/ee-exhibition-posters/' | relative_url }})도 열립니다. 포스터 20장의 주제별 요약과 PDF 원본을 볼 수 있습니다.
 
-<figure class="article__cover">
-  <img src="{{ page.image | relative_url }}" alt="2026 전자공학부 성과전시회 공식 포스터" width="1132" height="1600" loading="lazy">
-</figure>
-
 ## 관람 및 이벤트
 
 - **방명록 & Welcome 선물**: 전시장에서 방명록을 작성하시면 선착순 48분께 소정의 Welcome 선물을 드립니다.
