@@ -1,23 +1,6 @@
 ---
 layout: default
 ---
-<script>
-  if (performance.getEntriesByType("navigation")[0]?.type === "reload" && !location.hash.startsWith("#story-")) {
-    const restoration = history.scrollRestoration;
-    history.scrollRestoration = "manual";
-    if (location.hash) history.replaceState(history.state, "", location.pathname + location.search);
-    window.addEventListener("pageshow", () => {
-      requestAnimationFrame(() => {
-        try {
-          window.scrollTo({ top: 0, behavior: "instant" });
-        } catch {
-          window.scrollTo(0, 0);
-        }
-        history.scrollRestoration = restoration;
-      });
-    }, { once: true });
-  }
-</script>
 {% assign poster_dir = "/content/exhibition/2026/" | relative_url %}
 {% assign detail_dir = page.url | relative_url %}
 <article class="exhibition">
@@ -69,7 +52,7 @@ layout: default
     {% endfor %}
   </nav>
 
-  <div class="exhibition__chapters container" data-exhibition-chapters>
+  <div class="exhibition__chapters container" data-exhibition-chapters role="region" aria-label="전시 챕터">
   {% for section in page.sections %}
   <section id="{{ section.id }}" class="exhibition__section" aria-labelledby="{{ section.id }}-title">
     <div class="section__head">
@@ -148,7 +131,7 @@ layout: default
     {% endfor %}
   </section>
 
-  <section id="poster-index" class="exhibition__index container" aria-labelledby="poster-index-title">
+  <section id="poster-index" class="exhibition__index container" aria-labelledby="poster-index-title" tabindex="-1">
     <div class="section__head">
       <h2 class="section__title" id="poster-index-title">전체 포스터</h2>
     </div>

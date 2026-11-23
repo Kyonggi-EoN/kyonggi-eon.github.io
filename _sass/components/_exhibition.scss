@@ -12,7 +12,6 @@
 
 .exhibition {
   --exhibition-topics-h: 3.25rem;
-  --exhibition-scroll-offset: calc(var(--header-h) + var(--exhibition-topics-h) + var(--space-4));
   padding-bottom: var(--gap-section);
 
   &__masthead {
@@ -314,7 +313,6 @@
     gap: var(--space-3);
     align-items: center;
     padding-block: var(--space-4);
-    scroll-margin-top: var(--exhibition-scroll-offset);
 
     &.is-carousel {
       --exhibition-cover-left: translate(-72%, 6%) rotateY(8deg) rotate(-5deg) scale(0.65);
@@ -414,58 +412,57 @@
   &__chapters.is-carousel {
     --card-gutter: clamp(0.875rem, 4vw, 3.75rem);
     --card-gap: clamp(0.5rem, 1.4vw, 1.25rem);
+    --chapter-right: calc(100% + var(--card-gap));
+    --chapter-left: calc(-1 * var(--chapter-right));
     position: relative;
-    display: flex;
-    align-items: flex-start;
-    gap: var(--card-gap);
+    display: flow-root;
     margin-top: var(--space-3);
-    overflow-x: auto;
-    overflow-y: hidden;
-    overflow-anchor: none;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &.is-sliding {
-      scroll-snap-type: none;
-      scroll-behavior: auto;
-    }
-
-    &.is-recentering {
-      overflow-x: hidden;
-      scroll-snap-type: none;
-      scroll-behavior: auto;
-    }
-
-    &::before,
-    &::after {
-      flex: 0 0 calc(var(--card-gutter) - var(--card-gap));
-      content: "";
-    }
-
-    &::after {
-      order: 4;
-    }
+    padding-inline: var(--card-gutter);
+    overflow: clip;
+    overflow-clip-margin: 4px;
+    touch-action: pan-y pinch-zoom;
 
     > section {
-      flex: 0 0 calc(100% - 2 * var(--card-gutter));
-      min-width: 0;
+      position: absolute;
+      inset: 0 var(--card-gutter) auto;
       margin: 0;
       padding: clamp(0.875rem, 3vw, 2.25rem);
       border: 1px solid var(--border-strong);
       background: var(--bg);
-      scroll-snap-align: center;
-      scroll-snap-stop: always;
+      translate: var(--chapter-drag, 0px);
     }
+
+    > [data-position="center"] {
+      position: relative;
+      inset: auto;
+      z-index: 1;
+    }
+
+    > [data-position="left"] {
+      transform: translateX(var(--chapter-left));
+    }
+
+    > [data-position="right"] {
+      transform: translateX(var(--chapter-right));
+    }
+  }
+
+  &__stage,
+  &__chapters,
+  &__section,
+  &__poster,
+  &__stories,
+  &__story,
+  &__index {
+    scroll-margin-top: var(--exhibition-topics-h);
+  }
+
+  .is-carousel > [data-position="offstage"] {
+    display: none;
   }
 
   &__section {
     margin-top: var(--gap-section);
-    scroll-margin-top: var(--exhibition-scroll-offset);
   }
 
   &__question {
@@ -504,8 +501,6 @@
   }
 
   &__poster {
-    scroll-margin-top: var(--exhibition-scroll-offset);
-
     &:target {
       outline: 2px solid var(--brand-text);
       outline-offset: 3px;
@@ -616,13 +611,11 @@
 
   &__stories {
     margin-top: var(--gap-section);
-    scroll-margin-top: var(--exhibition-scroll-offset);
   }
 
   &__story {
     width: min(100%, 88rem);
     margin: var(--space-5) auto var(--gap-section);
-    scroll-margin-top: var(--exhibition-scroll-offset);
     overflow-wrap: anywhere;
     word-break: keep-all;
 
@@ -738,7 +731,6 @@
 
   &__index {
     margin-top: var(--gap-section);
-    scroll-margin-top: var(--exhibition-scroll-offset);
   }
 
   &__organizations {

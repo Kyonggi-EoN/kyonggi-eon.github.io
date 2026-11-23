@@ -13,16 +13,11 @@ async function main() {
       hasTouch: true,
     });
     page.setDefaultTimeout(8000);
-    await page.addInitScript(() => {
-      // Exercise the fallback even when Chromium supports scrollend.
-      const addEventListener = HTMLElement.prototype.addEventListener;
-      HTMLElement.prototype.addEventListener = function (type, ...args) {
-        if (type !== "scrollend") addEventListener.call(this, type, ...args);
-      };
-    });
     const settled = id => page.waitForFunction(id => {
       const panel = document.getElementById(id);
-      return location.hash === "#" + id && !panel.inert && panel.style.order === "2";
+      const { left, right } = panel.getBoundingClientRect();
+      const track = panel.parentElement.getBoundingClientRect();
+      return location.hash === "#" + id && !panel.inert && Math.abs(left + right - track.left - track.right) < 1;
     }, id, { timeout: 6000 });
 
     await page.clock.install();
@@ -79,6 +74,51 @@ async function main() {
     await page.locator("#communications .exhibition__chapter-next").tap();
     await settled("robotics");
 
+    const touch = await page.context().newCDPSession(page);
+    async function swipe(target, dx, dy = 0) {
+      const box = await target.boundingBox();
+      const x = Math.round(box.x + box.width / 2);
+      const y = Math.round(box.y + Math.min(box.height / 2, 220));
+      await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+      for (const step of [0.25, 0.5, 0.75, 1]) {
+        await touch.send("Input.dispatchTouchEvent", {
+          type: "touchMove",
+          touchPoints: [{ x: x + dx * step, y: y + dy * step }],
+        });
+      }
+      await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    }
+
+    await swipe(cover, -105);
+    await settled("semiconductors");
+    await swipe(page.locator("#semiconductors .exhibition__poster-link").first(), -105);
+    await settled("communications");
+    await swipe(page.locator("#communications .exhibition__poster-link").first(), -105);
+    await settled("robotics");
+    const beforePan = await page.evaluate(() => scrollY);
+    await swipe(page.locator("#robotics .exhibition__poster-link").first(), 0, -100);
+    await page.waitForFunction(before => scrollY > before + 30, beforePan);
+    assert.equal(new URL(page.url()).hash, "#robotics");
+    await page.goBack();
+    await settled("communications");
+    await page.locator("[data-exhibition-chapters]").focus();
+    await page.keyboard.press("ArrowRight");
+    await settled("robotics");
+
+    await page.setViewportSize({ width: 320, height: 640 });
+    await page.goto(gallery + "#asnl-1");
+    await page.reload();
+    await page.waitForFunction(() => {
+      const poster = document.querySelector("#asnl-1");
+      const top = poster.getBoundingClientRect().top;
+      return location.hash === "#asnl-1" && !poster.closest("section").inert &&
+        top >= document.querySelector(".exhibition__topics").getBoundingClientRect().bottom && top < innerHeight;
+    });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 320);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.getByRole("button", { name: "이전 주제" }).tap();
+    await settled("robotics");
+
     const stories = page.locator("[data-exhibition-chapters] + #story-overview:has(+ #poster-index)");
     assert.equal(await stories.locator(".exhibition__story-cover img").count(), 3);
     const sceneImages = stories.locator('.exhibition__scene img[alt]:not([alt=""])');
@@ -118,10 +158,17 @@ async function main() {
     }
 
     const search = page.getByRole("searchbox", { name: "포스터 검색" });
+    await search.fill("Go2");
+    await page.reload();
+    await page.waitForFunction(() => {
+      const index = document.querySelector("#poster-index");
+      const top = index.getBoundingClientRect().top;
+      return location.hash === "#poster-index" && document.querySelector("#poster-search").value === "Go2" &&
+        top >= document.querySelector(".exhibition__topics").getBoundingClientRect().bottom && top < innerHeight;
+    });
+    assert.ok(await index.filter({ visible: true }).getByText("길을 찾고, 시약을 붓는 로봇").isVisible());
     await search.fill("박막트랜지스터");
     assert.equal(await index.filter({ visible: true }).count(), 2);
-    await search.fill("Go2");
-    assert.ok(await index.filter({ visible: true }).getByText("길을 찾고, 시약을 붓는 로봇").isVisible());
     for (const term of ["SO-ARM101", "SO-101"]) {
       await search.fill(term);
       const matches = await index.filter({ visible: true }).evaluateAll(links => links.map(link => new URL(link.href).pathname.split("/").at(-2)));
