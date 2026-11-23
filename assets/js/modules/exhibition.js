@@ -36,10 +36,17 @@ export function initExhibition() {
   let order = panels;
   let destination = null;
   let queuedChapter = null;
-  let touchStart;
-  let trackTouchStart;
+  let slideRaf = 0;
+  let recenterRaf1 = 0;
+  let recenterRaf2 = 0;
+  let recentering = false;
+  let trackTouching = false;
+  let trackTouchStart = null;
+  let stageTouch = null;
+  let suppressStageClick = false;
+  let suppressStageClickTimer = 0;
   let swipeWind = false;
-  let scrollTimer;
+  let scrollTimer = 0;
 
   motionControls.hidden = false;
   motionControls.querySelectorAll("[data-exhibition-motion]").forEach(button => {
@@ -105,26 +112,70 @@ export function initExhibition() {
     line.dispatchEvent(new CustomEvent("exhibition:wind", { bubbles: true, detail: direction }));
   }
 
-  function offset(panel) {
-    return panel.offsetLeft - order[0].offsetLeft;
+  function scrollWindowInstant(top) {
+    try {
+      window.scrollTo({ top, behavior: "instant" });
+    } catch {
+      const root = document.documentElement;
+      const previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, top);
+      requestAnimationFrame(() => { root.style.scrollBehavior = previous; });
+    }
+  }
+
+  function snapOffset(panel) {
+    const max = Math.max(0, track.scrollWidth - track.clientWidth);
+    const left = panel.offsetLeft - (track.clientWidth - panel.offsetWidth) / 2;
+    return Math.max(0, Math.min(max, Math.round(left)));
+  }
+
+  function finishRecenter() {
+    cancelAnimationFrame(recenterRaf1);
+    cancelAnimationFrame(recenterRaf2);
+    recenterRaf1 = 0;
+    recenterRaf2 = 0;
+    track.classList.remove("is-recentering");
+    recentering = false;
   }
 
   function recenter(index) {
     // Keep both neighbors available for the next swipe without duplicating chapter IDs.
+    finishRecenter();
+    recentering = true;
     order = [-1, 0, 1].map(step => panels[(index + step + panels.length) % panels.length]);
-    track.style.scrollSnapType = "none";
+    track.classList.add("is-recentering");
     order.forEach((panel, position) => { panel.style.order = position + 1; });
-    track.scrollTo({ left: offset(panels[index]), behavior: "instant" });
-    track.style.removeProperty("scroll-snap-type");
+    track.scrollLeft = snapOffset(panels[index]);
+    // Keep overflow locked and scroll-snap off for two frames so iOS Safari does not
+    // re-snap to the previously snapped chapter after flex order changes.
+    recenterRaf1 = requestAnimationFrame(() => {
+      recenterRaf1 = 0;
+      recenterRaf2 = requestAnimationFrame(() => {
+        recenterRaf2 = 0;
+        track.classList.remove("is-recentering");
+        recentering = false;
+      });
+    });
   }
 
   function sizeTrack() {
-    if (destination === null) track.style.height = `${panels[active].offsetHeight}px`;
+    if (destination === null && panels[active]) {
+      track.style.height = `${panels[active].offsetHeight}px`;
+    }
   }
 
   function visibleIndex() {
-    const position = Math.max(0, Math.min(order.length - 1, Math.round(track.scrollLeft / offset(order[1]))));
-    return panels.indexOf(order[position]);
+    let closest = order[1];
+    let best = Infinity;
+    for (const panel of order) {
+      const distance = Math.abs(track.scrollLeft - snapOffset(panel));
+      if (distance < best) {
+        best = distance;
+        closest = panel;
+      }
+    }
+    return panels.indexOf(closest);
   }
 
   function activate(index) {
@@ -158,19 +209,72 @@ export function initExhibition() {
   function scrollPage(target, onlyIfBelow = false) {
     const inset = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
     const top = window.scrollY + target.getBoundingClientRect().top - inset;
-    if (!onlyIfBelow || window.scrollY > top) window.scrollTo({ top, behavior: "instant" });
+    if (!onlyIfBelow || window.scrollY > top) scrollWindowInstant(top);
+  }
+
+  function cancelSlide() {
+    if (!slideRaf) return;
+    cancelAnimationFrame(slideRaf);
+    slideRaf = 0;
+    track.classList.remove("is-sliding");
+  }
+
+  function completeNavigation(index) {
+    destination = null;
+    activate(index);
+    if (panels[index] !== order[1]) recenter(index);
+    sizeTrack();
+    const panel = panels[active];
+    const queued = queuedChapter;
+    queuedChapter = null;
+    if (queued && queued !== panel) requestAnimationFrame(() => {
+      if (destination === null && !trackTouching && panels[active] === panel) open(queued);
+    });
+  }
+
+  function slideTo(index, targetLeft) {
+    cancelSlide();
+    finishRecenter();
+    const startLeft = track.scrollLeft;
+    const delta = targetLeft - startLeft;
+    if (Math.abs(delta) <= 1) {
+      completeNavigation(index);
+      return;
+    }
+    track.classList.add("is-sliding");
+    const duration = 420;
+    const startTime = performance.now();
+
+    function step(now) {
+      const progress = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - (1 - progress) ** 3;
+      track.scrollLeft = startLeft + delta * eased;
+      if (progress < 1) {
+        slideRaf = requestAnimationFrame(step);
+        return;
+      }
+      slideRaf = 0;
+      track.scrollLeft = targetLeft;
+      track.classList.remove("is-sliding");
+      completeNavigation(index);
+    }
+
+    slideRaf = requestAnimationFrame(step);
   }
 
   function navigate(target, animate = true) {
     const panel = target?.closest(".exhibition__section");
     const index = panels.indexOf(panel);
     if (index === -1) return;
+    cancelSlide();
+    finishRecenter();
     if (destination !== null) {
       destination = null;
       queuedChapter = null;
       recenter(active);
+      finishRecenter();
     }
-    const left = offset(panel);
+    const left = snapOffset(panel);
     const slide = animate && target === panel && !reducedMotion.matches && Math.abs(track.scrollLeft - left) > 1;
     if (slide) {
       scrollPage(stage);
@@ -180,7 +284,7 @@ export function initExhibition() {
     activate(index);
     if (slide) {
       playTransitionWind(stage, Math.sign(left - track.scrollLeft));
-      track.scrollTo({ left, behavior: "smooth" });
+      slideTo(index, left);
     } else {
       recenter(index);
       sizeTrack();
@@ -197,6 +301,7 @@ export function initExhibition() {
     if (target === index || target?.matches(".exhibition__story, .exhibition__stories")) scrollPage(target);
     else if (target) navigate(target, false);
     else {
+      cancelSlide();
       destination = null;
       activate(0);
       recenter(0);
@@ -226,14 +331,25 @@ export function initExhibition() {
   recenter(0);
   if (location.hash) restoreLocation();
 
-  const resize = new ResizeObserver(sizeTrack);
+  let trackWidth = track.clientWidth;
+  const resize = new ResizeObserver(() => {
+    sizeTrack();
+    if (track.clientWidth !== trackWidth) {
+      trackWidth = track.clientWidth;
+      if (destination === null && !trackTouching && !slideRaf) recenter(active);
+    }
+  });
+  resize.observe(track);
   panels.forEach(panel => resize.observe(panel));
 
   track.addEventListener("scroll", () => {
-    clearTimeout(scrollTimer);
-    scrollTimer = setTimeout(finishScroll, 180);
+    if (recentering || slideRaf) return;
+    if (!trackTouching) {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(finishScroll, 220);
+    }
     if (destination !== null || swipeWind || reducedMotion.matches) return;
-    const delta = track.scrollLeft - offset(order[1]);
+    const delta = track.scrollLeft - snapOffset(order[1]);
     if (Math.abs(delta) < 24) return;
     swipeWind = true;
     const line = stage.getBoundingClientRect().bottom > nav.getBoundingClientRect().bottom ? stage : nav;
@@ -242,9 +358,10 @@ export function initExhibition() {
 
   function finishScroll() {
     clearTimeout(scrollTimer);
+    if (recentering || slideRaf || trackTouching) return;
     swipeWind = false;
     const index = visibleIndex();
-    if (destination !== null && index !== destination) return;
+    if (index === -1) return;
     const changed = index !== active;
     destination = null;
     activate(index);
@@ -258,40 +375,90 @@ export function initExhibition() {
     const queued = queuedChapter;
     queuedChapter = null;
     if (queued && queued !== panel) requestAnimationFrame(() => {
-      if (destination === null && panels[active] === panel) open(queued);
+      if (destination === null && !trackTouching && panels[active] === panel) open(queued);
     });
   }
   track.addEventListener("scrollend", finishScroll);
 
   function allowSwipe(event) {
     if (event.type === "wheel" && Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+    cancelSlide();
+    finishRecenter();
     destination = null;
     queuedChapter = null;
   }
 
   track.addEventListener("touchstart", event => {
-    trackTouchStart = event.touches.length === 1 ? event.touches[0] : null;
+    if (event.touches.length === 1) {
+      trackTouching = true;
+      clearTimeout(scrollTimer);
+      finishRecenter();
+      trackTouchStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    } else {
+      trackTouchStart = null;
+    }
   }, { passive: true });
   track.addEventListener("touchmove", event => {
     if (!trackTouchStart || event.touches.length !== 1) return;
     const touch = event.touches[0];
-    const dx = Math.abs(touch.clientX - trackTouchStart.clientX);
-    const dy = Math.abs(touch.clientY - trackTouchStart.clientY);
+    const dx = Math.abs(touch.clientX - trackTouchStart.x);
+    const dy = Math.abs(touch.clientY - trackTouchStart.y);
     if (dx > Math.max(10, dy)) allowSwipe(event);
   }, { passive: true });
+  function endTrackTouch(event) {
+    if (event.touches.length > 0) return;
+    trackTouching = false;
+    trackTouchStart = null;
+    if (!recentering && !slideRaf) {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(finishScroll, 220);
+    }
+  }
+  track.addEventListener("touchend", endTrackTouch, { passive: true });
+  track.addEventListener("touchcancel", endTrackTouch, { passive: true });
   track.addEventListener("wheel", allowSwipe, { passive: true });
 
   stage.addEventListener("touchstart", event => {
-    touchStart = event.touches.length === 1 ? event.touches[0] : null;
+    if (event.touches.length === 1) {
+      stageTouch = { x: event.touches[0].clientX, y: event.touches[0].clientY, lock: null };
+    } else {
+      stageTouch = null;
+    }
   }, { passive: true });
+  stage.addEventListener("touchmove", event => {
+    if (!stageTouch || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    const dx = touch.clientX - stageTouch.x;
+    const dy = touch.clientY - stageTouch.y;
+    if (!stageTouch.lock && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      stageTouch.lock = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
+    }
+    if (stageTouch.lock === "x") event.preventDefault();
+  }, { passive: false });
   stage.addEventListener("touchend", event => {
-    if (!touchStart || event.touches.length) return;
+    if (!stageTouch || event.touches.length) return;
     const touch = event.changedTouches[0];
-    const dx = touch.clientX - touchStart.clientX;
-    const dy = touch.clientY - touchStart.clientY;
-    touchStart = null;
-    if (Math.abs(dx) > Math.max(40, Math.abs(dy))) turn(dx < 0 ? 1 : -1);
+    const dx = touch.clientX - stageTouch.x;
+    const dy = touch.clientY - stageTouch.y;
+    const lockedX = stageTouch.lock === "x";
+    stageTouch = null;
+    if ((lockedX && Math.abs(dx) > 24) || Math.abs(dx) > Math.max(36, Math.abs(dy))) {
+      suppressStageClick = true;
+      clearTimeout(suppressStageClickTimer);
+      suppressStageClickTimer = setTimeout(() => { suppressStageClick = false; }, 400);
+      turn(dx < 0 ? 1 : -1);
+    }
   }, { passive: true });
+  stage.addEventListener("touchcancel", () => {
+    stageTouch = null;
+  }, { passive: true });
+  stage.addEventListener("click", event => {
+    if (!suppressStageClick) return;
+    suppressStageClick = false;
+    clearTimeout(suppressStageClickTimer);
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
 
   exhibition.addEventListener("click", event => {
     const control = event.target.closest("[data-exhibition-step]");

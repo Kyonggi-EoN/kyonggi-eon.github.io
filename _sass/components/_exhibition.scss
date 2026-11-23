@@ -327,9 +327,16 @@
       .exhibition__stage-card {
         grid-area: 1 / 1;
         width: 46%;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
 
         &, img, span {
           transition: transform 560ms var(--ease), filter 420ms var(--ease);
+        }
+
+        img {
+          -webkit-user-drag: none;
         }
       }
     }
@@ -418,6 +425,21 @@
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &.is-sliding {
+      scroll-snap-type: none;
+      scroll-behavior: auto;
+    }
+
+    &.is-recentering {
+      overflow-x: hidden;
+      scroll-snap-type: none;
+      scroll-behavior: auto;
+    }
 
     &::before,
     &::after {

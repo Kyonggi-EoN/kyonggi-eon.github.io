@@ -8,7 +8,11 @@ layout: default
     if (location.hash) history.replaceState(history.state, "", location.pathname + location.search);
     window.addEventListener("pageshow", () => {
       requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, behavior: "instant" });
+        try {
+          window.scrollTo({ top: 0, behavior: "instant" });
+        } catch {
+          window.scrollTo(0, 0);
+        }
         history.scrollRestoration = restoration;
       });
     }, { once: true });
