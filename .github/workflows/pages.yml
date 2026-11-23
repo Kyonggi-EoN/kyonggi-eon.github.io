@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Playwright 1.58.2의 Chromium 설치를 지원하는 이미지
     steps:
       - uses: actions/checkout@v5
 
