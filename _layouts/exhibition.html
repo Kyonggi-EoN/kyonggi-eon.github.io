@@ -83,12 +83,15 @@ layout: default
     <p class="exhibition__image-credit">표지 이미지 · {{ section.feature.credit }}</p>
 
     <nav class="exhibition__chapter-end" aria-label="{{ section.title }} 전후 주제">
-      {% assign previous_index = forloop.index0 | plus: page.sections.size | minus: 1 | modulo: page.sections.size %}
-      {% assign next_index = forloop.index | modulo: page.sections.size %}
-      {% assign previous_section = page.sections[previous_index] %}
-      {% assign next_section = page.sections[next_index] %}
-      <a href="#{{ previous_section.id }}"><span aria-hidden="true">←</span>{{ previous_section.title }}</a>
-      <a class="exhibition__chapter-next" href="#{{ next_section.id }}">{{ next_section.title }}<span aria-hidden="true">→</span></a>
+      {% unless forloop.first %}
+        {% assign previous_index = forloop.index0 | minus: 1 %}
+        {% assign previous_section = page.sections[previous_index] %}
+        <a href="#{{ previous_section.id }}"><span aria-hidden="true">←</span>{{ previous_section.title }}</a>
+      {% endunless %}
+      {% unless forloop.last %}
+        {% assign next_section = page.sections[forloop.index] %}
+        <a class="exhibition__chapter-next" href="#{{ next_section.id }}">{{ next_section.title }}<span aria-hidden="true">→</span></a>
+      {% endunless %}
     </nav>
   </section>
   {% endfor %}

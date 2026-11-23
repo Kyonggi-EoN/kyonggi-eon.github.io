@@ -101,7 +101,7 @@ function initChapters(exhibition, track, index, reducedMotion) {
   const panels = Array.from(track.children);
   const topics = Array.from(nav.querySelectorAll("a"));
   const covers = Array.from(stage.children);
-  const wrap = chapter => (chapter + panels.length) % panels.length;
+  const buttons = nav.querySelectorAll("[data-exhibition-step]");
   let active = -1;
   let slides = [];
 
@@ -113,9 +113,13 @@ function initChapters(exhibition, track, index, reducedMotion) {
     if (previous?.contains(document.activeElement)) track.focus({ preventScroll: true });
     active = next;
 
+    buttons.forEach(button => {
+      const neighbor = active + Number(button.dataset.exhibitionStep);
+      button.setAttribute("aria-disabled", String(!panels[neighbor]));
+    });
     panels.forEach((panel, i) => {
       const current = i === active;
-      const position = current ? "center" : i === wrap(active + 1) ? "right" : i === wrap(active - 1) ? "left" : "offstage";
+      const position = ["left", "center", "right"][i - active + 1] ?? "offstage";
       panel.dataset.position = covers[i].dataset.position = position;
       panel.inert = !current;
       for (const link of [topics[i], covers[i]]) {
@@ -145,7 +149,7 @@ function initChapters(exhibition, track, index, reducedMotion) {
 
   const align = target => target.scrollIntoView({ behavior: "instant", block: "start", inline: "nearest" });
 
-  function open(target, { link, direction, drag, restore = false } = {}) {
+  function open(target, { link, drag, restore = false } = {}) {
     const panel = target.closest(".exhibition__section");
     const next = panels.indexOf(panel);
     if (next < 0) {
@@ -156,7 +160,8 @@ function initChapters(exhibition, track, index, reducedMotion) {
 
     const isChapter = target === panel;
     const enter = isChapter && next === active && link && stage.contains(link);
-    const step = isChapter && !restore && next !== active ? direction || (next === wrap(active + 1) ? 1 : -1) : 0;
+    const distance = next - active;
+    const step = isChapter && !restore && Math.abs(distance) === 1 ? distance : 0;
     showChapter(next, step, drag);
     align(isChapter ? (enter ? track : stage) : target);
     if (enter || (isChapter && link && track.contains(link))) track.focus({ preventScroll: true });
@@ -170,7 +175,8 @@ function initChapters(exhibition, track, index, reducedMotion) {
   }
 
   function turn(direction, drag) {
-    navigate(panels[wrap(active + direction)], { direction, drag });
+    const neighbor = panels[active + direction];
+    if (neighbor) navigate(neighbor, { drag });
   }
 
   function restoreLocation() {
@@ -186,7 +192,7 @@ function initChapters(exhibition, track, index, reducedMotion) {
   showChapter(0);
   track.classList.add("is-carousel");
   stage.classList.add("is-carousel");
-  nav.querySelectorAll("[data-exhibition-step]").forEach(button => { button.hidden = false; });
+  buttons.forEach(button => { button.hidden = false; });
   if (location.hash) restoreLocation();
   window.addEventListener("hashchange", restoreLocation);
 

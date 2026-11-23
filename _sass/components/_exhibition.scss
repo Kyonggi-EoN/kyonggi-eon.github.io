@@ -302,7 +302,12 @@
       margin-left: auto;
     }
 
-    &:hover {
+    &[aria-disabled="true"] {
+      cursor: default;
+      opacity: 0.45;
+    }
+
+    &:not([aria-disabled="true"]):hover {
       border-color: var(--brand-text);
     }
   }

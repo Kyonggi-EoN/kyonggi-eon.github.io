@@ -69,10 +69,18 @@ async function main() {
     const firstPoster = await page.locator("#eon-robot-1").boundingBox();
     assert.ok(firstPoster.y + firstPoster.height <= 844, "The first poster fits on the screen");
 
-    await page.getByRole("button", { name: "이전 주제" }).tap();
+    assert.equal(await page.getByRole("button", { name: "이전 주제" }).isEnabled(), false);
+    const rightCover = page.locator('.exhibition__stage-card[data-position="right"]');
+    await rightCover.tap();
+    await settled("semiconductors");
+    await rightCover.tap();
     await settled("communications");
-    await page.locator("#communications .exhibition__chapter-next").tap();
-    await settled("robotics");
+    assert.equal(await rightCover.count(), 0);
+    assert.equal(await page.getByRole("button", { name: "다음 주제" }).isEnabled(), false);
+    assert.equal(await page.locator("#communications .exhibition__chapter-next").count(), 0);
+    await page.getByRole("region", { name: "전시 챕터" }).focus();
+    await page.keyboard.press("ArrowRight");
+    await settled("communications");
 
     const touch = await page.context().newCDPSession(page);
     async function swipe(target, dx, dy = 0) {
@@ -89,20 +97,19 @@ async function main() {
       await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
     }
 
-    await swipe(cover, -105);
-    await settled("semiconductors");
-    await swipe(page.locator("#semiconductors .exhibition__poster-link").first(), -105);
-    await settled("communications");
     await swipe(page.locator("#communications .exhibition__poster-link").first(), -105);
+    await settled("communications");
+    await swipe(page.locator("#communications .exhibition__poster-link").first(), 105);
+    await settled("semiconductors");
+    await swipe(page.locator("#semiconductors .exhibition__poster-link").first(), 105);
     await settled("robotics");
     const beforePan = await page.evaluate(() => scrollY);
     await swipe(page.locator("#robotics .exhibition__poster-link").first(), 0, -100);
     await page.waitForFunction(before => scrollY > before + 30, beforePan);
     assert.equal(new URL(page.url()).hash, "#robotics");
     await page.goBack();
-    await settled("communications");
-    await page.locator("[data-exhibition-chapters]").focus();
-    await page.keyboard.press("ArrowRight");
+    await settled("semiconductors");
+    await swipe(page.locator('.exhibition__stage-card[data-position="center"]'), 105);
     await settled("robotics");
 
     await page.setViewportSize({ width: 320, height: 640 });
