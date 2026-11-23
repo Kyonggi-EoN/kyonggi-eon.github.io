@@ -21,9 +21,9 @@ actions:
 | 11월 25일(수) · 2일차 | 12:00~12:30, 17:00~17:30 |
 
 - **Unitree Go2**는 네 발로 걷는 로봇입니다. [RV Lab. 포스터에서 자율이동 연구 보기]({{ '/news/2026/ee-exhibition-posters/rvlab-2/' | relative_url }})
-- **SO-ARM101**은 물체를 집고 옮기는 로봇 팔입니다. [RO:AD 포스터에서 로봇 팔 연구 보기]({{ '/news/2026/ee-exhibition-posters/road-1/' | relative_url }})
+- **SO-ARM101**은 물체를 집고 옮기는 로봇 팔로, RO:AD와 EoN이 시연합니다. [RO:AD 포스터에서 자연어 명령 연구 보기]({{ '/news/2026/ee-exhibition-posters/road-1/' | relative_url }}) · [EoN 포스터에서 스마트폰 원격 조작 연구 보기]({{ '/news/2026/ee-exhibition-posters/eon-robot-1/' | relative_url }})
 
-1일차 이후 추가로 확인된 시연과 부스 위치를 이 페이지에 정리합니다. 현장을 방문하기 어려운 분을 위해 공개할 수 있는 사진이나 영상도 함께 올립니다.
+1일차 이후 추가로 확인된 시연과 부스 위치를 이 페이지에 정리할 예정입니다. 현장을 방문하기 어려운 분을 위해 공개할 수 있는 사진이나 영상도 함께 올리겠습니다!
 
 {% comment %}
 1일차 이후 확인한 내용을 아래 형식으로 작성해 이 주석 바깥에 붙입니다.

@@ -42,7 +42,7 @@ export function initWindLines() {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         const exhibition = e.target.closest(".exhibition");
-        if (exhibition && (exhibition.hasAttribute("data-motion-paused") ||
+        if (exhibition && (exhibition.hasAttribute("data-wind-paused") ||
             matchMedia("(prefers-reduced-motion: reduce)").matches)) continue;
         if (e.target.matches(".exhibition__chapter-end") && e.intersectionRatio < 0.5) continue;
         seen.unobserve(e.target);

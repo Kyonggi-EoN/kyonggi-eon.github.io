@@ -2,7 +2,7 @@
 layout: default
 ---
 <script>
-  if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
+  if (performance.getEntriesByType("navigation")[0]?.type === "reload" && !location.hash.startsWith("#story-")) {
     const restoration = history.scrollRestoration;
     history.scrollRestoration = "manual";
     if (location.hash) history.replaceState(history.state, "", location.pathname + location.search);
@@ -19,40 +19,31 @@ layout: default
 <article class="exhibition">
   <header>
     <div class="exhibition__masthead">
+      <div class="exhibition__cover">
+        {% for cover in page.hero.covers %}
+        <img src="{{ poster_dir }}{{ cover.image }}" alt="{{ cover.alt | escape }}" width="{{ cover.width }}" height="{{ cover.height }}"{% if forloop.first %} fetchpriority="high"{% else %} aria-hidden="true" fetchpriority="low" decoding="async"{% endif %}>
+        {% endfor %}
+      </div>
       {% include page-wind.html class="exhibition__wind" %}
-      <div class="exhibition__entry container">
+      <div class="container">
         <div class="exhibition__intro" data-wind-text>
-          <p class="eyebrow"><a href="{{ page.event_url | relative_url }}">← 행사 안내</a></p>
           <p class="exhibition__label">경기대학교 · 온라인 전시</p>
           <h1>{{ page.hero.heading }}</h1>
-          <div>{{ content }}</div>
+          <div class="exhibition__lead">{{ content }}</div>
           <div class="exhibition__actions">
-            <a class="exhibition__start" href="#{{ page.sections.first.id }}">전시 둘러보기 <span aria-hidden="true">↓</span></a>
+            <a class="btn btn--primary" href="#story-overview">전시 둘러보기 <span aria-hidden="true">↓</span></a>
             <a href="#poster-index">전체 포스터 찾기 <span aria-hidden="true">↓</span></a>
             <a href="{{ page.demos_url | relative_url }}">현장 시연 안내 <span aria-hidden="true">→</span></a>
           </div>
-          <button class="exhibition__motion" type="button" aria-pressed="false" hidden>바람과 로고 움직임 멈추기</button>
         </div>
-        <ul class="exhibition__graph" aria-label="참여 단체" style="--node-count: {{ page.organizations.size }}">
-          <li class="exhibition__graph-center">
-            <img src="{{ poster_dir }}ee-mark.webp" alt="경기대학교 전자공학부" width="96" height="96">
-          </li>
-          {% for org in page.organizations %}
-          {% assign logo = org.logo %}
-          {% if org.mark %}
-            {% assign logo = "/content/images/news/2026-exhibition-org-" | append: org.mark | append: ".png" %}
-          {% endif %}
-          <li class="exhibition__spoke" style="--node-index: {{ forloop.index0 }}">
-              <a class="exhibition__node" href="#{{ org.poster }}" title="{{ org.name }}">
-              {% if logo %}
-                <img src="{{ logo | relative_url }}" alt="{{ org.name }}">
-              {% else %}
-                {{ org.name }}
-              {% endif %}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
+        <div class="exhibition__motion-controls" role="group" aria-label="움직임 제어" hidden>
+          <button class="exhibition__motion" type="button" data-exhibition-motion="wind" aria-label="바람 효과" aria-pressed="true" title="바람 효과">
+            {% include icon.html name="wind" %}
+          </button>
+          <button class="exhibition__motion" type="button" data-exhibition-motion="animation" aria-label="로고·표지 애니메이션" aria-pressed="true" title="로고·표지 애니메이션">
+            {% include icon.html name="animation" %}
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -80,14 +71,21 @@ layout: default
     <div class="section__head">
       <h2 class="section__title" id="{{ section.id }}-title">{{ section.title }}</h2>
     </div>
-    <p class="exhibition__question">{{ section.feature.title }}</p>
+    <div class="exhibition__chapter-note">
+      <p class="exhibition__question">{{ section.feature.title }}</p>
+      <p>{{ section.intro }}</p>
+      <a class="exhibition__story-link" href="#story-{{ section.id }}">{{ section.title }} 이야기 보기 <span aria-hidden="true">↓</span></a>
+    </div>
     <ul class="exhibition__grid">
       {% for poster in section.posters %}
       <li id="{{ poster.id }}" class="exhibition__poster">
         <a class="exhibition__poster-link" href="{{ detail_dir }}{{ poster.id }}/">
-          <img src="{{ poster_dir }}{{ poster.id }}.webp" alt="" loading="lazy" decoding="async" width="640" height="520">
+          <img src="{{ poster_dir }}detail/{{ poster.id }}.webp" alt="" loading="lazy" decoding="async" width="760" height="380">
           <div class="exhibition__poster-text">
-            <p class="exhibition__team">{{ poster.team }}</p>
+            <p class="exhibition__team">
+              {{ poster.team }}
+              {% include exhibition-material-icon.html poster=poster %}
+            </p>
             <h3>{{ poster.title }}</h3>
           </div>
           <span class="exhibition__poster-arrow" aria-hidden="true">→</span>
@@ -95,11 +93,8 @@ layout: default
       </li>
       {% endfor %}
     </ul>
-    <details class="exhibition__chapter-note">
-      <summary>{{ section.title }} 소개</summary>
-      <p>{{ section.intro }}</p>
-      <p class="exhibition__image-credit">표지 이미지 · {{ section.feature.credit }}</p>
-    </details>
+    <p class="exhibition__image-credit">표지 이미지 · {{ section.feature.credit }}</p>
+
     <nav class="exhibition__chapter-end" aria-label="{{ section.title }} 전후 주제">
       {% assign previous_index = forloop.index0 | plus: page.sections.size | minus: 1 | modulo: page.sections.size %}
       {% assign next_index = forloop.index | modulo: page.sections.size %}
@@ -111,6 +106,43 @@ layout: default
   </section>
   {% endfor %}
   </div>
+
+  <section id="story-overview" class="exhibition__stories" aria-labelledby="exhibition-stories-title" tabindex="-1">
+    <div class="section__head container">
+      <h2 class="section__title" id="exhibition-stories-title">주제별로 둘러보기</h2>
+      <a class="section__more" href="#poster-index">전체 포스터 <span aria-hidden="true">↓</span></a>
+    </div>
+    {% for section in page.sections %}
+    <article id="story-{{ section.id }}" class="exhibition__story" aria-labelledby="story-{{ section.id }}-title" tabindex="-1">
+      <header class="exhibition__story-cover">
+        <figure>
+          <img src="{{ poster_dir }}feature-{{ section.id }}.webp" alt="{{ section.feature.alt | escape }}" width="960" height="480" loading="lazy" decoding="async">
+          <figcaption>{{ section.feature.credit | escape }}</figcaption>
+        </figure>
+        <div class="exhibition__story-title">
+          <p class="exhibition__team">{{ section.title }}</p>
+          <h3 id="story-{{ section.id }}-title">{{ section.story.title | escape }}</h3>
+        </div>
+      </header>
+      <ul class="exhibition__story-works">
+        {% for work in section.story.works %}
+        {% assign poster = section.posters | where: "id", work.id | first %}
+        <li class="exhibition__scene">
+          <div class="exhibition__scene-visual">
+            <img src="{{ poster_dir }}story/{{ poster.id }}.webp" alt="{{ work.alt | default: poster.crop | escape }}" width="1520" height="760" loading="lazy" decoding="async">
+          </div>
+          <div class="exhibition__scene-copy">
+            <p class="exhibition__team">{{ poster.team }}</p>
+            <h4>{{ work.title | escape }}</h4>
+            <p>{{ work.text | escape }}</p>
+            <a href="{{ detail_dir }}{{ poster.id }}/" aria-label="{{ poster.title | escape }} — 포스터 보기">포스터 보기 <span aria-hidden="true">→</span></a>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+    {% endfor %}
+  </section>
 
   <section id="poster-index" class="exhibition__index container" aria-labelledby="poster-index-title">
     <div class="section__head">
@@ -124,14 +156,43 @@ layout: default
     <ul class="exhibition__index-list">
       {% for section in page.sections %}
       {% for poster in section.posters %}
-      <li data-search-text="{{ poster.summary | escape }} {{ poster.look | escape }}">
+      <li data-search-text="{{ poster.summary | escape }} {{ poster.look | escape }} {{ poster.keywords | escape }}">
         <a href="{{ detail_dir }}{{ poster.id }}/">
           <span class="exhibition__index-title">{{ poster.title }}</span>
-          <span class="exhibition__index-meta">{{ poster.team }} · {{ section.title }}</span>
+          <span class="exhibition__index-meta">
+            {{ poster.team }} · {{ section.title }}
+            {% include exhibition-material-icon.html poster=poster %}
+          </span>
           <span aria-hidden="true">→</span>
         </a>
       </li>
       {% endfor %}
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="exhibition__organizations container" aria-labelledby="exhibition-organizations">
+    <div class="section__head">
+      <h2 class="section__title" id="exhibition-organizations">참여 단체</h2>
+    </div>
+    <ul class="exhibition__graph" aria-label="참여 단체" style="--node-count: {{ page.organizations.size }}">
+      <li class="exhibition__graph-center">
+        <img src="{{ poster_dir }}ee-mark.webp" alt="경기대학교 전자공학부" width="96" height="96">
+      </li>
+      {% for org in page.organizations %}
+      {% assign logo = org.logo %}
+      {% if org.mark %}
+        {% assign logo = "/content/images/news/2026-exhibition-org-" | append: org.mark | append: ".png" %}
+      {% endif %}
+      <li class="exhibition__spoke" style="--node-index: {{ forloop.index0 }}">
+          <a class="exhibition__node" href="#{{ org.poster }}" title="{{ org.name }}">
+          {% if logo %}
+            <img src="{{ logo | relative_url }}" alt="{{ org.name }}">
+          {% else %}
+            {{ org.name }}
+          {% endif %}
+        </a>
+      </li>
       {% endfor %}
     </ul>
   </section>

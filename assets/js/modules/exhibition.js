@@ -13,6 +13,7 @@ export function initExhibition() {
   }
   const exhibition = track.closest(".exhibition");
   const nav = exhibition.querySelector(".exhibition__topics");
+  const coverPhotos = Array.from(exhibition.querySelectorAll(".exhibition__cover img"));
   const stage = exhibition.querySelector("[data-exhibition-stage]");
   const covers = Array.from(stage.querySelectorAll(".exhibition__stage-card"));
   const panels = Array.from(track.children);
@@ -20,12 +21,12 @@ export function initExhibition() {
   const buttons = Array.from(nav.querySelectorAll("[data-exhibition-step]"));
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const graph = exhibition.querySelector(".exhibition__graph");
-  const motionButton = exhibition.querySelector(".exhibition__motion");
+  const motionControls = exhibition.querySelector(".exhibition__motion-controls");
   const search = exhibition.querySelector("#poster-search");
   const searchBox = search.closest(".exhibition__search");
   const index = searchBox.closest(".exhibition__index");
   const compact = text => text.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
-  const results = Array.from(exhibition.querySelectorAll(".exhibition__index-list li"), item => ({
+  const results = Array.from(index.querySelectorAll("[data-search-text]"), item => ({
     item,
     link: item.querySelector("a"),
     text: compact(item.textContent + " " + item.dataset.searchText),
@@ -40,11 +41,28 @@ export function initExhibition() {
   let swipeWind = false;
   let scrollTimer;
 
-  motionButton.hidden = false;
-  motionButton.addEventListener("click", () => {
-    const paused = exhibition.toggleAttribute("data-motion-paused");
-    motionButton.setAttribute("aria-pressed", String(paused));
+  motionControls.hidden = false;
+  motionControls.querySelectorAll("[data-exhibition-motion]").forEach(button => {
+    button.addEventListener("click", () => {
+      const paused = exhibition.toggleAttribute(`data-${button.dataset.exhibitionMotion}-paused`);
+      button.setAttribute("aria-pressed", String(!paused));
+    });
   });
+
+  if (coverPhotos.length > 1) {
+    let current = coverPhotos[0];
+    setInterval(() => {
+      if (document.hidden || reducedMotion.matches || exhibition.hasAttribute("data-animation-paused")) return;
+      const loaded = coverPhotos.filter(photo => photo.complete && photo.naturalWidth > 0);
+      if (!loaded.length) return;
+      const next = loaded[(loaded.indexOf(current) + 1) % loaded.length];
+      if (next === current) return;
+      current.setAttribute("aria-hidden", "true");
+      next.removeAttribute("aria-hidden");
+      current = next;
+    }, 6000);
+  }
+
   const graphObserver = new IntersectionObserver(([entry]) => {
     graph.toggleAttribute("data-offscreen", !entry.isIntersecting);
   });
@@ -83,7 +101,7 @@ export function initExhibition() {
   window.addEventListener("popstate", restoreSearch);
 
   function playTransitionWind(line, direction) {
-    if (exhibition.hasAttribute("data-motion-paused")) return;
+    if (exhibition.hasAttribute("data-wind-paused")) return;
     line.dispatchEvent(new CustomEvent("exhibition:wind", { bubbles: true, detail: direction }));
   }
 
@@ -121,14 +139,13 @@ export function initExhibition() {
       const position = (i - active + covers.length) % covers.length;
       const next = ["center", "right", "left"][position];
       const previous = cover.dataset.position;
+      cover.getAnimations().filter(animation => animation.id === "chapter-return").forEach(animation => animation.cancel());
       cover.dataset.position = next;
-      if (!reducedMotion.matches && previous && previous !== "center" && next !== "center" && previous !== next) {
-        const direction = next === "left" ? 1 : -1;
-        cover.getAnimations().filter(animation => animation.id === "chapter-return").forEach(animation => animation.cancel());
+      if (!reducedMotion.matches && !exhibition.hasAttribute("data-animation-paused") && previous && previous !== "center" && next !== "center") {
         const back = cover.animate([
-          { transform: `translateX(${71 * direction}%) rotateY(${-14 * direction}deg) scale(0.61)` },
-          { transform: "translateY(14%) translateZ(-11rem) scale(0.52)", offset: 0.5 },
-          { transform: `translateX(${-71 * direction}%) rotateY(${14 * direction}deg) scale(0.61)` },
+          { transform: `var(--exhibition-cover-${previous})` },
+          { transform: "translate(0, 15%) translateZ(-9rem) rotate(0) scale(0.53)", offset: 0.5 },
+          { transform: `var(--exhibition-cover-${next})` },
         ], { duration: 560, easing: "cubic-bezier(0.2, 0.7, 0.2, 1)" });
         back.id = "chapter-return";
       }
@@ -144,7 +161,7 @@ export function initExhibition() {
     if (!onlyIfBelow || window.scrollY > top) window.scrollTo({ top, behavior: "instant" });
   }
 
-  function navigate(target, animate = true, chapterStart = false) {
+  function navigate(target, animate = true) {
     const panel = target?.closest(".exhibition__section");
     const index = panels.indexOf(panel);
     if (index === -1) return;
@@ -156,7 +173,7 @@ export function initExhibition() {
     const left = offset(panel);
     const slide = animate && target === panel && !reducedMotion.matches && Math.abs(track.scrollLeft - left) > 1;
     if (slide) {
-      scrollPage(chapterStart ? panel : stage);
+      scrollPage(stage);
       track.style.height = `${Math.max(panels[active].offsetHeight, panel.offsetHeight)}px`;
     }
     destination = slide ? index : null;
@@ -167,7 +184,7 @@ export function initExhibition() {
     } else {
       recenter(index);
       sizeTrack();
-      scrollPage(target === panel && !chapterStart ? stage : target);
+      scrollPage(target === panel ? stage : target);
     }
   }
 
@@ -177,7 +194,7 @@ export function initExhibition() {
 
   function restoreLocation() {
     const target = hashTarget();
-    if (target === index) scrollPage(index);
+    if (target === index || target?.matches(".exhibition__story, .exhibition__stories")) scrollPage(target);
     else if (target) navigate(target, false);
     else {
       destination = null;
@@ -186,13 +203,13 @@ export function initExhibition() {
     }
   }
 
-  function open(target, chapterStart = false) {
+  function open(target) {
     if (destination !== null && panels.includes(target)) {
       queuedChapter = target;
       return;
     }
     if (location.hash !== `#${target.id}`) history.pushState(null, "", `#${target.id}`);
-    navigate(target, true, chapterStart);
+    navigate(target);
   }
 
   function turn(step) {
@@ -300,9 +317,8 @@ export function initExhibition() {
       track.focus({ preventScroll: true });
       return;
     }
-    const chapterStart = link.classList.contains("exhibition__start");
-    open(target, chapterStart);
-    if (chapterStart || (track.contains(link) && panels.includes(target))) {
+    open(target);
+    if (track.contains(link) && panels.includes(target)) {
       track.focus({ preventScroll: true });
     } else if (target !== target.closest(".exhibition__section")) {
       target.querySelector("a").focus({ preventScroll: true });

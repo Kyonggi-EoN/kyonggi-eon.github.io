@@ -24,6 +24,26 @@
     color: var(--text-muted);
   }
 
+  &__event {
+    display: grid;
+    gap: var(--space-1);
+
+    .btn-row {
+      margin-top: var(--space-3);
+    }
+  }
+
+  &__event-time {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2);
+
+    strong {
+      font-size: var(--fs-lg);
+    }
+  }
+
   &__cover {
     margin-bottom: var(--space-6);
 

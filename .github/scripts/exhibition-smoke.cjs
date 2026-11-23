@@ -1,7 +1,8 @@
 const assert = require("node:assert/strict");
 const { chromium } = require("playwright");
 
-const gallery = "http://127.0.0.1:8137/news/2026/ee-exhibition-posters/";
+const origin = process.env.EXHIBITION_TEST_ORIGIN || "http://127.0.0.1:8137";
+const gallery = new URL("/news/2026/ee-exhibition-posters/", origin).href;
 
 async function main() {
   const browser = await chromium.launch({ executablePath: process.env.EXHIBITION_TEST_BROWSER });
@@ -24,10 +25,53 @@ async function main() {
       return location.hash === "#" + id && !panel.inert && panel.style.order === "2";
     }, id, { timeout: 6000 });
 
+    await page.clock.install();
     await page.goto(gallery);
-    await page.getByRole("link", { name: "전시 둘러보기" }).tap();
+    const activeCover = page.locator('.exhibition__cover img:not([aria-hidden="true"])');
+    await page.waitForFunction(() => [...document.querySelectorAll(".exhibition__cover img")]
+      .every(img => img.complete && img.naturalWidth > 0));
+    const coverSources = await page.locator(".exhibition__cover img").evaluateAll(images => images.map(img => img.src));
+    const start = page.getByRole("link", { name: "전시 둘러보기" });
+    const startBox = await start.boundingBox();
+    assert.equal(await activeCover.evaluate(img => img.src), coverSources[0]);
+    assert.ok(startBox.y + startBox.height <= 844, "The exhibition entrance fits on the first mobile screen");
+    const wind = page.getByRole("button", { name: "바람 효과", exact: true });
+    const animation = page.getByRole("button", { name: "로고·표지 애니메이션", exact: true });
+    const canvas = page.locator(".exhibition__wind");
+    const cover = page.locator(".exhibition__stage-card").first();
+    await wind.tap();
+    assert.equal(await wind.getAttribute("aria-pressed"), "false");
+    assert.equal(await canvas.isVisible(), false);
+    assert.equal(await animation.getAttribute("aria-pressed"), "true");
+    assert.notEqual(await cover.evaluate(el => getComputedStyle(el).transitionDuration), "0s");
+    await animation.tap();
+    assert.equal(await cover.evaluate(el => getComputedStyle(el).transitionDuration), "0s");
+    await page.clock.fastForward(6000);
+    assert.equal(await activeCover.evaluate(img => img.src), coverSources[0], "Pausing animation also pauses the entrance cover");
+    await wind.tap();
+    assert.equal(await canvas.isVisible(), true);
+    assert.equal(await animation.getAttribute("aria-pressed"), "false");
+    await animation.tap();
+
+    for (const src of [...coverSources.slice(1), coverSources[0]]) {
+      await page.clock.fastForward(6000);
+      assert.equal(await activeCover.evaluate(img => img.src), src, "The entrance cover rotates in order");
+    }
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.clock.fastForward(6000);
+    assert.equal(await activeCover.evaluate(img => img.src), coverSources[0], "Reduced motion keeps the cover still");
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+
+    await start.tap();
+    await page.waitForURL(gallery + "#story-overview");
+    await page.waitForFunction(() => {
+      const heading = document.getElementById("exhibition-stories-title").getBoundingClientRect();
+      return heading.top >= document.querySelector(".exhibition__topics").getBoundingClientRect().bottom
+        && heading.bottom <= innerHeight;
+    });
+    await cover.tap();
     await settled("robotics");
-    const firstPoster = await page.locator("#road-1").boundingBox();
+    const firstPoster = await page.locator("#eon-robot-1").boundingBox();
     assert.ok(firstPoster.y + firstPoster.height <= 844, "The first poster fits on the screen");
 
     await page.getByRole("button", { name: "이전 주제" }).tap();
@@ -35,10 +79,32 @@ async function main() {
     await page.locator("#communications .exhibition__chapter-next").tap();
     await settled("robotics");
 
+    const stories = page.locator("[data-exhibition-chapters] + #story-overview:has(+ #poster-index)");
+    assert.equal(await stories.locator(".exhibition__story-cover img").count(), 3);
+    const sceneImages = stories.locator('.exhibition__scene img[alt]:not([alt=""])');
+    const sources = await sceneImages.evaluateAll(images => images.map(image => image.src));
+    assert.equal(sources.length, 8);
+    for (const source of sources) {
+      assert.match(new URL(source).pathname, /\/2026\/story\/[^/]+\.webp$/);
+      assert.ok((await page.request.head(source)).ok(), source);
+    }
+    await page.getByRole("link", { name: "로봇·자율주행 이야기 보기" }).tap();
+    await page.waitForURL(gallery + "#story-robotics");
+    await page.reload();
+    await page.waitForURL(gallery + "#story-robotics");
+    const story = stories.locator("#story-robotics");
+    await page.waitForFunction(() => {
+      const top = document.querySelector("#story-robotics").getBoundingClientRect().top;
+      return top >= document.querySelector(".exhibition__topics").getBoundingClientRect().bottom && top < innerHeight;
+    });
+    assert.deepEqual(await story.locator("li .exhibition__team").allTextContents(), ["EoN", "RO:AD", "RV Lab."]);
+    await story.getByRole("link", { name: /자연어 명령을 따르는 로봇 팔.*포스터 보기/ }).tap();
+    await page.waitForURL(gallery + "road-1/");
+
     await page.goto(gallery + "#poster-index");
-    const index = page.locator(".exhibition__index-list a");
+    const index = page.locator("#poster-index .exhibition__index-list a");
     const hrefs = await index.evaluateAll(links => links.map(link => link.href));
-    assert.equal(hrefs.length, 20);
+    assert.equal(hrefs.length, 21);
     assert.equal(new Set(hrefs).size, hrefs.length);
     for (const href of hrefs) {
       const response = await page.request.get(href);
@@ -46,6 +112,9 @@ async function main() {
       const html = await response.text();
       assert.match(html, /<h1>[^<]+<\/h1>/, href);
       assert.match(html, /class="poster-detail__image"/, href);
+      const crop = html.match(/<img src="([^"]+\/detail\/[^"]+\.webp)"/);
+      assert.ok(crop, href);
+      assert.ok((await page.request.head(new URL(crop[1], gallery).href)).ok(), crop[1]);
     }
 
     const search = page.getByRole("searchbox", { name: "포스터 검색" });
@@ -53,8 +122,13 @@ async function main() {
     assert.equal(await index.filter({ visible: true }).count(), 2);
     await search.fill("Go2");
     assert.ok(await index.filter({ visible: true }).getByText("길을 찾고, 시약을 붓는 로봇").isVisible());
+    for (const term of ["SO-ARM101", "SO-101"]) {
+      await search.fill(term);
+      const matches = await index.filter({ visible: true }).evaluateAll(links => links.map(link => new URL(link.href).pathname.split("/").at(-2)));
+      assert.deepEqual(matches, ["eon-robot-1", "road-1"], term);
+    }
     await search.fill("sidl 통신");
-    assert.equal(await index.filter({ visible: true }).count(), 2);
+    assert.equal(await index.filter({ visible: true }).count(), 3);
     await index.filter({ visible: true }).first().tap();
     await page.waitForURL(url => url.pathname.endsWith("/sidl-1/"));
     assert.match(new URL(page.url()).pathname, /\/sidl-1\/$/);
@@ -67,7 +141,34 @@ async function main() {
     await page.getByRole("link", { name: "전체 포스터", exact: true }).tap();
     await page.waitForURL(url => url.hash === "#poster-index" && url.searchParams.get("q") === "sidl 통신");
     assert.equal(await search.inputValue(), "sidl 통신");
-    assert.equal(await index.filter({ visible: true }).count(), 2);
+    assert.equal(await index.filter({ visible: true }).count(), 3);
+    await search.fill("sidl fpga");
+    assert.deepEqual(await index.filter({ visible: true }).evaluateAll(links => links.map(link => new URL(link.href).pathname)), [new URL("sidl-fpga/", gallery).pathname]);
+
+    await page.goto(gallery + "rvlab-1/");
+    await page.locator(".exhibition__chapter-next").tap();
+    await page.waitForURL(gallery + "asnl-3/");
+    assert.match(await page.getByRole("navigation", { name: "이전·다음 포스터" }).getByRole("link").first().getAttribute("href"), /\/rvlab-1\/$/);
+    await page.goto(gallery + "sidl-2/");
+    await page.locator(".exhibition__chapter-next").tap();
+    await page.waitForURL(gallery + "sidl-fpga/");
+    assert.ok(await page.getByRole("heading", { name: "FPGA 개발 보드 설계 보고서" }).isVisible());
+    const reportPreview = page.getByRole("img", { name: "SIDL FPGA Board V1 보고서 첫 페이지" });
+    await reportPreview.scrollIntoViewIfNeeded();
+    await reportPreview.evaluate(image => image.decode());
+    const reportPdf = await page.getByRole("link", { name: /PDF 원본 보기/ }).getAttribute("href");
+    assert.match(reportPdf, /\/reports\/sidl-fpga-board-report\.pdf$/);
+    assert.ok((await page.request.head(new URL(reportPdf, gallery).href)).ok(), reportPdf);
+    await page.locator(".exhibition__chapter-next").tap();
+    await page.waitForURL(gallery + "#poster-index");
+
+    await page.goto(new URL("/news/2026/ee-exhibition/", origin).href);
+    const logistics = page.locator(".article__event");
+    assert.match(await logistics.innerText(), /11월 24일.*25일/);
+    assert.match(await logistics.innerText(), /제2공학관 1층 로비/);
+    assert.match(await logistics.innerText(), /12:00–12:30, 17:00–17:30/);
+    const schedule = await logistics.boundingBox();
+    assert.ok(schedule.y + schedule.height <= 844, "The event schedule fits on the first mobile screen");
   } finally {
     await browser.close();
   }

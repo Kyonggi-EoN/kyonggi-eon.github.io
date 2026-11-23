@@ -32,10 +32,6 @@
   position: relative;
 }
 
-.exhibition__stage > .wind-lane {
-  z-index: 3;
-}
-
 .wind-lane {
   position: absolute;
   left: 0;
@@ -58,4 +54,9 @@
     left: 0;
     opacity: 0.7; // wind.js의 ALPHA와 같게
   }
+}
+
+.exhibition__stage > .wind-lane {
+  bottom: var(--space-5);
+  z-index: -1;
 }

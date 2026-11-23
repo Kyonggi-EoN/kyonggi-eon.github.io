@@ -14,18 +14,30 @@ layout: default
   <header class="article__head container container--prose">
     <p class="eyebrow"><a href="{{ list_url | relative_url }}">← {{ list_label }}</a></p>
     <h1 class="article__title">{{ page.title }}</h1>
+    {% if page.event %}
+    <div class="article__event">
+      <p class="article__event-time"><strong>{{ page.event.when }}</strong> <span>{{ page.event.hours }}</span></p>
+      <p>{{ page.event.where }}</p>
+      <p><strong>로봇 시연</strong> {{ page.event.demos }}</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="{{ page.event.demos_url | relative_url }}">현장 시연 안내</a>
+        <a class="btn btn--ghost" href="{{ page.event.exhibition_url | relative_url }}">온라인 전시</a>
+      </div>
+    </div>
+    {% else %}
     <div class="meta">
       {% include date.html date=page.date %}
       {%- if page.author %}<span>{{ page.author }}</span>{% endif %}
       {%- if page.category %}{% include badge.html kind=label_kind code=page.category %}{% endif %}
     </div>
+    {% endif %}
     {%- if page.tags.size > 0 %}
     <ul class="tags">{% for t in page.tags %}<li>{{ t }}</li>{% endfor %}</ul>
     {%- endif %}
   </header>
   </div>
 
-  {%- if page.image %}
+  {%- if page.image and page.event == nil %}
   <figure class="article__cover container container--prose">
     <img src="{{ page.image | relative_url }}" alt="">
   </figure>

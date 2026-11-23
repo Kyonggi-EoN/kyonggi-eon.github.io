@@ -1,0 +1,10 @@
+{%- if include.poster.reports or include.poster.papers -%}
+  {%- assign material_label = "관련 논문" -%}
+  {%- if include.poster.reports -%}
+    {%- assign material_label = "보고서 포함" -%}
+  {%- endif -%}
+  <span class="exhibition__report-icon" title="{{ material_label }}">
+    {% include icon.html name="file-text" %}
+    <span class="visually-hidden">{{ material_label }}</span>
+  </span>
+{%- endif -%}
