@@ -151,7 +151,7 @@ async function main() {
     await page.goto(gallery + "#poster-index");
     const index = page.locator("#poster-index .exhibition__index-list a");
     const hrefs = await index.evaluateAll(links => links.map(link => link.href));
-    assert.equal(hrefs.length, 21);
+    assert.equal(hrefs.length, 23);
     assert.equal(new Set(hrefs).size, hrefs.length);
     for (const href of hrefs) {
       const response = await page.request.get(href);
@@ -175,11 +175,11 @@ async function main() {
     });
     assert.ok(await index.filter({ visible: true }).getByText("길을 찾고, 시약을 붓는 로봇").isVisible());
     await search.fill("박막트랜지스터");
-    assert.equal(await index.filter({ visible: true }).count(), 2);
+    assert.equal(await index.filter({ visible: true }).count(), 3);
     for (const term of ["SO-ARM101", "SO-101"]) {
       await search.fill(term);
       const matches = await index.filter({ visible: true }).evaluateAll(links => links.map(link => new URL(link.href).pathname.split("/").at(-2)));
-      assert.deepEqual(matches, ["eon-robot-1", "road-1"], term);
+      assert.deepEqual(matches, ["eon-robot-1", "eon-robot-2", "road-1", "eon-promo"], term);
     }
     await search.fill("sidl 통신");
     assert.equal(await index.filter({ visible: true }).count(), 3);
