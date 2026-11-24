@@ -218,6 +218,7 @@ sections:
         papers:
           - title: 'Multifunctional MXene-Based Nanomaterials in Optoelectronics: From Interfacial Engineering to Device'
             doi: 10.3390/mi17080970
+            file: asnl-mxene-optoelectronics
         title: MXene 나노소재를 활용한 광전자 소자
         summary: 전기가 잘 통하는 2차원 소재 MXene을 광전자 소자에 활용한 연구를 정리했습니다. 소재의 표면과 접합부를 조절해 전하 이동을 돕고, 산화와 접합부 결함을 줄이는 방법을 살펴봅니다. 응용 사례로 투명전극, 태양전지, 적외선 광검출기, 유연 발광소자가 나옵니다.
         look: "왼쪽의 적외선 광검출기와 오른쪽의 유연 발광소자를 비교해 보세요. 같은 MXene 계열 소재가 빛을 감지하는 소자와 빛을 내는 소자에 쓰인 사례입니다."
@@ -226,8 +227,15 @@ sections:
         team: NGSD
         file: NGSD_1
         papers:
+          - title: Bulk Feedback Field-Effect Transistor
+            doi: 10.1109/LED.2025.3588262
+            file: ngsd-bulk-feedback-fet
+          - title: 'Dual-Mode Conduction in Silicon Transistors on Bulk Substrates: Feedback and Thyristor Mechanisms'
+            doi: 10.1109/TED.2026.3732639
+            file: ngsd-dual-mode-conduction
           - title: Wired 1T-XNOR Logic Gate Using Reconfigurable Silicon Feedback Transistor
             doi: 10.1109/TED.2026.3751618
+            file: ngsd-wired-1t-xnor
         title: 차세대반도체소자 연구실
         summary: NGSD는 기존 CMOS 공정과 호환되는 차세대 메모리 소자를 설계하고 제작합니다. TCAD 시뮬레이션으로 소자 구조와 공정 조건을 살피고, CAD로 제작에 쓸 포토마스크를 설계합니다. 만든 소자는 실제로 측정해 동작 특성을 확인합니다.
         look: "오른쪽에서 색으로 표시한 소자 단면은 TCAD 시뮬레이션 화면입니다. 바로 아래 포토마스크 그림에는 소자 패턴을 배치한 모습이 나옵니다."

@@ -67,7 +67,12 @@ layout: default
         <h2 id="poster-papers">관련 논문</h2>
         <ul>
           {% for paper in poster.papers %}
-          <li><a href="https://doi.org/{{ paper.doi | escape }}">{{ paper.title | escape }} <span aria-hidden="true">↗</span></a></li>
+          <li>
+            <a href="https://doi.org/{{ paper.doi | escape }}">{{ paper.title | escape }} <span aria-hidden="true">↗</span></a>
+            {% if paper.file %}
+            <a href="{{ poster_dir }}papers/{{ paper.file }}.pdf" aria-label="{{ paper.title | escape }} PDF 보기">PDF 보기 <span aria-hidden="true">↗</span></a>
+            {% endif %}
+          </li>
           {% endfor %}
         </ul>
       </section>
