@@ -147,7 +147,8 @@
     color: var(--text-muted);
   }
 
-  img {
+  img,
+  video {
     max-height: 75vh; // 세로 사진이 화면을 넘지 않도록
     margin-inline: auto;
     border-radius: var(--radius);
